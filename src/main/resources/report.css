@@ -1,0 +1,55 @@
+<style>
+	table {
+		border-collapse: collapse;
+		width: 600px;
+	}
+	
+	th, td{
+		border-width: 1px;
+		border-color: #444444;
+		padding-left: 2px;
+		padding-right: 2px;
+		font-family: calibri;
+	}
+	
+	th{
+		background: #336699;
+		color: #eeeeee;
+		font-weight: bold;
+		font-size: 12px;
+		text-align:center;
+	}
+	
+	td{
+		font-size:10px;
+	}
+	
+	.reportHeader{
+		font-size:20px;
+		background: #cccccc;
+		color: #222222;
+		text-align:left;
+	}
+	
+	.subTotal{
+		background: #FFCC33;
+	}
+	
+	.total{
+		background: #FF9900;
+	}
+	
+	.numeric{
+		text-align:right;
+	}
+	
+	.oddRow{
+		background: #FFFFCC;
+	}
+	
+	.bestPerforming{
+		background: #aa0000;
+		color: #dddddd;
+	}
+	
+</style>

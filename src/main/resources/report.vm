@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		#include("./report.css")
+	</head>
+	<body>
+		<table>
+			#set($columnCount = $productGroups.size() * 2 + 4)
+				<tr>
+					<th class="reportHeader" colspan="$columnCount">Daily Sales Report: 21-Jun-2012</th>
+				</tr>
+		</table>
+		
+		#set($areas = $data.areas)
+
+		<table>
+			<tr>
+				<th style="width:120px;">&nbsp;</th>
+				<th style="width:120px;">&nbsp;</th>
+				
+				#foreach($group in $productGroups)
+					<th colspan="2">$group</th>
+				#end
+                
+				<th colspan="2">Total Sales</th>
+			</tr>
+			<tr>
+				<th>&nbsp;</th>
+				<th>&nbsp;</th>
+				
+				#foreach($group in $productGroups) 
+					<th style="font-size:11px;">count </th>
+					<th style="font-size:11px;">value</th>
+				#end
+				
+				<th>count</th>
+				<th>value</th>
+			</tr>
+			#foreach($area in $areas)
+				#set($dataRowCount = 0)
+				<tr>
+                    <td>$area.name</td>
+                    <td>&nbsp;</td>
+					
+					#foreach($group in $productGroups) 
+                        <td>&nbsp;</td>
+						<td>&nbsp;</td>
+					#end
+					
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr>
+				
+				#foreach($store in $area.stores)
+					#if($dataRowCount % 2 ==0)
+						#set($backgroundClass="oddRow")
+					#else
+						#set($backgroundClass="")
+					#end	
+					<tr>
+						<td class="$backgroundClass">&nbsp;</td>
+						<td class="$backgroundClass">$store.name</td>
+						
+        				#foreach($group in $productGroups)	
+        						<td data-group="store_${store.id}_count, area_${area.id}_pg_${group.id}_count" class="numeric $backgroundClass">
+									$store.getNumberOfSalesForProductGroup($group)
+                                </td>
+								#if($store == $area.getBestPerformingStoreForProductGroup($group))
+									#set($bestPerformingClass = "bestPerforming")
+								#else
+									#set($bestPerformingClass = "")
+								#end
+        						<td data-group="store_${store.id}_value, area_${area.id}_pg_${group.id}_value" class="numeric $backgroundClass $bestPerformingClass">
+        							$store.getValueOfSalesForProductGroup($group)
+                                </td>                            
+						#end
+						
+						<!-- TOTAL FOR STORES -->
+						<td data-group-output="store_${store.id}_count" data-group="area_${area.id}_count" class="numeric $backgroundClass">
+							$store.numberOfSales
+                        </td>
+						<td data-group-output="store_${store.id}_value" data-group="area_${area.id}_value" class="numeric $backgroundClass" >
+							$store.valueOfSales
+                        </td>   
+						
+						#set($dataRowCount = $dataRowCount + 1)
+					</tr>
+				#end
+				<tr>
+					<td class="subTotal">$area.name Sub-total</td>
+                    <td class="subTotal">&nbsp;</td>
+					
+					#foreach($group in $productGroups) 
+    					<td class="subTotal numeric" data-group-output="area_${area.id}_pg_${group.id}_count" data-group="pg_${group.id}_count">
+    						$area.getNumberOfSalesForProductGroup($group)
+                        </td>
+    					<td class="subTotal numeric" data-group-output="area_${area.id}_pg_${group.id}_value" data-group="pg_${group.id}_value"
+							data-range-name="sales_by_store">
+    						$area.getValueOfSalesForProductGroup($group)
+    					</td>
+					#end
+					
+					<!-- TOTAL FOR AREA -->
+					<td class="subTotal numeric" data-group-output="area_${area.id}_count" data-group="total_count">
+						$area.numberOfSales
+                    </td>
+					<td class="subTotal numeric" data-group-output="area_${area.id}_value" data-group="total_value">
+						$area.valueOfSales
+                    </td>   
+				</tr>
+			#end	
+			<!-- GRAND TOTALS-->
+			<tr>
+                <td class="total">Grand Totals</td>
+                <td class="total">&nbsp;</td>
+			
+    			#foreach($group in $productGroups) 
+    				<td class="total numeric" data-group-output="pg_${group.id}_count">
+    					$data.getNumberOfSalesForProductGroup($group)
+                    </td>
+    				<td class="total numeric" data-group-output="pg_${group.id}_value">
+    					$data.getValueOfSalesForProductGroup($group)
+    				</td>
+				#end
+				
+                <td class="total numeric" data-group-output="total_count">$data.numberOfSales</td>
+                <td class="total numeric" data-group-output="total_value">$data.valueOfSales</td>
+			</tr>
+		</table>
+		
+		<table>
+			<tr>
+				<td class="bestPerforming">&nbsp</td>
+				<td colspan="5" style="border-width:0px;">Best Performing Store in Area for Product Group</td>
+			</tr>
+		</table>
+	</body>
+</html>

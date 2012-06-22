@@ -1,0 +1,81 @@
+<html>
+<head>
+<style type="text/css">
+table {
+	border-collapse: collapse;
+	width: 600px;
+}
+
+th,td {
+	border: 1px solid #ff0000;
+	padding: 0px;
+}
+
+th {
+	background: #000000;
+	font-weight: bold;
+	font-family: Arial;
+	font-size: 22px;
+	color: #ffffff;
+	width: 100px;
+	font-weight:bold;
+}
+
+td {
+	font-family: trebuchet ms;
+	font-size: 8px;
+}
+
+.subHeader{
+	font-size: 13px;
+	color: #875434;
+	font-style: italic;
+	text-align:center;
+}
+
+.highlighted1, .highlighted2{
+	background: #aaaaaa;
+	color: #ff0000;
+	font-family: Courier New;
+	font-size: 20px;
+}
+
+.highlighted2 {
+	border: 1px solid #00ff00;
+	font-weight: bold;
+}
+</style>
+</head>
+<body>
+	<table>
+		<tr>
+			<th style="width:150px;">Column 1</th>
+			<th>Column 2</th>
+			<th>Column 3</th>
+			<th>Column 4</th>
+		</tr>
+		<tr>
+			<th class="subHeader" colspan="2">Sub 1</th>
+			<th class="subHeader" colspan="2">Sub 2</th>
+		</tr>
+		<tr>
+			<td style="color:#32ae43;">Cell A 1</td>
+			<td>Cell A 2</td>
+			<td>Cell A 3</td>
+			<td class="highlighted1">Cell A 4</td>
+		</tr>
+		<tr>
+			<td style="text-align:right;" data-group="">Cell B 1</td>
+			<td class="highlighted2">Cell B 2</td>
+			<td style="font-style:italic;">Cell B 3</td>
+			<td style="background:#878765;font-size:18px;">Cell B 4</td>
+		</tr>
+		<tr>
+			<td>22.635</td>
+			<td style="font-size:14px;font-style:italic;text-decoration:underline;">A1</td>
+			<td>23,767.76</td>
+			<td>-0.766532</td>
+		</tr>
+	</table>
+</body>
+</html>

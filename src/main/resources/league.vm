@@ -1,0 +1,8 @@
+<html>
+	<head>
+		#include("./report.css")
+	</head>
+	<body>
+		$content
+	</body>
+</html>
