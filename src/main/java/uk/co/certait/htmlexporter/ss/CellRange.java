@@ -18,6 +18,14 @@ package uk.co.certait.htmlexporter.ss;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A CellRange represents a range of cells. The range may or may not be
+ * contiguous. A CellRange is considered contiguous when tarversing the range
+ * form the top left to bottom right there are no gaps found.
+ * 
+ * @author alanhay
+ * 
+ */
 public class CellRange
 {
 	private List<CellRangeRow> rows;
@@ -29,6 +37,10 @@ public class CellRange
 		listeners = new ArrayList<CellRangeObserver>();
 	}
 
+	/**
+	 * 
+	 * @param cell
+	 */
 	public void addCell(TableCellReference cell)
 	{
 		if (rows.size() == 0)
@@ -44,25 +56,40 @@ public class CellRange
 				rows.add(new CellRangeRow(i + 1));
 			}
 		}
-		
+
 		rows.get(rows.size() - 1).addCell(cell);
-		
-		notifyListeners();
+
+		notifyObservers();
 	}
-	
-	public void addCellRangeListener(CellRangeObserver listener)
+
+	/**
+	 * 
+	 * @param listener
+	 */
+	public void addCellRangeObserver(CellRangeObserver listener)
 	{
 		listeners.add(listener);
 	}
-	
-	protected void notifyListeners()
+
+	/**
+	 * Notify any registered observers that a cell has been added.
+	 */
+	private void notifyObservers()
 	{
-		for(CellRangeObserver listener : listeners)
+		for (CellRangeObserver listener : listeners)
 		{
 			listener.cellRangeUpdated(this);
 		}
 	}
 
+	/**
+	 * 
+	 * @param cell
+	 *            The cell to be added.
+	 * 
+	 * @return True if this cell references a previously unreferenced row,
+	 *         otherwise false.
+	 */
 	protected boolean isCellInNewRow(TableCellReference cell)
 	{
 		boolean isNewRow = true;
@@ -78,58 +105,71 @@ public class CellRange
 		return isNewRow;
 	}
 
-	public int getWidth()
+	/**
+	 * A CellRange is considered to be contiguous if all rows within it are
+	 * contiguous and the first and last populated columns for all rows have the
+	 * same indices.
+	 * 
+	 * @return True if this CellRange is contiguous, otherwise false.
+	 */
+	public boolean isContiguous()
 	{
-		int firstPopulatedColumnForRange = 0;
-		int lastPopulatedColumnForRange = 0;
+		boolean isContiguous = true;
+
+		int firstColumn = -99;
+		int lastColumn = -99;
 
 		boolean firstLoop = true;
 
 		for (CellRangeRow row : rows)
 		{
-			if (!row.isEmpty())
+			if (!row.isContiguous())
 			{
-				if (firstLoop)
+				isContiguous = false;
+				break;
+			}
+			else
+			{
+				if (!firstLoop)
 				{
-					firstLoop = false;
-
-					firstPopulatedColumnForRange = row.getFirstPopulatedColumn();
-					lastPopulatedColumnForRange = row.getLastPopulatedColumn();
+					if (row.getFirstPopulatedColumn() != firstColumn || row.getLastPopulatedColumn() != lastColumn)
+					{
+						isContiguous = false;
+						break;
+					}
 				}
 				else
 				{
-					int firstPopulatedColumnForRow = row.getFirstPopulatedColumn();
-
-					if (firstPopulatedColumnForRow < firstPopulatedColumnForRange)
-					{
-						firstPopulatedColumnForRange = firstPopulatedColumnForRow;
-					}
-
-					int lastPopulatedColumnForRow = row.getLastPopulatedColumn();
-
-					if (lastPopulatedColumnForRow > lastPopulatedColumnForRange)
-					{
-						lastPopulatedColumnForRange = lastPopulatedColumnForRow;
-					}
+					firstColumn = row.getFirstPopulatedColumn();
+					lastColumn = row.getLastPopulatedColumn();
+					firstLoop = false;
 				}
 			}
 		}
 
-		return isEmpty() ? 0 : lastPopulatedColumnForRange + 1 - firstPopulatedColumnForRange;
+		return isContiguous;
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public int getHeight()
 	{
 		return rows.size();
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public boolean isEmpty()
 	{
 		boolean isEmpty = true;
 
 		for (CellRangeRow row : rows)
 		{
-			if (! row.isEmpty())
+			if (!row.isEmpty())
 			{
 				isEmpty = false;
 				break;
@@ -139,59 +179,48 @@ public class CellRange
 		return isEmpty;
 	}
 
-	public boolean isContiguous()
-	{
-		boolean isContiguous = true;
-
-		for (CellRangeRow row : rows)
-		{
-			if (!row.isContiguous())
-			{
-				isContiguous = false;
-				break;
-			}
-		}
-
-		return isContiguous;
-	}
-
-	public String toString()
-	{
-		StringBuilder builder = new StringBuilder();
-		
-		for(CellRangeRow row : rows)
-		{
-			builder.append("\nIndex").append(row.getIndex()).append(": ");
-			
-			for(TableCellReference cell : row.getCells())
-			{
-				if(cell != null)
-				{
-					builder.append("[").append(cell.getRowIndex()).append(",").append(cell.getColumnIndex()).append("]");
-				}
-				else
-				{
-					builder.append("[x]");
-				}
-			}
-
-		}
-		
-		return builder.toString();
-	}
-	
+	/**
+	 * 
+	 * @return The first cell in this range, that is the cell at the top left of
+	 *         the range.
+	 */
 	public TableCellReference getFirstCell()
 	{
 		return rows.get(0).getFirstCell();
 	}
-	
+
+	/**
+	 * 
+	 * @return The last cell in this range, that is the cell at the bottom right
+	 *         of the range.
+	 */
 	public TableCellReference getLastCell()
 	{
-		return rows.get(rows.size() -1).getLastCell();
+		return rows.get(rows.size() - 1).getLastCell();
 	}
-	
+
+	/**
+	 * 
+	 * @return The rows which this range references.
+	 */
 	public List<CellRangeRow> getRows()
 	{
 		return rows;
+	}
+
+	/**
+	 * 
+	 */
+	public String toString()
+	{
+		StringBuilder builder = new StringBuilder();
+
+		for (CellRangeRow row : rows)
+		{
+			builder.append("\nIndex").append(row.getIndex()).append(": ");
+			builder.append(row.toString()).append("\n");
+		}
+
+		return builder.toString();
 	}
 }

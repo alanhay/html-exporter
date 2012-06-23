@@ -35,7 +35,7 @@ public class OdsFunctionCell implements CellRangeObserver
 		this.resolver = resolver;
 		this.function = function;
 		
-		range.addCellRangeListener(this);
+		range.addCellRangeObserver(this);
 		
 		cellRangeUpdated(range);
 	}
