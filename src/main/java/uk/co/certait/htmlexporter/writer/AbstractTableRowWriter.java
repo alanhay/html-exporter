@@ -20,26 +20,90 @@ import org.jsoup.nodes.Element;
 public abstract class AbstractTableRowWriter implements TableRowWriter
 {
 	private TableCellWriter cellWriter;
-	
+	private RowTracker rowTracker;
+
 	public AbstractTableRowWriter(TableCellWriter cellWriter)
 	{
 		this.cellWriter = cellWriter;
+		rowTracker = new RowTracker();
 	}
-	
+
 	public void writeRow(Element row, int rowIndex)
 	{
 		renderRow(row, rowIndex);
-		
-		int columnIndex = 0;
 		
 		for(Element element : row.getAllElements())
 		{
 			if(element.tag().getName().equals(TD_TAG) || element.tag().getName().equals(TH_TAG))
 			{
-				columnIndex += cellWriter.writeCell(element, rowIndex, columnIndex);
+				int columnIndex = rowTracker.getNextColumnIndexForRow(rowIndex);
+				cellWriter.writeCell(element, rowIndex, columnIndex);
+				
+				int rowSpan = getRowSpan(element);
+				int columnSpan =  getColumnSpan(element);
+				
+				rowTracker.addCell(rowIndex, columnIndex, rowSpan, columnSpan);
+				
+				if(rowSpan > 1 || columnSpan > 1)
+				{
+					doMerge(rowIndex, columnIndex, rowSpan, columnSpan);
+				}
 			}
 		}
 	}
-	
+
+	protected boolean isRowGrouped(Element row)
+	{
+		return row.hasAttr("");
+	}
+
+	protected String[] getRowGroups(Element row)
+	{
+		return getAttributeValues(row, "");
+	}
+
+	protected String[] getAttributeValues(Element element, String attributeName)
+	{
+		String values[] = null;
+
+		if (element.hasAttr(attributeName))
+		{
+			values = element.attr(attributeName).toLowerCase().split(",");
+
+			for (String value : values)
+			{
+				value = value.trim().toLowerCase();
+			}
+		}
+
+		return values;
+	}
+
+	protected int getColumnSpan(Element element)
+	{
+		int columnSpan = 1;
+
+		if (element.hasAttr("colspan"))
+		{
+			columnSpan = Integer.parseInt(element.attr("colspan"));
+		}
+
+		return columnSpan;
+	}
+
+	protected int getRowSpan(Element element)
+	{
+		int rowSpan = 1;
+
+		if (element.hasAttr("rowSpan"))
+		{
+			rowSpan = Integer.parseInt(element.attr("rowSpan"));
+		}
+
+		return rowSpan;
+	}
+
 	public abstract void renderRow(Element row, int rowIndex);
+	
+	public abstract void doMerge(int rowIndex, int columnIndex, int rowSpan, int columnSpan);
 }

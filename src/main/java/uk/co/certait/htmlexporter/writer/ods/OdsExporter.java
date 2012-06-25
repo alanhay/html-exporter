@@ -22,7 +22,7 @@ import org.jsoup.nodes.Element;
 import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.table.Table;
 
-import uk.co.certait.htmlexporter.css.StyleMapper;
+import uk.co.certait.htmlexporter.css.StyleMap;
 import uk.co.certait.htmlexporter.writer.AbstractExporter;
 import uk.co.certait.htmlexporter.writer.TableWriter;
 
@@ -37,7 +37,7 @@ public class OdsExporter extends AbstractExporter
 			spreadsheet = SpreadsheetDocument.newSpreadsheetDocument();
 			Table table = spreadsheet.getSheetByIndex(0);
 
-			StyleMapper styleMapper = getStyleMapper(html);
+			StyleMap styleMapper = getStyleMapper(html);
 
 			TableWriter writer = new OdsTableWriter(new OdsTableRowWriter(table, new OdsTableCellWriter(table,
 					styleMapper)));

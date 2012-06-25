@@ -37,4 +37,14 @@ public class OdsTableRowWriter extends AbstractTableRowWriter
 	{
 		table.appendRow();
 	}
+
+	@Override
+	public void doMerge(int rowIndex, int columnIndex, int rowSpan, int columnSpan)
+	{
+		org.odftoolkit.simple.table.CellRange cr = table.getCellRangeByPosition(columnIndex,
+				rowIndex, columnIndex + columnSpan - 1, rowIndex + rowSpan - 1);
+		
+		cr.merge();
+		
+	}
 }

@@ -36,6 +36,9 @@ public class Style
 	protected static final String LEFT_ALIGN = "left";
 	protected static final String RIGHT_ALIGN = "right";
 	protected static final String CENTER_ALIGN = "center";
+	protected static final String TOP_ALIGN = "top";
+	protected static final String BOTTOM_ALIGN = "bottom";
+	protected static final String MIDDLE_ALIGN = "middle";
 
 	private Map<CssIntegerProperty, Integer> integerProperties;
 	private Map<CssStringProperty, String> stringProperties;
@@ -137,19 +140,34 @@ public class Style
 		return TEXT_DECORATION_UNDERLINE.equals(stringProperties.get(CssStringProperty.TEXT_DECORATION));
 	}
 
-	public boolean isLeftAligned()
+	public boolean isHorizontallyAlignedLeft()
 	{
 		return LEFT_ALIGN.equals(stringProperties.get(CssStringProperty.TEXT_ALIGN));
 	}
 
-	public boolean isRightAligned()
+	public boolean isHorizontallyAlignedRight()
 	{
 		return RIGHT_ALIGN.equals(stringProperties.get(CssStringProperty.TEXT_ALIGN));
 	}
 
-	public boolean isCenterAligned()
+	public boolean isHorizontallyAlignedCenter()
 	{
 		return CENTER_ALIGN.equals(stringProperties.get(CssStringProperty.TEXT_ALIGN));
+	}
+	
+	public boolean isVerticallyAlignedTop()
+	{
+		return TOP_ALIGN.equals(stringProperties.get(CssStringProperty.VERTICAL_ALIGN));
+	}
+	
+	public boolean isVerticallyAlignedBottom()
+	{
+		return BOTTOM_ALIGN.equals(stringProperties.get(CssStringProperty.VERTICAL_ALIGN));
+	}
+	
+	public boolean isVerticallyAlignedMiddle()
+	{
+		return MIDDLE_ALIGN.equals(stringProperties.get(CssStringProperty.VERTICAL_ALIGN));
 	}
 	
 	public boolean isBackgroundSet()

@@ -131,33 +131,33 @@ public class StyleTest
 	public void testIsLeftAligned()
 	{
 		Style style = new Style();
-		Assert.assertFalse(style.isLeftAligned());
+		Assert.assertFalse(style.isHorizontallyAlignedLeft());
 		
 		style.addProperty(CssStringProperty.TEXT_ALIGN, Style.LEFT_ALIGN);
 		
-		Assert.assertTrue(style.isLeftAligned());	
+		Assert.assertTrue(style.isHorizontallyAlignedLeft());	
 	}
 	
 	@Test
 	public void testIsRightAligned()
 	{
 		Style style = new Style();
-		Assert.assertFalse(style.isRightAligned());
+		Assert.assertFalse(style.isHorizontallyAlignedRight());
 		
 		style.addProperty(CssStringProperty.TEXT_ALIGN, Style.RIGHT_ALIGN);
 		
-		Assert.assertTrue(style.isRightAligned());			
+		Assert.assertTrue(style.isHorizontallyAlignedRight());			
 	}
 	
 	@Test
 	public void testIsCenterAligned()
 	{
 		Style style = new Style();
-		Assert.assertFalse(style.isCenterAligned());
+		Assert.assertFalse(style.isHorizontallyAlignedCenter());
 		
 		style.addProperty(CssStringProperty.TEXT_ALIGN, Style.CENTER_ALIGN);
 		
-		Assert.assertTrue(style.isCenterAligned());		
+		Assert.assertTrue(style.isHorizontallyAlignedCenter());		
 	}
 	
 	@Test

@@ -20,7 +20,7 @@ import java.util.List;
 
 /**
  * A CellRange represents a range of cells. The range may or may not be
- * contiguous. A CellRange is considered contiguous when tarversing the range
+ * contiguous. A CellRange is considered contiguous when traversing the range
  * form the top left to bottom right there are no gaps found.
  * 
  * @author alanhay

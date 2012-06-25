@@ -23,7 +23,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.jsoup.nodes.Element;
 
-import uk.co.certait.htmlexporter.css.StyleMapper;
+import uk.co.certait.htmlexporter.css.StyleMap;
 import uk.co.certait.htmlexporter.writer.AbstractExporter;
 import uk.co.certait.htmlexporter.writer.TableWriter;
 
@@ -34,7 +34,7 @@ public class ExcelExporter extends AbstractExporter
 		Workbook workbook = new XSSFWorkbook();
 		Sheet sheet = workbook.createSheet();
 		
-		StyleMapper styleMapper = getStyleMapper(html);
+		StyleMap styleMapper = getStyleMapper(html);
 		
 		TableWriter writer = new ExcelTableWriter(new ExcelTableRowWriter(sheet, new ExcelTableCellWriter(sheet, styleMapper)));
 

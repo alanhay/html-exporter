@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.collections.list.GrowthList;
-import org.apache.poi.ss.usermodel.Cell;
+
 
 /**
  * A CellRangeRow represents a row of data within a CellRange.
@@ -37,7 +37,7 @@ public class CellRangeRow
 	protected CellRangeRow(int index)
 	{
 		this.index = index;
-		cells = GrowthList.decorate(new ArrayList<Cell>());
+		cells = GrowthList.decorate(new ArrayList<TableCellReference>());
 	}
 
 	/**

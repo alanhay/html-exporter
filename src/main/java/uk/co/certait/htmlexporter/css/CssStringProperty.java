@@ -21,7 +21,8 @@ public enum CssStringProperty
 	FONT_WEIGHT("font-weight"),
 	FONT_STYLE("font-style"),
 	TEXT_DECORATION("text-decoration"),
-	TEXT_ALIGN("text-align");
+	TEXT_ALIGN("text-align"),
+	VERTICAL_ALIGN("vertical-align");
 	
 	private String property;
 	

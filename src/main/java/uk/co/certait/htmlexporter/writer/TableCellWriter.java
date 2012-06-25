@@ -23,5 +23,5 @@ public interface TableCellWriter
 	public static final String DATA_GROUP_ATTRIBUTE = "data-group";
 	public static final String DATA_GROUP_OUTPUT_ATTRIBUTE = "data-group-output";
 	
-	public int writeCell(Element cell, int row, int column);
+	public void writeCell(Element cell, int row, int column);
 }

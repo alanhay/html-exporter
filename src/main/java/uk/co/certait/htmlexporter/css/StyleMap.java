@@ -30,14 +30,14 @@ import com.osbcp.cssparser.Rule;
  * @author alanhay
  *
  */
-public class StyleMapper
+public class StyleMap
 {
 	private static final String CLASS_PREFIX = ".";
 	
 	Map<String, Style> styles;
 	private StyleGenerator generator;
 	
-	public StyleMapper(Map<String, Style> styles)
+	public StyleMap(Map<String, Style> styles)
 	{
 		this.styles = styles;
 		generator = new StyleGenerator();

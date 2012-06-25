@@ -24,6 +24,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
@@ -58,7 +59,8 @@ public class ExcelStyleGenerator
 			applyBackground(style, cellStyle);
 			applyBorders(style, cellStyle);
 			applyFont(cell, style, cellStyle);
-			applyAlignment(style, cellStyle);
+			applyHorizontalAlignment(style, cellStyle);
+			applyverticalAlignment(style, cellStyle);
 			applyWidth(cell, style);
 			
 			styles.put(style, cellStyle);
@@ -109,19 +111,35 @@ public class ExcelStyleGenerator
 		cellStyle.setFont(font);
 	}
 
-	protected void applyAlignment(Style style, XSSFCellStyle cellStyle)
+	protected void applyHorizontalAlignment(Style style, XSSFCellStyle cellStyle)
 	{
-		if (style.isLeftAligned())
+		if (style.isHorizontallyAlignedLeft())
 		{
 			cellStyle.setAlignment(HorizontalAlignment.LEFT);
 		}
-		else if (style.isRightAligned())
+		else if (style.isHorizontallyAlignedRight())
 		{
 			cellStyle.setAlignment(HorizontalAlignment.RIGHT);
 		}
-		else if (style.isCenterAligned())
+		else if (style.isHorizontallyAlignedCenter())
 		{
 			cellStyle.setAlignment(HorizontalAlignment.CENTER);
+		}
+	}
+	
+	protected void applyverticalAlignment(Style style, XSSFCellStyle cellStyle)
+	{
+		if (style.isVerticallyAlignedTop())
+		{
+			cellStyle.setVerticalAlignment(VerticalAlignment.TOP);
+		}
+		else if (style.isVerticallyAlignedBottom())
+		{
+			cellStyle.setVerticalAlignment(VerticalAlignment.BOTTOM);
+		}
+		else if (style.isVerticallyAlignedMiddle())
+		{
+			cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 		}
 	}
 

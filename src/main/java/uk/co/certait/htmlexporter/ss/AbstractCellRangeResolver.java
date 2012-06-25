@@ -13,15 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package uk.co.certait.htmlexporter.writer;
+package uk.co.certait.htmlexporter.ss;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.util.CellReference;
 
-import uk.co.certait.htmlexporter.ss.CellRange;
-import uk.co.certait.htmlexporter.ss.CellRangeResolver;
-import uk.co.certait.htmlexporter.ss.CellRangeRow;
-import uk.co.certait.htmlexporter.ss.TableCellReference;
 
 public abstract class AbstractCellRangeResolver implements CellRangeResolver
 {

@@ -15,7 +15,7 @@
  */
 package uk.co.certait.htmlexporter.writer.excel;
 
-import uk.co.certait.htmlexporter.writer.AbstractCellRangeResolver;
+import uk.co.certait.htmlexporter.ss.AbstractCellRangeResolver;
 
 public class ExcelCellRangeResolver extends AbstractCellRangeResolver
 {

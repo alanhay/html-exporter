@@ -22,6 +22,7 @@ import org.odftoolkit.simple.style.StyleTypeDefinitions;
 import org.odftoolkit.simple.style.StyleTypeDefinitions.CellBordersType;
 import org.odftoolkit.simple.style.StyleTypeDefinitions.FontStyle;
 import org.odftoolkit.simple.style.StyleTypeDefinitions.HorizontalAlignmentType;
+import org.odftoolkit.simple.style.StyleTypeDefinitions.VerticalAlignmentType;
 import org.odftoolkit.simple.table.Cell;
 
 import uk.co.certait.htmlexporter.css.CssColorProperty;
@@ -39,7 +40,8 @@ public class OdsStyleGenerator
 		}
 
 		applyBorder(cell, style);
-		applyAlignment(cell, style);
+		applyHorizontalAlignment(cell, style);
+		applyVerticalAlignment(cell, style);
 		applyFont(cell, style);
 	}
 	
@@ -64,22 +66,38 @@ public class OdsStyleGenerator
 		}	
 	}
 
-	protected void applyAlignment(Cell cell, Style style)
+	protected void applyHorizontalAlignment(Cell cell, Style style)
 	{
 
-		if (style.isLeftAligned())
+		if (style.isHorizontallyAlignedLeft())
 		{
 			cell.setHorizontalAlignment(HorizontalAlignmentType.LEFT);
 		}
-		else if (style.isRightAligned())
+		else if (style.isHorizontallyAlignedRight())
 		{
 			cell.setHorizontalAlignment(HorizontalAlignmentType.RIGHT);
 		}
-		else if (style.isCenterAligned())
+		else if (style.isHorizontallyAlignedCenter())
 		{
 			cell.setHorizontalAlignment(HorizontalAlignmentType.CENTER);
 		}
+	}
+	
+	protected void applyVerticalAlignment(Cell cell, Style style)
+	{
 
+		if (style.isVerticallyAlignedTop())
+		{
+			cell.setVerticalAlignment(VerticalAlignmentType.TOP);
+		}
+		else if (style.isVerticallyAlignedBottom())
+		{
+			cell.setVerticalAlignment(VerticalAlignmentType.BOTTOM);
+		}
+		else if (style.isVerticallyAlignedMiddle())
+		{
+			cell.setVerticalAlignment(VerticalAlignmentType.MIDDLE);
+		}
 	}
 
 	protected void applyFont(Cell cell, Style style)

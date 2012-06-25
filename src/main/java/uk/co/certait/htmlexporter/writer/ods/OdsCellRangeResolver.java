@@ -15,7 +15,7 @@
  */
 package uk.co.certait.htmlexporter.writer.ods;
 
-import uk.co.certait.htmlexporter.writer.AbstractCellRangeResolver;
+import uk.co.certait.htmlexporter.ss.AbstractCellRangeResolver;
 
 public class OdsCellRangeResolver extends AbstractCellRangeResolver
 {

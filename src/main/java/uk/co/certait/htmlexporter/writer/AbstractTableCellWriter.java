@@ -26,119 +26,178 @@ import uk.co.certait.htmlexporter.ss.DefaultTableCellReference;
 import uk.co.certait.htmlexporter.ss.Function;
 import uk.co.certait.htmlexporter.ss.RangeReferenceTracker;
 
+/**
+ * 
+ * @author alanhay
+ *
+ */
 public abstract class AbstractTableCellWriter implements TableCellWriter
 {
 	private RangeReferenceTracker tracker;
-	
+
 	public AbstractTableCellWriter()
 	{
 		tracker = new RangeReferenceTracker();
 	}
-	
-	public int writeCell(Element element, int rowIndex, int columnIndex)
+
+	public void writeCell(Element element, int rowIndex, int columnIndex)
 	{
-		int cellsWritten = renderCell(element, rowIndex, columnIndex);
-		
-		if(isFunctionGroupCell(element))
+		renderCell(element, rowIndex, columnIndex);
+
+		if (isFunctionGroupCell(element))
 		{
-			for(String rangeName : getFunctionGroupReferences(element))
+			for (String rangeName : getFunctionGroupReferences(element))
 			{
 				tracker.addCelltoRange(rangeName, new DefaultTableCellReference(rowIndex, columnIndex));
 			}
 		}
-		if(isFunctionOutputCell(element))
+		
+		if (isFunctionOutputCell(element))
 		{
 			String rangeName = getFunctionOutputReference(element);
 			addFunctionCell(rowIndex, columnIndex, tracker.getCellRange(rangeName), Function.SUM);
 		}
-		
-		return cellsWritten;
 	}
-	
+
+	/**
+	 * Returns the actual text of the innermost child element for this cell.
+	 * 
+	 * @param element
+	 * 
+	 * @return The text to be output for this Cell.
+	 */
 	public String getElementText(Element element)
 	{
 		String text = element.ownText();
-		
-		for(Element child : element.children())
+
+		for (Element child : element.children())
 		{
 			text = child.ownText();
 		}
-		
+
 		return text;
 	}
-	
+
+	/**
+	 * Checks the for the presence of the 'colspan' attribute on the cell and
+	 * returns the value if this attribute if present, otherwise 1.
+	 * 
+	 * @param element
+	 * 
+	 * @return True if the this Element spans multiple columns (has the
+	 *         'colspan' attribute defined, otherwise false.
+	 */
 	protected boolean spansMultipleColumns(Element element)
 	{
 		boolean spansMultipleColumns = false;
-		
+
 		if (element.hasAttr(COLUMN_SPAN_ATTRIBUTE))
 		{
 			int columnCount = Integer.parseInt(element.attr(COLUMN_SPAN_ATTRIBUTE));
-			
+
 			spansMultipleColumns = columnCount > 1;
 		}
-		
+
 		return spansMultipleColumns;
 	}
-	
+
+	/**
+	 * Checks the for the presence of the 'colspan' attribute on the cell and
+	 * returns the value if this attribute if present, otherwise 1.
+	 * 
+	 * @param element
+	 * 
+	 * @return The number of columns this cell should span.
+	 */
 	protected int getMergedColumnCount(Element element)
 	{
 		int columnCount = 1;
-		
-		if(spansMultipleColumns(element))
+
+		if (spansMultipleColumns(element))
 		{
-			columnCount = Integer.parseInt(element.attr(COLUMN_SPAN_ATTRIBUTE));	
+			columnCount = Integer.parseInt(element.attr(COLUMN_SPAN_ATTRIBUTE));
 		}
-		
-		return columnCount ;
+
+		return columnCount;
 	}
 	
+	/**
+	 * 
+	 * @param element
+	 * 
+	 * @return
+	 */
 	protected boolean isFunctionGroupCell(Element element)
 	{
 		return element.hasAttr(DATA_GROUP_ATTRIBUTE);
 	}
 	
-	protected String [] getFunctionGroupReferences(Element element)
+	/**
+	 * 
+	 * @param element
+	 * 
+	 * @return
+	 */
+	protected String[] getFunctionGroupReferences(Element element)
 	{
 		return getAttributeValues(element, DATA_GROUP_ATTRIBUTE);
 	}
 	
+	/**
+	 * 
+	 * @param element
+	 * 
+	 * @return
+	 */
 	protected boolean isFunctionOutputCell(Element element)
 	{
 		boolean functionOutputCell = false;
-		
-		for(Attribute attribute : element.attributes())
+
+		for (Attribute attribute : element.attributes())
 		{
-			if(attribute.getKey().equalsIgnoreCase(DATA_GROUP_OUTPUT_ATTRIBUTE))
+			if (attribute.getKey().equalsIgnoreCase(DATA_GROUP_OUTPUT_ATTRIBUTE))
 			{
 				functionOutputCell = true;
 				break;
 			}
 		}
-		
+
 		return functionOutputCell;
 	}
 	
+	/**
+	 * 
+	 * @param element
+	 * 
+	 * @return
+	 */
 	protected String getFunctionOutputReference(Element element)
 	{
 		String functionOutputGroup = null;
-		
-		for(Attribute attribute : element.attributes())
+
+		for (Attribute attribute : element.attributes())
 		{
-			if(attribute.getKey().equalsIgnoreCase(DATA_GROUP_OUTPUT_ATTRIBUTE))
+			if (attribute.getKey().equalsIgnoreCase(DATA_GROUP_OUTPUT_ATTRIBUTE))
 			{
 				functionOutputGroup = attribute.getValue();
 				break;
 			}
 		}
-		
+
 		return functionOutputGroup;
 	}
 	
-	protected String [] getAttributeValues(Element element, String attributeName)
+	/**
+	 * 
+	 * @param element
+	 * @param attributeName
+	 * 
+	 * @return
+	 */
+	protected String[] getAttributeValues(Element element, String attributeName)
 	{
-		String values [] = null;
-		
+		String values[] = null;
+
 		if (element.hasAttr(attributeName))
 		{
 			values = element.attr(attributeName).toLowerCase().split(",");
@@ -148,27 +207,33 @@ public abstract class AbstractTableCellWriter implements TableCellWriter
 				value = value.trim().toLowerCase();
 			}
 		}
-		
-		return values;	
+
+		return values;
 	}
 	
+	/**
+	 * 
+	 * @param element
+	 * 
+	 * @return
+	 */
 	public Double getNumericValue(Element element)
 	{
 		Double numericValue = null;
-		
+
 		try
 		{
 			numericValue = NumberFormat.getInstance().parse(element.ownText()).doubleValue();
 		}
-		catch(ParseException e)
+		catch (ParseException e)
 		{
-			
+
 		}
-		
+
 		return numericValue;
 	}
 	
-	public abstract int renderCell(Element element, int rowIndex, int columnIndex);
-	
+	public abstract void renderCell(Element element, int rowIndex, int columnIndex);
+
 	public abstract void addFunctionCell(int rowIndex, int columnIndex, CellRange range, Function function);
 }

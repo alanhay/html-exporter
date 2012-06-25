@@ -31,9 +31,11 @@ import org.apache.velocity.app.Velocity;
 
 import uk.co.certait.htmlexporter.demo.domain.Area;
 import uk.co.certait.htmlexporter.demo.domain.ProductGroup;
+import uk.co.certait.htmlexporter.demo.domain.Region;
 import uk.co.certait.htmlexporter.demo.domain.Sale;
 import uk.co.certait.htmlexporter.demo.domain.SalesReportData;
 import uk.co.certait.htmlexporter.demo.domain.Store;
+import uk.co.certait.htmlexporter.pdf.PdfExporter;
 import uk.co.certait.htmlexporter.writer.excel.ExcelExporter;
 import uk.co.certait.htmlexporter.writer.ods.OdsExporter;
 
@@ -41,11 +43,12 @@ public class ReportGenerator
 {
 	public ReportGenerator() throws Exception
 	{
-		String html = generateHTML();
+		String html = generateHTML("report.vm");
 		saveFile("report.html", html.getBytes());
-		
-		new ExcelExporter().exportHtml(html, new File("./report.xlsx"));
-		new OdsExporter().exportHtml(html, new File("./report.ods"));
+
+		//new ExcelExporter().exportHtml(html, new File("./report.xlsx"));
+		//new OdsExporter().exportHtml(html, new File("./report.ods"));
+		new PdfExporter().exportHtml(html, new File("./report.pdf"));
 	}
 
 	public static void main(String[] args) throws Exception
@@ -55,14 +58,14 @@ public class ReportGenerator
 		System.exit(0);
 	}
 
-	public String generateHTML()
+	public String generateHTML(String templateName)
 	{
 		Properties props = new Properties();
 		props.put("resource.loader", "class");
 		props.put("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
 
 		Velocity.init(props);
-		Template template = Velocity.getTemplate("report.vm");
+		Template template = Velocity.getTemplate(templateName);
 
 		VelocityContext context = new VelocityContext();
 		context.put("data", generateData());
@@ -78,26 +81,34 @@ public class ReportGenerator
 		SalesReportData data = new SalesReportData();
 
 		String[] areaNames = { "North", "South", "East", "West" };
+		String[][] regionNames = { { "Grampian", "Highland" }, { "Borders", "Dumfries" },
+				{ "Fife", "Lothian", "Tayside" }, { "Argyll", "Ayrshire", "Glasgow" } };
 
 		for (int i = 0; i < areaNames.length; ++i)
 		{
 			Area area = new Area(i, areaNames[i]);
 
-			int storeCount = RandomUtils.nextInt(8) + 2;
+			int storeCount = RandomUtils.nextInt(2) + 2;
 
-			for (int j = 0; j < storeCount; ++j)
+			for (int j = 0; j < regionNames[i].length; ++j)
 			{
-				Store store = new Store(area.getName() + "_" + (j + 1), area.getName() + " Store " + (j + 1));
-				area.addStore(store);
+				Region region = new Region(i + "_" + j, regionNames[i][j]);
+				area.addRegion(region);
 
-				for (ProductGroup group : ProductGroup.values())
+				for (int k = 0; k < storeCount; ++k)
 				{
-					int saleCount = RandomUtils.nextInt(50);
+					Store store = new Store(region.getName() + "_" + (k + 1), region.getName() + " Store " + (k + 1));
+					region.addStore(store);
 
-					for (int k = 0; k < saleCount; ++k)
+					for (ProductGroup group : ProductGroup.values())
 					{
-						int value = RandomUtils.nextInt(100) + 10;
-						store.addSale(new Sale(group, new BigDecimal(Integer.toString(value))));
+						int saleCount = RandomUtils.nextInt(50);
+
+						for (int m = 0; m < saleCount; ++m)
+						{
+							int value = RandomUtils.nextInt(100) + 10;
+							store.addSale(new Sale(group, new BigDecimal(Integer.toString(value))));
+						}
 					}
 				}
 			}

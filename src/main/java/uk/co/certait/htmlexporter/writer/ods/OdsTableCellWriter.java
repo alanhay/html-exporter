@@ -20,7 +20,7 @@ import org.odftoolkit.simple.table.Cell;
 import org.odftoolkit.simple.table.Table;
 
 import uk.co.certait.htmlexporter.css.Style;
-import uk.co.certait.htmlexporter.css.StyleMapper;
+import uk.co.certait.htmlexporter.css.StyleMap;
 import uk.co.certait.htmlexporter.ss.CellRange;
 import uk.co.certait.htmlexporter.ss.Function;
 import uk.co.certait.htmlexporter.writer.AbstractTableCellWriter;
@@ -28,10 +28,10 @@ import uk.co.certait.htmlexporter.writer.AbstractTableCellWriter;
 public class OdsTableCellWriter extends AbstractTableCellWriter
 {
 	private Table table;
-	private StyleMapper styleMapper;
+	private StyleMap styleMapper;
 	private OdsStyleGenerator styleGenerator;
 
-	public OdsTableCellWriter(Table table, StyleMapper styleMapper)
+	public OdsTableCellWriter(Table table, StyleMap styleMapper)
 	{
 		this.table = table;
 		this.styleMapper = styleMapper;
@@ -39,10 +39,8 @@ public class OdsTableCellWriter extends AbstractTableCellWriter
 	}
 
 	@Override
-	public int renderCell(Element element, int rowIndex, int columnIndex)
+	public void renderCell(Element element, int rowIndex, int columnIndex)
 	{
-		int cellsWritten = 1;
-
 		Cell cell = table.getCellByPosition(columnIndex, rowIndex);
 
 		Double numericValue = null;
@@ -58,24 +56,6 @@ public class OdsTableCellWriter extends AbstractTableCellWriter
 
 		Style style = styleMapper.getStyleForElement(element);
 		styleGenerator.styleCell(cell, style);
-
-		if (spansMultipleColumns(element))
-		{
-			int columnCount = getMergedColumnCount(element) - 1;
-
-			doMerge(table, cell, columnCount);
-			cellsWritten += columnCount;
-		}
-
-		return cellsWritten;
-	}
-
-	private void doMerge(Table table, Cell cell, int columnCount)
-	{
-		org.odftoolkit.simple.table.CellRange cr = table.getCellRangeByPosition(cell.getColumnIndex(),
-				cell.getRowIndex(), cell.getColumnIndex() + columnCount, cell.getRowIndex());
-		
-		cr.merge();
 	}
 
 	@Override

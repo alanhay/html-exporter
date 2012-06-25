@@ -25,7 +25,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
-import uk.co.certait.htmlexporter.css.StyleMapper;
+import uk.co.certait.htmlexporter.css.StyleMap;
 import uk.co.certait.htmlexporter.css.StyleParser;
 
 public abstract class AbstractExporter implements Exporter
@@ -51,13 +51,13 @@ public abstract class AbstractExporter implements Exporter
 		return document.getElementsByTag("table");
 	}
 	
-	protected StyleMapper getStyleMapper(String html)
+	protected StyleMap getStyleMapper(String html)
 	{
 		Document document = Jsoup.parse(html);
 		Elements styles = document.getElementsByTag("style");//FIXME parsing twice
 		
 		StyleParser parser = new StyleParser();
-		StyleMapper mapper = new StyleMapper(parser.parseStyles(styles));
+		StyleMap mapper = new StyleMap(parser.parseStyles(styles));
 		
 		return mapper;
 	}

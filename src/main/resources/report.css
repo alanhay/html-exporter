@@ -1,12 +1,18 @@
 <style>
+
+	@page {
+	    size: landscape;
+	}
+	
 	table {
 		border-collapse: collapse;
-		width: 600px;
+		width: 100%;
 	}
 	
 	th, td{
 		border-width: 1px;
 		border-color: #444444;
+		border-style: solid;
 		padding-left: 2px;
 		padding-right: 2px;
 		font-family: calibri;
@@ -31,12 +37,20 @@
 		text-align:left;
 	}
 	
+	.areaClass, .regionClass{
+		vertical-align:middle;
+	}
 	.subTotal{
 		background: #FFCC33;
 	}
 	
-	.total{
+	.areaSubTotal{
 		background: #FF9900;
+	}
+	
+	.total{
+		background: #336699;
+		color: #eeeeee;
 	}
 	
 	.numeric{
