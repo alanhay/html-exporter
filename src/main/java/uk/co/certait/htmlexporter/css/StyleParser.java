@@ -26,39 +26,87 @@ import com.osbcp.cssparser.CSSParser;
 import com.osbcp.cssparser.Rule;
 import com.osbcp.cssparser.Selector;
 
+/**
+ * 
+ * @author alanhay
+ * 
+ */
 public class StyleParser
 {
+	public static final String HREF_ATTRIBUTE_KEY = "href";
+
 	private StyleGenerator generator;
-	
-	public StyleParser()
+	private ExternalStyleSheetLoader externalStyleSheetLoader;
+	Map<String, Style> styles = null;
+
+	public StyleParser(ExternalStyleSheetLoader externalStyleSheetLoader)
 	{
 		generator = new StyleGenerator();
+		this.externalStyleSheetLoader = externalStyleSheetLoader;
+
+		styles = new HashMap<String, Style>();
 	}
-	
-	public Map<String, Style> parseStyles(Elements elements)
+
+	/**
+	 * 
+	 * @param embeddedStyleSheets
+	 * @param linkedStyleSheets
+	 */
+	public Map<String, Style> parseStyles(Elements externalStyleSheets, Elements embeddedStyleSheets)
 	{
-		Map<String, Style> styles = null;
-		
-		for (Element element : elements)
+		processEmbeddedStyles(embeddedStyleSheets);
+		//processExternalStyles(externalStyleSheets);
+
+		return styles;
+	}
+
+	/**
+	 * 
+	 * @param embeddedStyleSheets
+	 */
+	protected void processEmbeddedStyles(Elements embeddedStyleSheets)
+	{
+		for (Element element : embeddedStyleSheets)
 		{
 			try
 			{
 				List<Rule> rules = CSSParser.parse(element.data());
-				styles = mapStyles(rules);
+				mapStyles(rules);
 			}
 			catch (Exception e)
 			{
 				throw new RuntimeException(e);
 			}
 		}
-		
-		return styles;
 	}
-	
-	protected Map<String, Style> mapStyles(List<Rule> rules)
+
+	/**
+	 * 
+	 * @param externalStyleSheets
+	 */
+	protected void processExternalStyles(Elements externalStyleSheets)
 	{
-		Map<String, Style> styles = new HashMap<String, Style>();
-		
+		for (Element element : externalStyleSheets)
+		{
+			try
+			{
+				String styleSheet = externalStyleSheetLoader.loadStyleSheet(getUrl(element));
+				List<Rule> rules = CSSParser.parse(styleSheet);
+				mapStyles(rules);
+			}
+			catch (Exception e)
+			{
+				throw new RuntimeException(e);
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * @param rules
+	 */
+	protected void mapStyles(List<Rule> rules)
+	{
 		for (Rule rule : rules)
 		{
 			for (Selector selector : rule.getSelectors())
@@ -67,7 +115,8 @@ public class StyleParser
 
 				if (styles.containsKey(selector.toString()))
 				{
-					Style merged = StyleMerger.mergeStyles(styles.get(selector.toString()), style);
+					Style existing = styles.get(selector.toString());
+					Style merged = StyleMerger.mergeStyles(existing, style);
 					styles.put(selector.toString(), merged);
 				}
 				else
@@ -76,7 +125,15 @@ public class StyleParser
 				}
 			}
 		}
-
-		return styles;
+	}
+	
+	/**
+	 * 
+	 * @param element
+	 * @return
+	 */
+	protected String getUrl(Element element)
+	{
+		return element.attr(HREF_ATTRIBUTE_KEY);
 	}
 }

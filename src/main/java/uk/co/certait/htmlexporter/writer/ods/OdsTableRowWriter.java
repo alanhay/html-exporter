@@ -34,8 +34,11 @@ public class OdsTableRowWriter extends AbstractTableRowWriter
 
 	@Override
 	public void renderRow(Element row, int rowIndex)
-	{
-		table.appendRow();
+	{System.out.println(table.getRowCount());
+		if(table.getRowCount() < rowIndex)
+		{System.out.println("added row");
+			table.appendRow();
+		}
 	}
 
 	@Override

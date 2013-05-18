@@ -19,6 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -27,35 +28,44 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
-public class PdfExporter
+import uk.co.certait.htmlexporter.writer.Exporter;
+
+public class PdfExporter implements Exporter
 {
-	public byte[] exportHtml(String html) throws Exception
+	public byte[] exportHtml(String html) throws IOException
 	{
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		exportHtml(html, out);
-		
+
 		return out.toByteArray();
 	}
-	
-	public void exportHtml(String html, File file) throws Exception
+
+	public void exportHtml(String html, File file) throws IOException
 	{
 		exportHtml(html, new FileOutputStream(file));
 	}
-	
-	private void exportHtml(String html, OutputStream out) throws Exception
+
+	private void exportHtml(String html, OutputStream out) throws IOException
 	{
-		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-		Document doc = builder.parse(new ByteArrayInputStream(html.replaceAll("&nbsp;", "").getBytes()));
-	
-		ITextRenderer renderer = new ITextRenderer();
-		renderer.setDocument(doc, null);
-		
-		//FIXME
-		renderer.getFontResolver().addFont("C:/Windows/Fonts/CALIBRI.TTF", true);
-		
-		renderer.layout();
-		renderer.createPDF(out);
-		out.flush();
-		out.close();
+		try
+		{
+			DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			Document doc = builder.parse(new ByteArrayInputStream(html.replaceAll("&nbsp;", "").getBytes()));
+
+			ITextRenderer renderer = new ITextRenderer();
+			renderer.setDocument(doc, null);
+
+			// FIXME
+			renderer.getFontResolver().addFont("C:/Windows/Fonts/CALIBRI.TTF", true);
+
+			renderer.layout();
+			renderer.createPDF(out);
+			out.flush();
+			out.close();
+		}
+		catch (Exception ex)
+		{
+			throw new IOException(ex);
+		}
 	}
 }

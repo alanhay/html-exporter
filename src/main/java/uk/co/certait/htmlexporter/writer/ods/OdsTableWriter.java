@@ -17,6 +17,7 @@ package uk.co.certait.htmlexporter.writer.ods;
 
 import org.jsoup.nodes.Element;
 
+import uk.co.certait.htmlexporter.css.StyleMap;
 import uk.co.certait.htmlexporter.writer.AbstractTableWriter;
 import uk.co.certait.htmlexporter.writer.TableRowWriter;
 
@@ -31,5 +32,11 @@ public class OdsTableWriter extends AbstractTableWriter
 	public void renderTable(Element table)
 	{
 		// nothing required
+	}
+
+	public int writeTable(Element table, StyleMap styleMapper, int startRow)
+	{
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

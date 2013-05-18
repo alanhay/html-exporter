@@ -17,15 +17,17 @@ package uk.co.certait.htmlexporter.writer;
 
 import org.jsoup.nodes.Element;
 
+import uk.co.certait.htmlexporter.ss.CellTracker;
+
 public abstract class AbstractTableRowWriter implements TableRowWriter
 {
 	private TableCellWriter cellWriter;
-	private RowTracker rowTracker;
+	private CellTracker rowTracker;
 
 	public AbstractTableRowWriter(TableCellWriter cellWriter)
 	{
 		this.cellWriter = cellWriter;
-		rowTracker = new RowTracker();
+		rowTracker = new CellTracker();
 	}
 
 	public void writeRow(Element row, int rowIndex)

@@ -61,7 +61,7 @@ public class OdsStyleGenerator
 				borderColor = Color.BLACK;
 			}
 
-			cell.setBorders(CellBordersType.ALL_FOUR, new Border(borderColor, borderWidth,
+			cell.setBorders(CellBordersType.ALL_FOUR, new Border(borderColor, 0.5,
 					StyleTypeDefinitions.SupportedLinearMeasure.PT));
 		}	
 	}

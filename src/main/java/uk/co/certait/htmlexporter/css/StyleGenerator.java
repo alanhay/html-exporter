@@ -24,6 +24,8 @@ import com.osbcp.cssparser.Selector;
 public class StyleGenerator
 {
 	private static final String PX = "px";
+	private static final String PC = "%";
+	private static final String TRANSPARENT = "transparent";
 	
 	protected Style createStyle(Rule rule, Selector selector)
 	{
@@ -44,7 +46,10 @@ public class StyleGenerator
 			{
 				if(p.getProperty().equals(pv.getProperty()))
 				{
-					style.addProperty(p, Integer.parseInt(pv.getValue().replaceAll(PX, "").trim()));
+					if(! pv.getValue().contains(PC))
+					{
+						style.addProperty(p, Integer.parseInt(pv.getValue().replaceAll(PX, "").trim()));
+					}
 				}
 			}
 		}
@@ -72,7 +77,10 @@ public class StyleGenerator
 			{
 				if(p.getProperty().equals(pv.getProperty()))
 				{
-					style.addProperty(p, createColor(pv.getValue().trim()));
+					if(!pv.getValue().toLowerCase().trim().equals(TRANSPARENT))
+					{
+						style.addProperty(p, createColor(pv.getValue().trim()));
+					}
 				}
 			}
 		}
