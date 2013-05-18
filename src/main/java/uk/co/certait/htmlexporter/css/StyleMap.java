@@ -16,6 +16,7 @@
 package uk.co.certait.htmlexporter.css;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +40,7 @@ public class StyleMap
 	
 	public StyleMap(Map<String, Style> styles)
 	{
-		this.styles = styles;
+		this.styles = styles != null ? styles : new HashMap<String, Style>();
 		generator = new StyleGenerator();
 	}
 	
