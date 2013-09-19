@@ -15,7 +15,12 @@
  */
 package uk.co.certait.htmlexporter.writer.excel;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.jsoup.nodes.Element;
 
@@ -45,8 +50,18 @@ public class ExcelTableCellWriter extends AbstractTableCellWriter
 		Cell cell = sheet.getRow(rowIndex).createCell(columnIndex);
 
 		Double numericValue;
-
-		if ((numericValue = getNumericValue(element)) != null)
+		
+		if(isDateCell(element)){
+			DateFormat df = new SimpleDateFormat(getDateCellFormat(element));
+			
+			try{
+				cell.setCellValue(df.parse(getElementText(element)));
+			}
+			catch(ParseException pex){
+				System.out.println("Invalid Usage");
+			}
+		}
+		else if ((numericValue = getNumericValue(element)) != null)
 		{
 			cell.setCellValue(numericValue);
 		}
@@ -57,6 +72,11 @@ public class ExcelTableCellWriter extends AbstractTableCellWriter
 
 		Style style = styleMapper.getStyleForElement(element);
 		cell.setCellStyle(styleGenerator.getStyle(cell, style));
+		
+		if(isDateCell(element)){
+			CreationHelper createHelper = sheet.getWorkbook().getCreationHelper();
+			cell.getCellStyle().setDataFormat(createHelper.createDataFormat().getFormat(getDateCellFormat(element)));
+		}
 	}
 
 	public void addFunctionCell(int rowIndex, int columnIndex, CellRange range, Function function)

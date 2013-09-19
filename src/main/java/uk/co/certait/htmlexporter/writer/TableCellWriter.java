@@ -22,6 +22,8 @@ public interface TableCellWriter
 	public static final String COLUMN_SPAN_ATTRIBUTE = "colspan";
 	public static final String DATA_GROUP_ATTRIBUTE = "data-group";
 	public static final String DATA_GROUP_OUTPUT_ATTRIBUTE = "data-group-output";
+	public static final String DATE_CELL_ATTRIBUTE = "data-date-cell-format";
+	public static final String DATA_TEXT_CELL = "data-text-cell";
 	
 	public void writeCell(Element cell, int row, int column);
 }

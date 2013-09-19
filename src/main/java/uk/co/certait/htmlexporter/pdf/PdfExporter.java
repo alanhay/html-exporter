@@ -51,7 +51,7 @@ public class PdfExporter
 		renderer.setDocument(doc, null);
 		
 		//FIXME
-		renderer.getFontResolver().addFont("C:/Windows/Fonts/CALIBRI.TTF", true);
+		//renderer.getFontResolver().addFont("C:/Windows/Fonts/CALIBRI.TTF", true);
 		
 		renderer.layout();
 		renderer.createPDF(out);

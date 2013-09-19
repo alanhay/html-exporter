@@ -45,6 +45,22 @@ public class ExcelExporter extends AbstractExporter
 			startRow += writer.writeTable(element, styleMapper, startRow) + 1;
 			sheet.createRow(startRow);
 		}
+		
+		int lastRowWithData = 0;
+		
+		for(int i = sheet.getLastRowNum(); i>= 0; -- i){
+			if(sheet.getRow(i) != null && sheet.getRow(i).getPhysicalNumberOfCells() > 0){
+				lastRowWithData = i;
+				break;
+			}
+		}
+		for(int i = 0; i < sheet.getRow(lastRowWithData).getPhysicalNumberOfCells(); ++ i){
+			sheet.autoSizeColumn(i);
+		}
+		
+		for(int i = 0; i < sheet.getRow(sheet.getLastRowNum()).getPhysicalNumberOfCells(); ++ i){
+			sheet.setColumnWidth(i, (int)(sheet.getColumnWidth(i) * 1.2));
+		}
 
 		workbook.write(out);
 		out.flush();

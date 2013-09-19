@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>uk.co.certait</groupId>
 	<artifactId>html-exporter</artifactId>
-	<version>0.1-SNAPSHOT</version>
+	<version>0.2.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<!-- <parent> <groupId>org.sonatype.oss</groupId> <artifactId>oss-parent</artifactId> 
@@ -192,7 +192,7 @@
 		<repository>
 			<id>maven-s3-release-repo</id>
 			<name>S3 Release Repository</name>
-			<url>s3://S3_BUCKET_NAME/release</url>
+			<url>s3://${S3_BUCKET_NAME}/release</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>

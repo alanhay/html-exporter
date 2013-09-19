@@ -132,6 +132,14 @@ public abstract class AbstractTableCellWriter implements TableCellWriter
 		return element.hasAttr(DATA_GROUP_ATTRIBUTE);
 	}
 	
+	protected boolean isDateCell(Element element){
+		return element.hasAttr(DATE_CELL_ATTRIBUTE);
+	}
+	
+	protected String getDateCellFormat(Element element){
+		return element.attr(DATE_CELL_ATTRIBUTE);
+	}
+	
 	/**
 	 * 
 	 * @param element
@@ -221,14 +229,15 @@ public abstract class AbstractTableCellWriter implements TableCellWriter
 	{
 		Double numericValue = null;
 
-		try
-		{
-			numericValue = NumberFormat.getInstance().parse(element.ownText()).doubleValue();
-		}
-		catch (ParseException e)
-		{
-
-		}
+		if(! element.hasAttr(DATA_TEXT_CELL))
+			try
+			{
+				numericValue = NumberFormat.getInstance().parse(element.ownText()).doubleValue();
+			}
+			catch (ParseException e)
+			{
+	
+			}
 
 		return numericValue;
 	}

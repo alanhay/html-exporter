@@ -24,6 +24,7 @@ import com.osbcp.cssparser.Selector;
 public class StyleGenerator
 {
 	private static final String PX = "px";
+	private static final String PERCENTAGE = "%";
 	
 	protected Style createStyle(Rule rule, Selector selector)
 	{
@@ -44,7 +45,9 @@ public class StyleGenerator
 			{
 				if(p.getProperty().equals(pv.getProperty()))
 				{
-					style.addProperty(p, Integer.parseInt(pv.getValue().replaceAll(PX, "").trim()));
+					if(! pv.getValue().contains(PERCENTAGE)){
+						style.addProperty(p, Integer.parseInt(pv.getValue().replaceAll(PX, "").trim()));
+					}
 				}
 			}
 		}
