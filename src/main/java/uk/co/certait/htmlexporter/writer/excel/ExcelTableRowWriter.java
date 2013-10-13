@@ -38,7 +38,10 @@ public class ExcelTableRowWriter extends AbstractTableRowWriter
 	@Override
 	public void renderRow(Element row, int rowIndex)
 	{
-		sheet.createRow(rowIndex);
+		//row may already have been created as a result of a merge operation.
+		if(sheet.getRow(rowIndex) == null){
+			sheet.createRow(rowIndex);
+		}
 	}
 	
 	public void doMerge(int rowIndex, int columnIndex, int rowSpan, int columnSpan)
