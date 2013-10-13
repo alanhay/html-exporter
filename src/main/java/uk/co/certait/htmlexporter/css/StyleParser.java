@@ -26,57 +26,40 @@ import com.osbcp.cssparser.CSSParser;
 import com.osbcp.cssparser.Rule;
 import com.osbcp.cssparser.Selector;
 
-public class StyleParser
-{
+public class StyleParser {
 	private StyleGenerator generator;
-	
-	public StyleParser()
-	{
+
+	public StyleParser() {
 		generator = new StyleGenerator();
 	}
-	
-	public Map<String, Style> parseStyles(Elements elements)
-	{
-		Map<String, Style> styles = null;
-		
-		for (Element element : elements)
-		{
-			try
-			{
+
+	public Map<String, Style> parseStyles(Elements elements) {
+		Map<String, Style> styles = new HashMap<>();
+
+		for (Element element : elements) {
+			try {
 				List<Rule> rules = CSSParser.parse(element.data());
-				styles = mapStyles(rules);
-			}
-			catch (Exception e)
-			{
+				mapStyles(rules, styles);
+			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
 		}
-		
+
 		return styles;
 	}
-	
-	protected Map<String, Style> mapStyles(List<Rule> rules)
-	{
-		Map<String, Style> styles = new HashMap<String, Style>();
-		
-		for (Rule rule : rules)
-		{
-			for (Selector selector : rule.getSelectors())
-			{
+
+	protected void mapStyles(List<Rule> rules, Map<String, Style> styles) {
+		for (Rule rule : rules) {
+			for (Selector selector : rule.getSelectors()) {
 				Style style = generator.createStyle(rule, selector);
 
-				if (styles.containsKey(selector.toString()))
-				{
+				if (styles.containsKey(selector.toString())) {
 					Style merged = StyleMerger.mergeStyles(styles.get(selector.toString()), style);
 					styles.put(selector.toString(), merged);
-				}
-				else
-				{
+				} else {
 					styles.put(selector.toString(), style);
 				}
 			}
 		}
-
-		return styles;
 	}
 }

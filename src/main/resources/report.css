@@ -2,28 +2,30 @@
 
 	@page {
 	    size: landscape;
+	    margin: 2%;
 	}
+	
 	
 	table {
 		border-collapse: collapse;
-		/* width: 100%; */
+		border-spacing: 0;
 	}
 	
 	th, td{
-		border-width: 1px;
+		font-family: sans-serif;
 		border-color: #444444;
+		border-width: 1px;
 		border-style: solid;
 		padding-left: 2px;
 		padding-right: 2px;
-		font-family: calibri;
 	}
 	
 	th{
-		background: #336699;
-		color: #eeeeee;
+		background: #8C9C9A;
+		color: #ffffff;
 		font-weight: bold;
-		font-size: 12px;
-		text-align:center;
+		font-size: 11px;
+		text-align:left;
 	}
 	
 	td{

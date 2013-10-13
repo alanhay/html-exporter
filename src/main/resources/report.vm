@@ -2,9 +2,16 @@
 <html>
 	<head>
 		#include("./report.css")
+		
+		<style>
+				th{
+					background: #637D7C;
+				}
+		</style>
+		
 	</head>
 	<body>
-		<table>
+		<table style="width:100%;">
 			#set($columnCount = $productGroups.size() * 2 + 5)
 				<tr>
 					<th class="reportHeader" colspan="$columnCount">Daily Sales Report: 21-Jun-2012</th>
@@ -13,7 +20,7 @@
 		
 		#set($areas = $data.areas)
 
-		<table>
+		<table style="width:100%;">
 			<tr>
 				<th style="width:120px;">Area</th>
 				<th style="width:120px;">Region</th>
@@ -31,8 +38,8 @@
 				<th>&nbsp;</th>
 				
 				#foreach($group in $productGroups) 
-					<th style="font-size:11px;">count </th>
-					<th style="font-size:11px;">value</th>
+					<th style="font-size:11px;">Count </th>
+					<th style="font-size:11px;">Value</th>
 				#end
 				
 				<th>count</th>
