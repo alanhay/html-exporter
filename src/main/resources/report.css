@@ -1,10 +1,8 @@
 <style>
-
 	@page {
 	    size: landscape;
 	    margin: 2%;
 	}
-	
 	
 	table {
 		border-collapse: collapse;
@@ -13,7 +11,7 @@
 	
 	th, td{
 		font-family: sans-serif;
-		border-color: #444444;
+		border-color: #000000;
 		border-width: 1px;
 		border-style: solid;
 		padding-left: 2px;
@@ -21,10 +19,10 @@
 	}
 	
 	th{
-		background: #8C9C9A;
-		color: #ffffff;
+		background: #336699;
+		color: #eeeeee;
 		font-weight: bold;
-		font-size: 11px;
+		font-size: 10px;
 		text-align:left;
 	}
 	
@@ -33,15 +31,16 @@
 	}
 	
 	.reportHeader{
-		font-size:20px;
-		background: #cccccc;
-		color: #222222;
+		font-size:16px;
+		background: #336699;
+		color: #eeeeee;
 		text-align:left;
 	}
 	
 	.areaClass, .regionClass{
 		vertical-align:middle;
 	}
+	
 	.subTotal{
 		background: #FFCC33;
 	}
@@ -67,5 +66,4 @@
 		background: #aa0000;
 		color: #dddddd;
 	}
-	
 </style>

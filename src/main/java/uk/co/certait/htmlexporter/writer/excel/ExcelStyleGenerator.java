@@ -87,19 +87,19 @@ public class ExcelStyleGenerator
 			Color color = style.getProperty(CssColorProperty.BORDER_COLOR) != null ? style
 					.getProperty(CssColorProperty.BORDER_COLOR) : Color.BLACK;
 
-			cellStyle.setBorderBottom(BorderStyle.THICK);
+			cellStyle.setBorderBottom(BorderStyle.THIN);
 			cellStyle.setBorderBottom(width);
 			cellStyle.setBottomBorderColor(new XSSFColor(color));
 
-			cellStyle.setBorderTop(BorderStyle.THICK);
+			cellStyle.setBorderTop(BorderStyle.THIN);
 			cellStyle.setBorderTop(width);
 			cellStyle.setTopBorderColor(new XSSFColor(color));
 
-			cellStyle.setBorderLeft(BorderStyle.THICK);
+			cellStyle.setBorderLeft(BorderStyle.THIN);
 			cellStyle.setBorderLeft(width);
 			cellStyle.setLeftBorderColor(new XSSFColor(color));
 
-			cellStyle.setBorderRight(BorderStyle.THICK);
+			cellStyle.setBorderRight(BorderStyle.THIN);
 			cellStyle.setBorderRight(width);
 			cellStyle.setRightBorderColor(new XSSFColor(color));
 		}

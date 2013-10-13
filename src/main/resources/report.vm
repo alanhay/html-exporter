@@ -2,13 +2,6 @@
 <html>
 	<head>
 		#include("./report.css")
-		
-		<style>
-				th{
-					background: #637D7C;
-				}
-		</style>
-		
 	</head>
 	<body>
 		<table style="width:100%;">
@@ -17,7 +10,7 @@
 					<th class="reportHeader" colspan="$columnCount">Daily Sales Report: 21-Jun-2012</th>
 				</tr>
 		</table>
-		
+		<br/>
 		#set($areas = $data.areas)
 
 		<table style="width:100%;">
@@ -27,10 +20,10 @@
 				<th style="width:120px;">Store</th>
 				
 				#foreach($group in $productGroups)
-					<th colspan="2">$group</th>
+					<th colspan="2" style="text-align:center;">$group</th>
 				#end
                 
-				<th colspan="2">Total Sales</th>
+				<th colspan="2" style="text-align:center;">Total Sales</th>
 			</tr>
 			<tr>
 				<th>&nbsp;</th>
@@ -38,12 +31,12 @@
 				<th>&nbsp;</th>
 				
 				#foreach($group in $productGroups) 
-					<th style="font-size:11px;">Count </th>
-					<th style="font-size:11px;">Value</th>
+					<th style="text-align:center;">Count </th>
+					<th style="text-align:center;">Value</th>
 				#end
 				
-				<th>count</th>
-				<th>value</th>
+				<th style="text-align:center;">Count</th>
+				<th style="text-align:center;">Value</th>
 			</tr>
 			<!-- LOOP AREAS -->
 			#foreach($area in $areas)
@@ -181,10 +174,10 @@
                 <td class="total numeric" data-group-output="total_value">$data.valueOfSales</td>
 			</tr>
 		</table>
-		
+		<br/>
 		<table>
 			<tr>
-				<td class="bestPerforming">&nbsp;</td>
+				<td class="bestPerforming">&nbsp;&nbsp;</td>
 				<td colspan="5" style="border-width:0px;">Best Performing Store in Area for Product Group</td>
 			</tr>
 		</table>

@@ -37,7 +37,6 @@ import uk.co.certait.htmlexporter.demo.domain.SalesReportData;
 import uk.co.certait.htmlexporter.demo.domain.Store;
 import uk.co.certait.htmlexporter.pdf.PdfExporter;
 import uk.co.certait.htmlexporter.writer.excel.ExcelExporter;
-import uk.co.certait.htmlexporter.writer.ods.OdsExporter;
 
 public class ReportGenerator
 {
@@ -46,8 +45,7 @@ public class ReportGenerator
 		String html = generateHTML("report.vm");
 		saveFile("report.html", html.getBytes());
 
-		//new ExcelExporter().exportHtml(html, new File("./report.xlsx"));
-		//new OdsExporter().exportHtml(html, new File("./report.ods"));
+		new ExcelExporter().exportHtml(html, new File("./report.xlsx"));
 		new PdfExporter().exportHtml(html, new File("./report.pdf"));
 	}
 
