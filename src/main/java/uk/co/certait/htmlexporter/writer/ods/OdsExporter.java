@@ -47,7 +47,6 @@ public class OdsExporter extends AbstractExporter
 			for (Element element : getTables(html))
 			{
 				startRow += writer.writeTable(element, styleMapper, startRow) + 1;
-				table.appendRow();
 			}
 
 			spreadsheet.save(out);

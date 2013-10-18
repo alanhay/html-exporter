@@ -35,7 +35,7 @@ public class OdsTableRowWriter extends AbstractTableRowWriter
 	@Override
 	public void renderRow(Element row, int rowIndex)
 	{
-		table.appendRow();
+		//actually nothing required for ods
 	}
 
 	@Override
@@ -45,6 +45,5 @@ public class OdsTableRowWriter extends AbstractTableRowWriter
 				rowIndex, columnIndex + columnSpan - 1, rowIndex + rowSpan - 1);
 		
 		cr.merge();
-		
 	}
 }
