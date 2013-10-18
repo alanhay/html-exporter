@@ -54,8 +54,9 @@ to populate a Velocity template. The resulting HTML is then exported to Excel, P
 Features
 ========
 
-* Supports a limited subset of CSS for producing nicely formatted reports.
-* Spreadsheet cell comments
+* Supports a limited subset of CSS: enough for producing nicely formatted reports.
+* Spreadsheet cell comments.
+* Cells can span multiple rows and columns.
 * Automatic formula insertion:
 
 The ODS and Excel exporters allow for producing spreadsheets with automatic formula insertion via the use of various HTML5 
