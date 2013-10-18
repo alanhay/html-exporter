@@ -65,19 +65,19 @@ compliant data-* attributes being applied to table cells. The sample spreadsheet
 Example:
 
 	<!-- This cell will, via the data-group attribute,  be added to two ranges, each of which will be the inputs to formulas -->
-	<td data-group="store_${store.id}_value, area_${area.id}_pg_${group.id}_value" class="numeric $backgroundClass $bestPerformingClass">
-		$store.getValueOfSalesForProductGroup($group)
-    </td>   
+	<td data-group="store_Dumfries_2_value, region_1_1_pg_5_value" class="numeric">
+    	486
+    </td>      
     
     ...
 	
 	<!-- 
-		This raw value of this cell will, via the data-group-ouput attribute, be replaced with a SUM function taking as input all cells added to the specified range.
+		This raw value of this cell will, via the data-group-output attribute, be replaced with a SUM function taking as input all cells added to the specified range.
 		The cell is then itself added to another range which will be used by another a further function.
 	-->
-	<td data-group-output="store_${store.id}_value" data-group="area_${area.id}_value" class="numeric $backgroundClass" >
-		$store.valueOfSales
-    </td>  
+    <td class="subTotal numeric" data-group-output="region_1_1_pg_6_count" data-group="area_1_pg_6_count">
+		32
+    </td>
     
     
 Further documentation to follow.
