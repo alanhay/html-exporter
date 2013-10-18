@@ -73,7 +73,7 @@ Example:
 	
 	<!-- 
 		This raw value of this cell will, via the data-group-output attribute, be replaced with a SUM function taking as input all cells added to the specified range.
-		The cell is then itself added to another range which will be used by another a further function.
+		The cell is then itself added to another range which will be used by a further function.
 	-->
     <td class="subTotal numeric" data-group-output="region_1_1_pg_6_count" data-group="area_1_pg_6_count">
 		32
