@@ -56,6 +56,12 @@ public class OdsTableCellWriter extends AbstractTableCellWriter
 
 		Style style = styleMapper.getStyleForElement(element);
 		styleGenerator.styleCell(cell, style);
+		
+		String commentText;
+		
+		if((commentText = getCellCommentText(element)) != null){
+			cell.setNoteText(commentText);
+		}
 	}
 
 	@Override

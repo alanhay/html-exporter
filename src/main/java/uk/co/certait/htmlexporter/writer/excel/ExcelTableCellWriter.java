@@ -77,6 +77,12 @@ public class ExcelTableCellWriter extends AbstractTableCellWriter
 			CreationHelper createHelper = sheet.getWorkbook().getCreationHelper();
 			cell.getCellStyle().setDataFormat(createHelper.createDataFormat().getFormat(getDateCellFormat(element)));
 		}
+		
+		String commentText;
+		
+		if((commentText = getCellCommentText(element)) != null){
+			ExcelCellCommentGenerator.addCellComment(cell, commentText, getCellCommentDimension(element));
+		}
 	}
 
 	public void addFunctionCell(int rowIndex, int columnIndex, CellRange range, Function function)

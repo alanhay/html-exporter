@@ -37,6 +37,7 @@ import uk.co.certait.htmlexporter.demo.domain.SalesReportData;
 import uk.co.certait.htmlexporter.demo.domain.Store;
 import uk.co.certait.htmlexporter.pdf.PdfExporter;
 import uk.co.certait.htmlexporter.writer.excel.ExcelExporter;
+import uk.co.certait.htmlexporter.writer.ods.OdsExporter;
 
 public class ReportGenerator
 {
@@ -47,6 +48,7 @@ public class ReportGenerator
 
 		new ExcelExporter().exportHtml(html, new File("./report.xlsx"));
 		new PdfExporter().exportHtml(html, new File("./report.pdf"));
+		new OdsExporter().exportHtml(html, new File("./report.ods")); 
 	}
 
 	public static void main(String[] args) throws Exception

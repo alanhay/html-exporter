@@ -18,42 +18,38 @@ package uk.co.certait.htmlexporter.writer;
 import java.text.NumberFormat;
 import java.text.ParseException;
 
+import org.apache.commons.lang.StringUtils;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Element;
 
 import uk.co.certait.htmlexporter.ss.CellRange;
 import uk.co.certait.htmlexporter.ss.DefaultTableCellReference;
+import uk.co.certait.htmlexporter.ss.Dimension;
 import uk.co.certait.htmlexporter.ss.Function;
 import uk.co.certait.htmlexporter.ss.RangeReferenceTracker;
 
 /**
  * 
  * @author alanhay
- *
+ * 
  */
-public abstract class AbstractTableCellWriter implements TableCellWriter
-{
+public abstract class AbstractTableCellWriter implements TableCellWriter {
 	private RangeReferenceTracker tracker;
 
-	public AbstractTableCellWriter()
-	{
+	public AbstractTableCellWriter() {
 		tracker = new RangeReferenceTracker();
 	}
 
-	public void writeCell(Element element, int rowIndex, int columnIndex)
-	{
+	public void writeCell(Element element, int rowIndex, int columnIndex) {
 		renderCell(element, rowIndex, columnIndex);
 
-		if (isFunctionGroupCell(element))
-		{
-			for (String rangeName : getFunctionGroupReferences(element))
-			{
+		if (isFunctionGroupCell(element)) {
+			for (String rangeName : getFunctionGroupReferences(element)) {
 				tracker.addCelltoRange(rangeName, new DefaultTableCellReference(rowIndex, columnIndex));
 			}
 		}
-		
-		if (isFunctionOutputCell(element))
-		{
+
+		if (isFunctionOutputCell(element)) {
 			String rangeName = getFunctionOutputReference(element);
 			addFunctionCell(rowIndex, columnIndex, tracker.getCellRange(rangeName), Function.SUM);
 		}
@@ -66,12 +62,10 @@ public abstract class AbstractTableCellWriter implements TableCellWriter
 	 * 
 	 * @return The text to be output for this Cell.
 	 */
-	public String getElementText(Element element)
-	{
+	public String getElementText(Element element) {
 		String text = element.ownText();
 
-		for (Element child : element.children())
-		{
+		for (Element child : element.children()) {
 			text = child.ownText();
 		}
 
@@ -87,12 +81,10 @@ public abstract class AbstractTableCellWriter implements TableCellWriter
 	 * @return True if the this Element spans multiple columns (has the
 	 *         'colspan' attribute defined, otherwise false.
 	 */
-	protected boolean spansMultipleColumns(Element element)
-	{
+	protected boolean spansMultipleColumns(Element element) {
 		boolean spansMultipleColumns = false;
 
-		if (element.hasAttr(COLUMN_SPAN_ATTRIBUTE))
-		{
+		if (element.hasAttr(COLUMN_SPAN_ATTRIBUTE)) {
 			int columnCount = Integer.parseInt(element.attr(COLUMN_SPAN_ATTRIBUTE));
 
 			spansMultipleColumns = columnCount > 1;
@@ -109,62 +101,55 @@ public abstract class AbstractTableCellWriter implements TableCellWriter
 	 * 
 	 * @return The number of columns this cell should span.
 	 */
-	protected int getMergedColumnCount(Element element)
-	{
+	protected int getMergedColumnCount(Element element) {
 		int columnCount = 1;
 
-		if (spansMultipleColumns(element))
-		{
+		if (spansMultipleColumns(element)) {
 			columnCount = Integer.parseInt(element.attr(COLUMN_SPAN_ATTRIBUTE));
 		}
 
 		return columnCount;
 	}
-	
+
 	/**
 	 * 
 	 * @param element
 	 * 
 	 * @return
 	 */
-	protected boolean isFunctionGroupCell(Element element)
-	{
+	protected boolean isFunctionGroupCell(Element element) {
 		return element.hasAttr(DATA_GROUP_ATTRIBUTE);
 	}
-	
-	protected boolean isDateCell(Element element){
+
+	protected boolean isDateCell(Element element) {
 		return element.hasAttr(DATE_CELL_ATTRIBUTE);
 	}
-	
-	protected String getDateCellFormat(Element element){
+
+	protected String getDateCellFormat(Element element) {
 		return element.attr(DATE_CELL_ATTRIBUTE);
 	}
-	
+
 	/**
 	 * 
 	 * @param element
 	 * 
 	 * @return
 	 */
-	protected String[] getFunctionGroupReferences(Element element)
-	{
+	protected String[] getFunctionGroupReferences(Element element) {
 		return getAttributeValues(element, DATA_GROUP_ATTRIBUTE);
 	}
-	
+
 	/**
 	 * 
 	 * @param element
 	 * 
 	 * @return
 	 */
-	protected boolean isFunctionOutputCell(Element element)
-	{
+	protected boolean isFunctionOutputCell(Element element) {
 		boolean functionOutputCell = false;
 
-		for (Attribute attribute : element.attributes())
-		{
-			if (attribute.getKey().equalsIgnoreCase(DATA_GROUP_OUTPUT_ATTRIBUTE))
-			{
+		for (Attribute attribute : element.attributes()) {
+			if (attribute.getKey().equalsIgnoreCase(DATA_GROUP_OUTPUT_ATTRIBUTE)) {
 				functionOutputCell = true;
 				break;
 			}
@@ -172,21 +157,18 @@ public abstract class AbstractTableCellWriter implements TableCellWriter
 
 		return functionOutputCell;
 	}
-	
+
 	/**
 	 * 
 	 * @param element
 	 * 
 	 * @return
 	 */
-	protected String getFunctionOutputReference(Element element)
-	{
+	protected String getFunctionOutputReference(Element element) {
 		String functionOutputGroup = null;
 
-		for (Attribute attribute : element.attributes())
-		{
-			if (attribute.getKey().equalsIgnoreCase(DATA_GROUP_OUTPUT_ATTRIBUTE))
-			{
+		for (Attribute attribute : element.attributes()) {
+			if (attribute.getKey().equalsIgnoreCase(DATA_GROUP_OUTPUT_ATTRIBUTE)) {
 				functionOutputGroup = attribute.getValue();
 				break;
 			}
@@ -194,7 +176,47 @@ public abstract class AbstractTableCellWriter implements TableCellWriter
 
 		return functionOutputGroup;
 	}
+
+	/**
+	 * 
+	 * @param element
+	 * @return
+	 */
+	protected String getCellCommentText(Element element) {
+		String commentText = null;
+
+		for (Attribute attribute : element.attributes()) {
+			if (attribute.getKey().equalsIgnoreCase(DATA_CELL_COMMENT_ATTRIBUTE)) {
+				commentText = attribute.getValue();
+				break;
+			}
+		}
+
+		return StringUtils.trimToNull(commentText);
+	}
 	
+	/**
+	 * Return the Dimension for the cell comment. Return a Dimension of 3,1 if the dimension attribute is not present or has an invalid value.
+	 * 
+	 * @return
+	 */
+	protected Dimension getCellCommentDimension(Element element){
+		Dimension dimension = null;
+		
+		for (Attribute attribute : element.attributes()) {
+			if (attribute.getKey().equalsIgnoreCase(DATA_CELL_COMMENT_DIMENSION_ATTRIBUTE)) {
+				try{
+					dimension = new Dimension(attribute.getValue());
+				}
+				catch(IllegalArgumentException ex){
+					dimension = new Dimension(3, 1);
+				}
+			}
+		}
+		
+		return dimension != null ? dimension : new Dimension(3, 1);
+	}
+
 	/**
 	 * 
 	 * @param element
@@ -202,46 +224,39 @@ public abstract class AbstractTableCellWriter implements TableCellWriter
 	 * 
 	 * @return
 	 */
-	protected String[] getAttributeValues(Element element, String attributeName)
-	{
+	protected String[] getAttributeValues(Element element, String attributeName) {
 		String values[] = null;
 
-		if (element.hasAttr(attributeName))
-		{
+		if (element.hasAttr(attributeName)) {
 			values = element.attr(attributeName).toLowerCase().split(",");
 
-			for (String value : values)
-			{
+			for (String value : values) {
 				value = value.trim().toLowerCase();
 			}
 		}
 
 		return values;
 	}
-	
+
 	/**
 	 * 
 	 * @param element
 	 * 
 	 * @return
 	 */
-	public Double getNumericValue(Element element)
-	{
+	public Double getNumericValue(Element element) {
 		Double numericValue = null;
 
-		if(! element.hasAttr(DATA_TEXT_CELL))
-			try
-			{
+		if (!element.hasAttr(DATA_TEXT_CELL))
+			try {
 				numericValue = NumberFormat.getInstance().parse(element.ownText()).doubleValue();
-			}
-			catch (ParseException e)
-			{
-	
+			} catch (ParseException e) {
+
 			}
 
 		return numericValue;
 	}
-	
+
 	public abstract void renderCell(Element element, int rowIndex, int columnIndex);
 
 	public abstract void addFunctionCell(int rowIndex, int columnIndex, CellRange range, Function function);

@@ -67,6 +67,7 @@
     						#end
     						<td class="$backgroundClass">$store.name</td>
     						
+							<!-- FOR EACH PRODUCT GROUP-->
             				#foreach($group in $productGroups)	
             						<td data-group="store_${store.id}_count, region_${region.id}_pg_${group.id}_count" 
 											class="numeric $backgroundClass">
@@ -76,8 +77,16 @@
     									#set($bestPerformingClass = "bestPerforming")
     								#else
     									#set($bestPerformingClass = "")
-    								#end
-            						<td data-group="store_${store.id}_value, region_${region.id}_pg_${group.id}_value" 
+									#end
+									
+									#if($store.getValueOfSalesForProductGroup($group) < 200)
+										#set($cellComment = "data-cell-comment='Random Comment: Sales &lt; 200'")
+										#set($cellCommentDimension = "data-cell-comment-dimension='4,1'")
+									#else
+										#set($cellComment = "")
+										#set($cellCommentDimension = "")
+									#end
+            						<td data-group="store_${store.id}_value, region_${region.id}_pg_${group.id}_value" $cellComment $cellCommentDimension
 											class="numeric $backgroundClass $bestPerformingClass">
             							$store.getValueOfSalesForProductGroup($group)
                                     </td>                            
