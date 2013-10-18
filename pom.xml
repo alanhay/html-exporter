@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>uk.co.certait</groupId>
 	<artifactId>html-exporter</artifactId>
-	<version>0.3</version>
+	<version>0.3.1-snapshot</version>
 	<packaging>jar</packaging>
 
 	<!-- <parent> <groupId>org.sonatype.oss</groupId> <artifactId>oss-parent</artifactId> 
