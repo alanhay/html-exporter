@@ -49,7 +49,7 @@ public class OdsStyleGenerator
 	{
 		if (style.isBorderWidthSet())
 		{
-			int borderWidth = style.getProperty(CssIntegerProperty.BORDER_WIDTH);
+			double borderWidth = style.getProperty(CssIntegerProperty.BORDER_WIDTH);
 			Color borderColor;
 
 			if (style.isBorderColorSet())
@@ -60,8 +60,9 @@ public class OdsStyleGenerator
 			{
 				borderColor = Color.BLACK;
 			}
-
-			cell.setBorders(CellBordersType.ALL_FOUR, new Border(borderColor, borderWidth,
+			
+			//ods border too thick. divide by 5 for now
+			cell.setBorders(CellBordersType.ALL_FOUR, new Border(borderColor, borderWidth / 5,
 					StyleTypeDefinitions.SupportedLinearMeasure.PT));
 		}	
 	}
