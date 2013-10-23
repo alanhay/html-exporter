@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>uk.co.certait</groupId>
 	<artifactId>html-exporter</artifactId>
-	<version>0.3.1-snapshot</version>
+	<version>0.3</version>
 	<packaging>jar</packaging>
 
 	<!-- <parent> <groupId>org.sonatype.oss</groupId> <artifactId>oss-parent</artifactId> 
@@ -93,7 +93,7 @@
 		<dependency>
 			<groupId>com.osbcp</groupId>
 			<artifactId>cssparser</artifactId>
-			<version>1.0</version>
+			<version>1.0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.lowagie</groupId>
@@ -155,22 +155,10 @@
 					</execution>
 				</executions>
 			</plugin>
-<!-- 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-gpg-plugin</artifactId>
-				<executions>
-					<execution>
-						<configuration>
-							<executable>C:\Program Files\GNU\GnuPG\gpg2.exe</executable>
-						</configuration>
-						<id>sign-artifacts</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>sign</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin> -->
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-gpg-plugin</artifactId> 
+				<executions> <execution> <configuration> <executable>C:\Program Files\GNU\GnuPG\gpg2.exe</executable> 
+				</configuration> <id>sign-artifacts</id> <phase>verify</phase> <goals> <goal>sign</goal> 
+				</goals> </execution> </executions> </plugin> -->
 			<plugin>
 				<groupId>com.mycila.maven-license-plugin</groupId>
 				<artifactId>maven-license-plugin</artifactId>
