@@ -92,6 +92,18 @@ public abstract class AbstractTableCellWriter implements TableCellWriter {
 
 		return spansMultipleColumns;
 	}
+	
+	protected boolean definesFreezePane(Element element){
+		boolean definesFreezePane = false;
+		
+		if(element.hasAttr(DATA_FREEZE_PANE_CELL)){
+			if(Boolean.parseBoolean(element.attr(DATA_FREEZE_PANE_CELL))){
+				definesFreezePane = true;
+			}
+		}
+		
+		return definesFreezePane;
+	}
 
 	/**
 	 * Checks the for the presence of the 'colspan' attribute on the cell and

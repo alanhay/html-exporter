@@ -30,14 +30,13 @@ import uk.co.certait.htmlexporter.ss.CellRange;
 import uk.co.certait.htmlexporter.ss.Function;
 import uk.co.certait.htmlexporter.writer.AbstractTableCellWriter;
 
-public class ExcelTableCellWriter extends AbstractTableCellWriter
-{
+public class ExcelTableCellWriter extends AbstractTableCellWriter {
+
 	private Sheet sheet;
 	private StyleMap styleMapper;
 	private ExcelStyleGenerator styleGenerator;
 
-	public ExcelTableCellWriter(Sheet sheet, StyleMap styleMapper)
-	{
+	public ExcelTableCellWriter(Sheet sheet, StyleMap styleMapper) {
 		this.sheet = sheet;
 		this.styleMapper = styleMapper;
 
@@ -45,48 +44,45 @@ public class ExcelTableCellWriter extends AbstractTableCellWriter
 	}
 
 	@Override
-	public void renderCell(Element element, int rowIndex, int columnIndex)
-	{
+	public void renderCell(Element element, int rowIndex, int columnIndex) {
 		Cell cell = sheet.getRow(rowIndex).createCell(columnIndex);
 
 		Double numericValue;
-		
-		if(isDateCell(element)){
+
+		if (isDateCell(element)) {
 			DateFormat df = new SimpleDateFormat(getDateCellFormat(element));
-			
-			try{
+
+			try {
 				cell.setCellValue(df.parse(getElementText(element)));
-			}
-			catch(ParseException pex){
+			} catch (ParseException pex) {
 				System.out.println("Invalid Usage");
 			}
-		}
-		else if ((numericValue = getNumericValue(element)) != null)
-		{
+		} else if ((numericValue = getNumericValue(element)) != null) {
 			cell.setCellValue(numericValue);
-		}
-		else
-		{
+		} else {
 			cell.setCellValue(getElementText(element));
 		}
 
 		Style style = styleMapper.getStyleForElement(element);
 		cell.setCellStyle(styleGenerator.getStyle(cell, style));
-		
-		if(isDateCell(element)){
+
+		if (isDateCell(element)) {
 			CreationHelper createHelper = sheet.getWorkbook().getCreationHelper();
 			cell.getCellStyle().setDataFormat(createHelper.createDataFormat().getFormat(getDateCellFormat(element)));
 		}
-		
+
 		String commentText;
-		
-		if((commentText = getCellCommentText(element)) != null){
+
+		if ((commentText = getCellCommentText(element)) != null) {
 			ExcelCellCommentGenerator.addCellComment(cell, commentText, getCellCommentDimension(element));
+		}
+
+		if (definesFreezePane(element)) {
+			sheet.createFreezePane(columnIndex, rowIndex);
 		}
 	}
 
-	public void addFunctionCell(int rowIndex, int columnIndex, CellRange range, Function function)
-	{
+	public void addFunctionCell(int rowIndex, int columnIndex, CellRange range, Function function) {
 		Cell cell = sheet.getRow(rowIndex).getCell(columnIndex);
 
 		new ExcelFunctionCell(cell, range, new ExcelCellRangeResolver(), function);
