@@ -109,3 +109,7 @@ and then add the following dependency:
 Further documentation to follow.
 
  
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/alanhay/html-exporter/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
