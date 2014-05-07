@@ -46,7 +46,13 @@ public class StyleGenerator
 				if(p.getProperty().equals(pv.getProperty()))
 				{
 					if(! pv.getValue().contains(PERCENTAGE)){
-						style.addProperty(p, Integer.parseInt(pv.getValue().replaceAll(PX, "").trim()));
+						double value = Double.parseDouble(pv.getValue().replaceAll(PX, "").trim());
+						
+						if(value < 1){
+							value = 1;
+						}
+						
+						style.addProperty(p, (int)value);
 					}
 				}
 			}
