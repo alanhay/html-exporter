@@ -21,13 +21,11 @@ import com.osbcp.cssparser.PropertyValue;
 import com.osbcp.cssparser.Rule;
 import com.osbcp.cssparser.Selector;
 
-public class StyleGenerator
-{
+public class StyleGenerator {
 	private static final String PX = "px";
 	private static final String PERCENTAGE = "%";
-	
-	protected Style createStyle(Rule rule, Selector selector)
-	{
+
+	protected Style createStyle(Rule rule, Selector selector) {
 		Style style = new Style();
 
 		populateIntegerProperties(rule, selector, style);
@@ -36,59 +34,46 @@ public class StyleGenerator
 
 		return style;
 	}
-	
-	protected void populateIntegerProperties(Rule rule, Selector selector, Style style)
-	{
-		for (PropertyValue pv : rule.getPropertyValues())
-		{
-			for(CssIntegerProperty p : CssIntegerProperty.values())
-			{
-				if(p.getProperty().equals(pv.getProperty()))
-				{
-					if(! pv.getValue().contains(PERCENTAGE)){
+
+	protected void populateIntegerProperties(Rule rule, Selector selector, Style style) {
+		for (PropertyValue pv : rule.getPropertyValues()) {
+			for (CssIntegerProperty p : CssIntegerProperty.values()) {
+				if (p.getProperty().equals(pv.getProperty())) {
+					if (!pv.getValue().contains(PERCENTAGE)) {
 						double value = Double.parseDouble(pv.getValue().replaceAll(PX, "").trim());
-						
-						if(value < 1){
+
+						if (value < 1) {
 							value = 1;
 						}
-						
-						style.addProperty(p, (int)value);
+
+						style.addProperty(p, (int) value);
 					}
 				}
 			}
 		}
 	}
-	
-	protected void populateStringProperties(Rule rule, Selector selector, Style style)
-	{
-		for (PropertyValue pv : rule.getPropertyValues())
-		{
-			for(CssStringProperty p : CssStringProperty.values())
-			{
-				if(p.getProperty().equals(pv.getProperty()))
-				{
+
+	protected void populateStringProperties(Rule rule, Selector selector, Style style) {
+		for (PropertyValue pv : rule.getPropertyValues()) {
+			for (CssStringProperty p : CssStringProperty.values()) {
+				if (p.getProperty().equals(pv.getProperty())) {
 					style.addProperty(p, pv.getValue().trim());
 				}
 			}
 		}
 	}
-	
-	protected void populateColorProperties(Rule rule, Selector selector, Style style)
-	{
-		for (PropertyValue pv : rule.getPropertyValues())
-		{
-			for(CssColorProperty p : CssColorProperty.values())
-			{
-				if(p.getProperty().equals(pv.getProperty()))
-				{
+
+	protected void populateColorProperties(Rule rule, Selector selector, Style style) {
+		for (PropertyValue pv : rule.getPropertyValues()) {
+			for (CssColorProperty p : CssColorProperty.values()) {
+				if (p.getProperty().equals(pv.getProperty())) {
 					style.addProperty(p, createColor(pv.getValue().trim()));
 				}
 			}
 		}
 	}
-	
-	private Color createColor(String hex)
-	{
+
+	private Color createColor(String hex) {
 		hex = hex.toUpperCase();
 
 		return Color.decode(hex);

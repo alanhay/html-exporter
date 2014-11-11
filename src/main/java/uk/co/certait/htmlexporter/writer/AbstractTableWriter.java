@@ -19,29 +19,25 @@ import org.jsoup.nodes.Element;
 
 import uk.co.certait.htmlexporter.css.StyleMap;
 
-public abstract class AbstractTableWriter implements TableWriter
-{
+public abstract class AbstractTableWriter implements TableWriter {
 	private TableRowWriter rowWriter;
-	
-	public AbstractTableWriter(TableRowWriter rowWriter)
-	{
+
+	public AbstractTableWriter(TableRowWriter rowWriter) {
 		this.rowWriter = rowWriter;
 	}
-	
-	public int writeTable(Element table, StyleMap styleMapper, int startRow)
-	{
+
+	public int writeTable(Element table, StyleMap styleMapper, int startRow) {
 		renderTable(table);
-		
+
 		int rowIndex = startRow;
-		
-		for(Element element : table.getElementsByTag(TABLE_ROW_ELEMENT_NAME))
-		{
+
+		for (Element element : table.getElementsByTag(TABLE_ROW_ELEMENT_NAME)) {
 			rowWriter.writeRow(element, rowIndex);
-			++ rowIndex;
+			++rowIndex;
 		}
-		
+
 		return rowIndex - startRow;
 	}
-	
+
 	public abstract void renderTable(Element table);
 }

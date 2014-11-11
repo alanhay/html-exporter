@@ -20,15 +20,12 @@ import org.jsoup.nodes.Element;
 import uk.co.certait.htmlexporter.writer.AbstractTableWriter;
 import uk.co.certait.htmlexporter.writer.TableRowWriter;
 
-public class ExcelTableWriter extends AbstractTableWriter
-{
-	public ExcelTableWriter(TableRowWriter rowWriter)
-	{
+public class ExcelTableWriter extends AbstractTableWriter {
+	public ExcelTableWriter(TableRowWriter rowWriter) {
 		super(rowWriter);
 	}
-	
-	public void renderTable(Element table)
-	{
-		//nothing required for Excel
+
+	public void renderTable(Element table) {
+		// nothing required for Excel
 	}
 }

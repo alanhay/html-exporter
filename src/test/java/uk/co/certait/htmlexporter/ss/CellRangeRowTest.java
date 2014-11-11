@@ -20,26 +20,20 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class CellRangeRowTest
-{
+public class CellRangeRowTest {
 	private CellRangeRow row;
 
 	@Before
-	public void onSetup()
-	{
+	public void onSetup() {
 		row = new CellRangeRow(0);
 	}
 
 	@Test
-	public void testAddCell()
-	{
-		try
-		{
+	public void testAddCell() {
+		try {
 			row.addCell(null);
 			Assert.fail();
-		}
-		catch (IllegalArgumentException ex)
-		{
+		} catch (IllegalArgumentException ex) {
 
 		}
 
@@ -55,8 +49,7 @@ public class CellRangeRowTest
 	}
 
 	@Test
-	public void testIsContiguous()
-	{
+	public void testIsContiguous() {
 		Assert.assertFalse(row.isContiguous());// ??
 
 		row.addCell(createCell(1, 1));
@@ -77,22 +70,20 @@ public class CellRangeRowTest
 	}
 
 	@Test
-	public void testGetFirstPopulatedColumn()
-	{
+	public void testGetFirstPopulatedColumn() {
 		Assert.assertEquals(-1, row.getFirstPopulatedColumn());
 		row.addCell(createCell(3, 4));
 		row.addCell(createCell(3, 5));
 		row.addCell(createCell(3, 6));
 
 		Assert.assertEquals(4, row.getFirstPopulatedColumn());
-		
+
 		row.addCell(createCell(3, 2));
 		Assert.assertEquals(2, row.getFirstPopulatedColumn());
 	}
 
 	@Test
-	public void testGetLastPopulatedColumn()
-	{
+	public void testGetLastPopulatedColumn() {
 		Assert.assertEquals(-1, row.getLastPopulatedColumn());
 
 		row.addCell(createCell(1, 1));
@@ -104,8 +95,7 @@ public class CellRangeRowTest
 	}
 
 	@Test
-	public void testGetWidth()
-	{
+	public void testGetWidth() {
 		Assert.assertEquals(0, row.getWidth());
 
 		row.addCell(createCell(2, 1));
@@ -116,8 +106,8 @@ public class CellRangeRowTest
 
 		row.addCell(createCell(2, 4));
 		Assert.assertEquals(4, row.getWidth());
-		
-		//overwrite
+
+		// overwrite
 		row.addCell(createCell(2, 4));
 		Assert.assertEquals(4, row.getWidth());
 
@@ -125,8 +115,7 @@ public class CellRangeRowTest
 		Assert.assertEquals(5, row.getWidth());
 	}
 
-	private TableCellReference createCell(int rowIndex, int columnIndex)
-	{
+	private TableCellReference createCell(int rowIndex, int columnIndex) {
 		return TestUtils.createCell(rowIndex, columnIndex);
 	}
 }

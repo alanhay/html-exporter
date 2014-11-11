@@ -15,24 +15,20 @@
  */
 package uk.co.certait.htmlexporter.ss;
 
-public class DefaultTableCellReference implements TableCellReference
-{
+public class DefaultTableCellReference implements TableCellReference {
 	private int rowIndex;
 	private int columnIndex;
 
-	public DefaultTableCellReference(int rowIndex, int columnIndex)
-	{
+	public DefaultTableCellReference(int rowIndex, int columnIndex) {
 		this.rowIndex = rowIndex;
 		this.columnIndex = columnIndex;
 	}
 
-	public int getRowIndex()
-	{
+	public int getRowIndex() {
 		return rowIndex;
 	}
 
-	public int getColumnIndex()
-	{
+	public int getColumnIndex() {
 		return columnIndex;
 	}
 }

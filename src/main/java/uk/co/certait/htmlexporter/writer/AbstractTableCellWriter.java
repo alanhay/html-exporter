@@ -92,16 +92,16 @@ public abstract class AbstractTableCellWriter implements TableCellWriter {
 
 		return spansMultipleColumns;
 	}
-	
-	protected boolean definesFreezePane(Element element){
+
+	protected boolean definesFreezePane(Element element) {
 		boolean definesFreezePane = false;
-		
-		if(element.hasAttr(DATA_FREEZE_PANE_CELL)){
-			if(Boolean.parseBoolean(element.attr(DATA_FREEZE_PANE_CELL))){
+
+		if (element.hasAttr(DATA_FREEZE_PANE_CELL)) {
+			if (Boolean.parseBoolean(element.attr(DATA_FREEZE_PANE_CELL))) {
 				definesFreezePane = true;
 			}
 		}
-		
+
 		return definesFreezePane;
 	}
 
@@ -206,26 +206,26 @@ public abstract class AbstractTableCellWriter implements TableCellWriter {
 
 		return StringUtils.trimToNull(commentText);
 	}
-	
+
 	/**
-	 * Return the Dimension for the cell comment. Return a Dimension of 3,1 if the dimension attribute is not present or has an invalid value.
+	 * Return the Dimension for the cell comment. Return a Dimension of 3,1 if
+	 * the dimension attribute is not present or has an invalid value.
 	 * 
 	 * @return
 	 */
-	protected Dimension getCellCommentDimension(Element element){
+	protected Dimension getCellCommentDimension(Element element) {
 		Dimension dimension = null;
-		
+
 		for (Attribute attribute : element.attributes()) {
 			if (attribute.getKey().equalsIgnoreCase(DATA_CELL_COMMENT_DIMENSION_ATTRIBUTE)) {
-				try{
+				try {
 					dimension = new Dimension(attribute.getValue());
-				}
-				catch(IllegalArgumentException ex){
+				} catch (IllegalArgumentException ex) {
 					dimension = new Dimension(3, 1);
 				}
 			}
 		}
-		
+
 		return dimension != null ? dimension : new Dimension(3, 1);
 	}
 

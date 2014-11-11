@@ -17,11 +17,9 @@ package uk.co.certait.htmlexporter.writer.ods;
 
 import uk.co.certait.htmlexporter.ss.AbstractCellRangeResolver;
 
-public class OdsCellRangeResolver extends AbstractCellRangeResolver
-{
+public class OdsCellRangeResolver extends AbstractCellRangeResolver {
 	@Override
-	public String getCellSeparator()
-	{
+	public String getCellSeparator() {
 		return ";";
 	}
 }

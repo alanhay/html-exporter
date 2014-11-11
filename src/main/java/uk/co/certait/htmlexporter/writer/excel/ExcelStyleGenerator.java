@@ -35,53 +35,43 @@ import uk.co.certait.htmlexporter.css.CssIntegerProperty;
 import uk.co.certait.htmlexporter.css.CssStringProperty;
 import uk.co.certait.htmlexporter.css.Style;
 
-public class ExcelStyleGenerator
-{
+public class ExcelStyleGenerator {
 	private Map<Style, XSSFCellStyle> styles;
 
-	public ExcelStyleGenerator()
-	{
+	public ExcelStyleGenerator() {
 		styles = new HashMap<Style, XSSFCellStyle>();
 	}
 
-	public CellStyle getStyle(Cell cell, Style style)
-	{
+	public CellStyle getStyle(Cell cell, Style style) {
 		XSSFCellStyle cellStyle;
 
-		if (styles.containsKey(style))
-		{
+		if (styles.containsKey(style)) {
 			cellStyle = styles.get(style);
-		}
-		else
-		{
+		} else {
 			cellStyle = (XSSFCellStyle) cell.getSheet().getWorkbook().createCellStyle();
-			
+
 			applyBackground(style, cellStyle);
 			applyBorders(style, cellStyle);
 			applyFont(cell, style, cellStyle);
 			applyHorizontalAlignment(style, cellStyle);
 			applyverticalAlignment(style, cellStyle);
 			applyWidth(cell, style);
-			
+
 			styles.put(style, cellStyle);
 		}
-		
+
 		return cellStyle;
 	}
 
-	protected void applyBackground(Style style, XSSFCellStyle cellStyle)
-	{
-		if (style.isBackgroundSet())
-		{
+	protected void applyBackground(Style style, XSSFCellStyle cellStyle) {
+		if (style.isBackgroundSet()) {
 			cellStyle.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);
 			cellStyle.setFillForegroundColor(new XSSFColor(style.getProperty(CssColorProperty.BACKGROUND)));
 		}
 	}
 
-	protected void applyBorders(Style style, XSSFCellStyle cellStyle)
-	{
-		if (style.isBorderWidthSet())
-		{
+	protected void applyBorders(Style style, XSSFCellStyle cellStyle) {
+		if (style.isBorderWidthSet()) {
 			short width = (short) style.getProperty(CssIntegerProperty.BORDER_WIDTH);
 
 			Color color = style.getProperty(CssColorProperty.BORDER_COLOR) != null ? style
@@ -105,86 +95,64 @@ public class ExcelStyleGenerator
 		}
 	}
 
-	protected void applyFont(Cell cell, Style style, XSSFCellStyle cellStyle)
-	{
+	protected void applyFont(Cell cell, Style style, XSSFCellStyle cellStyle) {
 		Font font = createFont(cell.getSheet().getWorkbook(), style);
 		cellStyle.setFont(font);
 	}
 
-	protected void applyHorizontalAlignment(Style style, XSSFCellStyle cellStyle)
-	{
-		if (style.isHorizontallyAlignedLeft())
-		{
+	protected void applyHorizontalAlignment(Style style, XSSFCellStyle cellStyle) {
+		if (style.isHorizontallyAlignedLeft()) {
 			cellStyle.setAlignment(HorizontalAlignment.LEFT);
-		}
-		else if (style.isHorizontallyAlignedRight())
-		{
+		} else if (style.isHorizontallyAlignedRight()) {
 			cellStyle.setAlignment(HorizontalAlignment.RIGHT);
-		}
-		else if (style.isHorizontallyAlignedCenter())
-		{
+		} else if (style.isHorizontallyAlignedCenter()) {
 			cellStyle.setAlignment(HorizontalAlignment.CENTER);
 		}
 	}
-	
-	protected void applyverticalAlignment(Style style, XSSFCellStyle cellStyle)
-	{
-		if (style.isVerticallyAlignedTop())
-		{
+
+	protected void applyverticalAlignment(Style style, XSSFCellStyle cellStyle) {
+		if (style.isVerticallyAlignedTop()) {
 			cellStyle.setVerticalAlignment(VerticalAlignment.TOP);
-		}
-		else if (style.isVerticallyAlignedBottom())
-		{
+		} else if (style.isVerticallyAlignedBottom()) {
 			cellStyle.setVerticalAlignment(VerticalAlignment.BOTTOM);
-		}
-		else if (style.isVerticallyAlignedMiddle())
-		{
+		} else if (style.isVerticallyAlignedMiddle()) {
 			cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
 		}
 	}
 
-	protected void applyWidth(Cell cell, Style style)
-	{
-		if (style.getProperty(CssIntegerProperty.WIDTH) > 0)
-		{
-			cell.getSheet().setColumnWidth(cell.getColumnIndex(),
-					style.getProperty(CssIntegerProperty.WIDTH) * 50);
+	protected void applyWidth(Cell cell, Style style) {
+		if (style.getProperty(CssIntegerProperty.WIDTH) > 0) {
+			cell.getSheet().setColumnWidth(cell.getColumnIndex(), style.getProperty(CssIntegerProperty.WIDTH) * 50);
 		}
 	}
 
-	public Font createFont(Workbook workbook, Style style)
-	{
+	public Font createFont(Workbook workbook, Style style) {
 		Font font = workbook.createFont();
 
-		if (style.isFontNameSet())
-		{
+		if (style.isFontNameSet()) {
 			font.setFontName(style.getProperty(CssStringProperty.FONT_FAMILY));
 		}
 
-		if (style.isFontSizeSet())
-		{
+		if (style.isFontSizeSet()) {
 			font.setFontHeightInPoints((short) style.getProperty(CssIntegerProperty.FONT_SIZE));
 		}
 
-		if (style.isColorSet())
-		{
+		if (style.isColorSet()) {
 			Color color = style.getProperty(CssColorProperty.COLOR);
-			
-			//if(! color.equals(Color.WHITE)) // POI Bug
-			//{
-				((XSSFFont) font).setColor(new XSSFColor(color));
-			//}
+
+			// if(! color.equals(Color.WHITE)) // POI Bug
+			// {
+			((XSSFFont) font).setColor(new XSSFColor(color));
+			// }
 		}
 
-		if (style.isFontBold())
-		{
+		if (style.isFontBold()) {
 			font.setBoldweight(Font.BOLDWEIGHT_BOLD);
 		}
 
 		font.setItalic(style.isFontItalic());
 
-		if (style.isTextUnderlined())
-		{
+		if (style.isTextUnderlined()) {
 			font.setUnderline(Font.U_SINGLE);
 		}
 

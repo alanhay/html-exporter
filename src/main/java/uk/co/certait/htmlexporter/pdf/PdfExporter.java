@@ -27,32 +27,29 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
-public class PdfExporter
-{
-	public byte[] exportHtml(String html) throws Exception
-	{
+public class PdfExporter {
+	public byte[] exportHtml(String html) throws Exception {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		exportHtml(html, out);
-		
+
 		return out.toByteArray();
 	}
-	
-	public void exportHtml(String html, File file) throws Exception
-	{
+
+	public void exportHtml(String html, File file) throws Exception {
 		exportHtml(html, new FileOutputStream(file));
 	}
-	
-	private void exportHtml(String html, OutputStream out) throws Exception
-	{
+
+	private void exportHtml(String html, OutputStream out) throws Exception {
 		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 		Document doc = builder.parse(new ByteArrayInputStream(html.replaceAll("&nbsp;", "").getBytes()));
-	
+
 		ITextRenderer renderer = new ITextRenderer();
 		renderer.setDocument(doc, null);
-		
-		//FIXME
-		//renderer.getFontResolver().addFont("C:/Windows/Fonts/CALIBRI.TTF", true);
-		
+
+		// FIXME
+		// renderer.getFontResolver().addFont("C:/Windows/Fonts/CALIBRI.TTF",
+		// true);
+
 		renderer.layout();
 		renderer.createPDF(out);
 		out.flush();

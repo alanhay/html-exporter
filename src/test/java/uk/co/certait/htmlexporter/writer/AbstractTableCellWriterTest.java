@@ -2,35 +2,29 @@ package uk.co.certait.htmlexporter.writer;
 
 import org.junit.Test;
 
-public class AbstractTableCellWriterTest
-{
+public class AbstractTableCellWriterTest {
 	@Test
-	public void testGetElementtext()
-	{
+	public void testGetElementtext() {
 
 	}
 
 	@Test
-	public void testSpansMultipleColumns()
-	{
+	public void testSpansMultipleColumns() {
 
 	}
 
 	@Test
-	public void testGetMergedColumnCount()
-	{
+	public void testGetMergedColumnCount() {
 
 	}
 
 	@Test
-	public void testIsFunctionGroupCell()
-	{
+	public void testIsFunctionGroupCell() {
 
 	}
 
 	@Test
-	public void testGetFunctionGroupReferences()
-	{
+	public void testGetFunctionGroupReferences() {
 
 	}
 }

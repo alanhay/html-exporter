@@ -19,76 +19,62 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Area
-{
+public class Area {
 	private int id;
 	private String name;
 	private List<Region> regions;
 
-	public Area(int id, String name)
-	{
+	public Area(int id, String name) {
 		this.id = id;
 		this.name = name;
 
 		regions = new ArrayList<Region>();
 	}
 
-	public int getId()
-	{
+	public int getId() {
 		return id;
 	}
 
-	public String getName()
-	{
+	public String getName() {
 		return name;
 	}
-	
-	public List<Region> getRegions()
-	{
+
+	public List<Region> getRegions() {
 		return regions;
 	}
 
-	public void addRegion(Region region)
-	{
+	public void addRegion(Region region) {
 		regions.add(region);
 	}
 
-	public int getNumberOfSalesForProductGroup(ProductGroup group)
-	{
+	public int getNumberOfSalesForProductGroup(ProductGroup group) {
 		int count = 0;
 
-		for (Region region : regions)
-		{
+		for (Region region : regions) {
 			count += region.getNumberOfSalesForProductGroup(group);
 		}
 		return count;
 	}
 
-	public BigDecimal getValueOfSalesForProductGroup(ProductGroup group)
-	{
+	public BigDecimal getValueOfSalesForProductGroup(ProductGroup group) {
 		BigDecimal total = new BigDecimal("0");
 
-		for (Region region : regions)
-		{
+		for (Region region : regions) {
 			total = total.add(region.getValueOfSalesForProductGroup(group));
 		}
 
 		return total;
 	}
 
-	public Store getBestPerformingStoreForProductGroup(ProductGroup group)
-	{
+	public Store getBestPerformingStoreForProductGroup(ProductGroup group) {
 		// FIXME does not account 2 stores with equal sales
 
 		Store store = null;
 		BigDecimal maxSales = new BigDecimal("-1");
 
-		for (Region region : regions)
-		{
-			for (Store s : region.getStores())
-			{
-				if (s.getValueOfSalesForProductGroup(group).compareTo(maxSales) > 0)
-				{
+		for (Region region : regions) {
+			for (Store s : region.getStores()) {
+				if (s.getValueOfSalesForProductGroup(group).compareTo(maxSales) > 0) {
 					store = s;
 					maxSales = store.getValueOfSalesForProductGroup(group);
 				}
@@ -98,44 +84,37 @@ public class Area
 		return store;
 	}
 
-	public int getNumberOfSales()
-	{
+	public int getNumberOfSales() {
 		int total = 0;
 
-		for (Region region : regions)
-		{
+		for (Region region : regions) {
 			total += region.getNumberOfSales();
 		}
 
 		return total;
 	}
 
-	public BigDecimal getValueOfSales()
-	{
+	public BigDecimal getValueOfSales() {
 		BigDecimal total = new BigDecimal("0");
 
-		for (Region region : regions)
-		{
+		for (Region region : regions) {
 			total = total.add(region.getValueOfSales());
 		}
 
 		return total;
 	}
-	
-	public int getNumberOfRegions()
-	{
+
+	public int getNumberOfRegions() {
 		return regions.size();
 	}
-	
-	public int getNumberOfStores()
-	{
+
+	public int getNumberOfStores() {
 		int total = 0;
-		
-		for(Region region : regions)
-		{
+
+		for (Region region : regions) {
 			total += region.getNumberOfStores();
 		}
-		
+
 		return total;
 	}
 }

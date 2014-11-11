@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.apache.commons.collections.list.GrowthList;
 
-
 /**
  * A CellRangeRow represents a row of data within a CellRange.
  * 
@@ -28,14 +27,12 @@ import org.apache.commons.collections.list.GrowthList;
  * @author alanhay
  * 
  */
-public class CellRangeRow
-{
+public class CellRangeRow {
 	private int index;
 	private List<TableCellReference> cells;
 
 	@SuppressWarnings("unchecked")
-	protected CellRangeRow(int index)
-	{
+	protected CellRangeRow(int index) {
 		this.index = index;
 		cells = GrowthList.decorate(new ArrayList<TableCellReference>());
 	}
@@ -49,16 +46,13 @@ public class CellRangeRow
 	 * 
 	 * @param cell
 	 */
-	public void addCell(TableCellReference cell)
-	{
-		if (cell == null)
-		{
+	public void addCell(TableCellReference cell) {
+		if (cell == null) {
 			throw new IllegalArgumentException();
 		}
 
 		// allows cells to be added in any order.
-		if (cells.size() > cell.getColumnIndex())
-		{
+		if (cells.size() > cell.getColumnIndex()) {
 			cells.remove(cell.getColumnIndex());
 		}
 
@@ -73,26 +67,20 @@ public class CellRangeRow
 	 * 
 	 * @return True if this row is contiguous, otherwise false.
 	 */
-	protected boolean isContiguous()
-	{
+	protected boolean isContiguous() {
 		boolean isContiguous = true;
 
-		if (!cells.isEmpty())
-		{
+		if (!cells.isEmpty()) {
 			int firstPopulatedColumn = getFirstPopulatedColumn();
 			int lastPopulatedColumn = getLastPopulatedColumn();
 
-			for (int i = firstPopulatedColumn; i < lastPopulatedColumn; ++i)
-			{
-				if (cells.get(i) == null)
-				{
+			for (int i = firstPopulatedColumn; i < lastPopulatedColumn; ++i) {
+				if (cells.get(i) == null) {
 					isContiguous = false;
 					break;
 				}
 			}
-		}
-		else
-		{
+		} else {
 			isContiguous = false;
 		}
 
@@ -104,14 +92,11 @@ public class CellRangeRow
 	 * @return The index of the first populated column in this row. Returns -1
 	 *         if the row holds no cell references.
 	 */
-	protected int getFirstPopulatedColumn()
-	{
+	protected int getFirstPopulatedColumn() {
 		int firstColumn = -1;
 
-		for (int i = 0; i < cells.size(); ++i)
-		{
-			if (cells.get(i) != null)
-			{
+		for (int i = 0; i < cells.size(); ++i) {
+			if (cells.get(i) != null) {
 				firstColumn = i;
 				break;
 			}
@@ -128,14 +113,11 @@ public class CellRangeRow
 	 * @return The index of the last populated column. Returns -1 if this row is
 	 *         Empty.
 	 */
-	protected int getLastPopulatedColumn()
-	{
+	protected int getLastPopulatedColumn() {
 		int lastColumn = -1;
 
-		for (int i = cells.size() - 1; i > -1; --i)
-		{
-			if (cells.get(i) != null)
-			{
+		for (int i = cells.size() - 1; i > -1; --i) {
+			if (cells.get(i) != null) {
 				lastColumn = i;
 				break;
 			}
@@ -148,14 +130,11 @@ public class CellRangeRow
 	 * 
 	 * @return True if this row contains no cell references, otherwise false.
 	 */
-	public boolean isEmpty()
-	{
+	public boolean isEmpty() {
 		boolean isEmpty = true;
 
-		for (TableCellReference cell : cells)
-		{
-			if (cell != null)
-			{
+		for (TableCellReference cell : cells) {
+			if (cell != null) {
 				isEmpty = false;
 				break;
 			}
@@ -172,12 +151,10 @@ public class CellRangeRow
 	 * 
 	 * @return The width of this row.
 	 */
-	public int getWidth()
-	{
+	public int getWidth() {
 		int width = 0;
 
-		if (!isEmpty())
-		{
+		if (!isEmpty()) {
 			width = getLastPopulatedColumn() - getFirstPopulatedColumn() + 1;
 		}
 
@@ -188,8 +165,7 @@ public class CellRangeRow
 	 * 
 	 * @return A list of the cell references held by this row.
 	 */
-	public List<TableCellReference> getCells()
-	{
+	public List<TableCellReference> getCells() {
 		return cells;
 	}
 
@@ -197,8 +173,7 @@ public class CellRangeRow
 	 * 
 	 * @return The first cell referenced by this row.
 	 */
-	public TableCellReference getFirstCell()
-	{
+	public TableCellReference getFirstCell() {
 		return cells.get(getFirstPopulatedColumn());
 	}
 
@@ -206,8 +181,7 @@ public class CellRangeRow
 	 * 
 	 * @return The last cell referenced by this row.
 	 */
-	public TableCellReference getLastCell()
-	{
+	public TableCellReference getLastCell() {
 		return cells.get(getLastPopulatedColumn());
 	}
 
@@ -215,23 +189,17 @@ public class CellRangeRow
 	 * 
 	 * @return The underlying index of this row.
 	 */
-	public int getIndex()
-	{
+	public int getIndex() {
 		return index;
 	}
 
-	public String toString()
-	{
+	public String toString() {
 		StringBuilder builder = new StringBuilder();
 
-		for (TableCellReference cell : cells)
-		{
-			if (cell != null)
-			{
+		for (TableCellReference cell : cells) {
+			if (cell != null) {
 				builder.append("[").append(cell.getRowIndex()).append(",").append(cell.getColumnIndex()).append("]");
-			}
-			else
-			{
+			} else {
 				builder.append("[x]");
 			}
 		}

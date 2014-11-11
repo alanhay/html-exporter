@@ -30,12 +30,9 @@ import uk.co.certait.htmlexporter.css.CssIntegerProperty;
 import uk.co.certait.htmlexporter.css.CssStringProperty;
 import uk.co.certait.htmlexporter.css.Style;
 
-public class OdsStyleGenerator
-{
-	public void styleCell(Cell cell, Style style)
-	{
-		if (style.isBackgroundSet())
-		{
+public class OdsStyleGenerator {
+	public void styleCell(Cell cell, Style style) {
+		if (style.isBackgroundSet()) {
 			cell.setCellBackgroundColor(new Color(style.getProperty(CssColorProperty.BACKGROUND)));
 		}
 
@@ -44,92 +41,66 @@ public class OdsStyleGenerator
 		applyVerticalAlignment(cell, style);
 		applyFont(cell, style);
 	}
-	
-	protected void applyBorder(Cell cell, Style style)
-	{
-		if (style.isBorderWidthSet())
-		{
+
+	protected void applyBorder(Cell cell, Style style) {
+		if (style.isBorderWidthSet()) {
 			double borderWidth = style.getProperty(CssIntegerProperty.BORDER_WIDTH);
 			Color borderColor;
 
-			if (style.isBorderColorSet())
-			{
+			if (style.isBorderColorSet()) {
 				borderColor = new Color(style.getProperty(CssColorProperty.BORDER_COLOR));
-			}
-			else
-			{
+			} else {
 				borderColor = Color.BLACK;
 			}
-			
-			//ods border too thick. divide by 5 for now
+
+			// ods border too thick. divide by 5 for now
 			cell.setBorders(CellBordersType.ALL_FOUR, new Border(borderColor, borderWidth / 5,
 					StyleTypeDefinitions.SupportedLinearMeasure.PT));
-		}	
+		}
 	}
 
-	protected void applyHorizontalAlignment(Cell cell, Style style)
-	{
+	protected void applyHorizontalAlignment(Cell cell, Style style) {
 
-		if (style.isHorizontallyAlignedLeft())
-		{
+		if (style.isHorizontallyAlignedLeft()) {
 			cell.setHorizontalAlignment(HorizontalAlignmentType.LEFT);
-		}
-		else if (style.isHorizontallyAlignedRight())
-		{
+		} else if (style.isHorizontallyAlignedRight()) {
 			cell.setHorizontalAlignment(HorizontalAlignmentType.RIGHT);
-		}
-		else if (style.isHorizontallyAlignedCenter())
-		{
+		} else if (style.isHorizontallyAlignedCenter()) {
 			cell.setHorizontalAlignment(HorizontalAlignmentType.CENTER);
 		}
 	}
-	
-	protected void applyVerticalAlignment(Cell cell, Style style)
-	{
 
-		if (style.isVerticallyAlignedTop())
-		{
+	protected void applyVerticalAlignment(Cell cell, Style style) {
+
+		if (style.isVerticallyAlignedTop()) {
 			cell.setVerticalAlignment(VerticalAlignmentType.TOP);
-		}
-		else if (style.isVerticallyAlignedBottom())
-		{
+		} else if (style.isVerticallyAlignedBottom()) {
 			cell.setVerticalAlignment(VerticalAlignmentType.BOTTOM);
-		}
-		else if (style.isVerticallyAlignedMiddle())
-		{
+		} else if (style.isVerticallyAlignedMiddle()) {
 			cell.setVerticalAlignment(VerticalAlignmentType.MIDDLE);
 		}
 	}
 
-	protected void applyFont(Cell cell, Style style)
-	{
+	protected void applyFont(Cell cell, Style style) {
 		Font font = cell.getFont();
 
-		if (style.isFontNameSet())
-		{
+		if (style.isFontNameSet()) {
 			font.setFamilyName(style.getProperty(CssStringProperty.FONT_FAMILY));
 		}
 
-		if (style.isFontBold() && style.isFontItalic())
-		{
+		if (style.isFontBold() && style.isFontItalic()) {
 			font.setFontStyle(FontStyle.BOLDITALIC);
-		}
-		else if (style.isFontBold())
-		{
+		} else if (style.isFontBold()) {
 			font.setFontStyle(FontStyle.BOLD);
-		}
-		else if (style.isFontItalic())
-		{
+		} else if (style.isFontItalic()) {
 			font.setFontStyle(FontStyle.ITALIC);
 		}
 
-		if (style.isFontSizeSet())
-		{
+		if (style.isFontSizeSet()) {
 			font.setSize(style.getProperty(CssIntegerProperty.FONT_SIZE));
 		}
 
-		if (style.isColorSet())
-		{
+		if (style.isColorSet()) {
 			font.setColor(new Color(style.getProperty(CssColorProperty.COLOR)));
 		}
 

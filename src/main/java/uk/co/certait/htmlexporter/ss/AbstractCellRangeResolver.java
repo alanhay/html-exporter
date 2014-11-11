@@ -18,53 +18,43 @@ package uk.co.certait.htmlexporter.ss;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.util.CellReference;
 
-
-public abstract class AbstractCellRangeResolver implements CellRangeResolver
-{
-	public String getRangeString(CellRange range)
-	{
+public abstract class AbstractCellRangeResolver implements CellRangeResolver {
+	public String getRangeString(CellRange range) {
 		String rangeString;
-		
-		if(range.isContiguous())
-		{
+
+		if (range.isContiguous()) {
 			rangeString = buildContiguousString(range);
-		}
-		else
-		{
+		} else {
 			rangeString = buildNonContigousString(range);
 		}
-		
+
 		return rangeString;
 	}
-	
-	private String buildContiguousString(CellRange range)
-	{
+
+	private String buildContiguousString(CellRange range) {
 		TableCellReference firstCell = range.getFirstCell();
 		CellReference first = new CellReference(firstCell.getRowIndex(), firstCell.getColumnIndex());
-		
+
 		TableCellReference lastCell = range.getLastCell();
 		CellReference last = new CellReference(lastCell.getRowIndex(), lastCell.getColumnIndex());
-		
+
 		return first.formatAsString() + ":" + last.formatAsString();
 	}
-	
-	private String buildNonContigousString(CellRange range)
-	{
+
+	private String buildNonContigousString(CellRange range) {
 		StringBuilder builder = new StringBuilder();
-		
-		for(CellRangeRow row : range.getRows())
-		{
-			for(TableCellReference cell : row.getCells())
-			{
-				if(cell != null)
-				{
-					builder.append(new CellReference(cell.getRowIndex(), cell.getColumnIndex()).formatAsString()).append(getCellSeparator());
+
+		for (CellRangeRow row : range.getRows()) {
+			for (TableCellReference cell : row.getCells()) {
+				if (cell != null) {
+					builder.append(new CellReference(cell.getRowIndex(), cell.getColumnIndex()).formatAsString())
+							.append(getCellSeparator());
 				}
 			}
 		}
-		
+
 		return StringUtils.removeEnd(builder.toString(), getCellSeparator());
 	}
-	
+
 	public abstract String getCellSeparator();
 }

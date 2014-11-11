@@ -25,48 +25,41 @@ import uk.co.certait.htmlexporter.ss.CellRange;
 import uk.co.certait.htmlexporter.ss.Function;
 import uk.co.certait.htmlexporter.writer.AbstractTableCellWriter;
 
-public class OdsTableCellWriter extends AbstractTableCellWriter
-{
+public class OdsTableCellWriter extends AbstractTableCellWriter {
 	private Table table;
 	private StyleMap styleMapper;
 	private OdsStyleGenerator styleGenerator;
 
-	public OdsTableCellWriter(Table table, StyleMap styleMapper)
-	{
+	public OdsTableCellWriter(Table table, StyleMap styleMapper) {
 		this.table = table;
 		this.styleMapper = styleMapper;
 		styleGenerator = new OdsStyleGenerator();
 	}
 
 	@Override
-	public void renderCell(Element element, int rowIndex, int columnIndex)
-	{
+	public void renderCell(Element element, int rowIndex, int columnIndex) {
 		Cell cell = table.getCellByPosition(columnIndex, rowIndex);
 
 		Double numericValue = null;
 
-		if ((numericValue = getNumericValue(element)) != null)
-		{
+		if ((numericValue = getNumericValue(element)) != null) {
 			cell.setDoubleValue(numericValue);
-		}
-		else
-		{
+		} else {
 			cell.setStringValue(getElementText(element));
 		}
 
 		Style style = styleMapper.getStyleForElement(element);
 		styleGenerator.styleCell(cell, style);
-		
+
 		String commentText;
-		
-		if((commentText = getCellCommentText(element)) != null){
+
+		if ((commentText = getCellCommentText(element)) != null) {
 			cell.setNoteText(commentText);
 		}
 	}
 
 	@Override
-	public void addFunctionCell(int rowIndex, int columnIndex, CellRange range, Function function)
-	{
+	public void addFunctionCell(int rowIndex, int columnIndex, CellRange range, Function function) {
 		Cell cell = table.getCellByPosition(columnIndex, rowIndex);
 
 		new OdsFunctionCell(cell, range, new OdsCellRangeResolver(), function);

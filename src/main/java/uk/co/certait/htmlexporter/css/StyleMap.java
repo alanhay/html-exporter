@@ -29,67 +29,55 @@ import com.osbcp.cssparser.Rule;
 /**
  * 
  * @author alanhay
- *
+ * 
  */
-public class StyleMap
-{
+public class StyleMap {
 	private static final String CLASS_PREFIX = ".";
-	
+
 	Map<String, Style> styles;
 	private StyleGenerator generator;
-	
-	public StyleMap(Map<String, Style> styles)
-	{
+
+	public StyleMap(Map<String, Style> styles) {
 		this.styles = styles != null ? styles : new HashMap<String, Style>();
 		generator = new StyleGenerator();
 	}
-	
-	public Style getStyleForElement(Element element)
-	{
+
+	public Style getStyleForElement(Element element) {
 		Style style = new Style();
 
-		if(getStyleForTag(element) != null)
-		{
+		if (getStyleForTag(element) != null) {
 			style = StyleMerger.mergeStyles(style, getStyleForTag(element));
 		}
-		
-		if(! getStylesForClass(element).isEmpty())
-		{
+
+		if (!getStylesForClass(element).isEmpty()) {
 			List<Style> classStyles = getStylesForClass(element);
-			
-			for(Style classStyle : classStyles)
-			{
+
+			for (Style classStyle : classStyles) {
 				style = StyleMerger.mergeStyles(style, classStyle);
 			}
 		}
-		
-		if(getInlineStyle(element) != null)
-		{
+
+		if (getInlineStyle(element) != null) {
 			style = StyleMerger.mergeStyles(style, getInlineStyle(element));
 		}
 
 		return style;
 	}
 
-	private Style getStyleForTag(Element element)
-	{
+	private Style getStyleForTag(Element element) {
 		return styles.get(element.tagName());
 	}
 
-	private List<Style> getStylesForClass(Element element)
-	{
+	private List<Style> getStylesForClass(Element element) {
 		List<Style> classStyles = new ArrayList<Style>();
 
-		if (StringUtils.isNotEmpty(element.className()))
-		{
-			String [] classNames = element.className().split(" ");
+		if (StringUtils.isNotEmpty(element.className())) {
+			String[] classNames = element.className().split(" ");
 
-			for(String className : classNames)
-			{
+			for (String className : classNames) {
 				String qualifiedClassName = CLASS_PREFIX + className.trim();
-		
-				if (styles.containsKey(qualifiedClassName))
-				{	
+
+				if (styles.containsKey(qualifiedClassName)) {
 					classStyles.add(styles.get(qualifiedClassName));
 				}
 			}
@@ -98,23 +86,19 @@ public class StyleMap
 		return classStyles;
 	}
 
-	private Style getInlineStyle(Element element)
-	{
+	private Style getInlineStyle(Element element) {
 		Style style = null;
 
-		if (element.hasAttr("style"))
-		{
+		if (element.hasAttr("style")) {
 			List<Rule> inlineRules;
-			try
-			{
-				String inlineStyle = element.attr("style").endsWith(";") ? element.attr("style") : element.attr("style") + ";";
+			try {
+				String inlineStyle = element.attr("style").endsWith(";") ? element.attr("style") : element
+						.attr("style") + ";";
 				inlineRules = CSSParser.parse("x{" + inlineStyle + "}");
-			}
-			catch (Exception e)
-			{
+			} catch (Exception e) {
 				throw new RuntimeException("Error parsing inline style for element " + element.tagName());
 			}
-			
+
 			style = generator.createStyle(inlineRules.get(0), inlineRules.get(0).getSelectors().get(0));
 		}
 

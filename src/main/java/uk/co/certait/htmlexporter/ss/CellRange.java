@@ -26,13 +26,11 @@ import java.util.List;
  * @author alanhay
  * 
  */
-public class CellRange
-{
+public class CellRange {
 	private List<CellRangeRow> rows;
 	private List<CellRangeObserver> listeners;
 
-	public CellRange()
-	{
+	public CellRange() {
 		rows = new ArrayList<CellRangeRow>();
 		listeners = new ArrayList<CellRangeObserver>();
 	}
@@ -41,18 +39,13 @@ public class CellRange
 	 * 
 	 * @param cell
 	 */
-	public void addCell(TableCellReference cell)
-	{
-		if (rows.size() == 0)
-		{
+	public void addCell(TableCellReference cell) {
+		if (rows.size() == 0) {
 			rows.add(new CellRangeRow(cell.getRowIndex()));
-		}
-		else if (isCellInNewRow(cell))
-		{
+		} else if (isCellInNewRow(cell)) {
 			int lastRowIndex = rows.get(rows.size() - 1).getIndex();
 
-			for (int i = lastRowIndex; i < cell.getRowIndex(); ++i)
-			{
+			for (int i = lastRowIndex; i < cell.getRowIndex(); ++i) {
 				rows.add(new CellRangeRow(i + 1));
 			}
 		}
@@ -66,18 +59,15 @@ public class CellRange
 	 * 
 	 * @param listener
 	 */
-	public void addCellRangeObserver(CellRangeObserver listener)
-	{
+	public void addCellRangeObserver(CellRangeObserver listener) {
 		listeners.add(listener);
 	}
 
 	/**
 	 * Notify any registered observers that a cell has been added.
 	 */
-	private void notifyObservers()
-	{
-		for (CellRangeObserver listener : listeners)
-		{
+	private void notifyObservers() {
+		for (CellRangeObserver listener : listeners) {
 			listener.cellRangeUpdated(this);
 		}
 	}
@@ -90,14 +80,11 @@ public class CellRange
 	 * @return True if this cell references a previously unreferenced row,
 	 *         otherwise false.
 	 */
-	protected boolean isCellInNewRow(TableCellReference cell)
-	{
+	protected boolean isCellInNewRow(TableCellReference cell) {
 		boolean isNewRow = true;
 
-		for (CellRangeRow row : rows)
-		{
-			if (cell.getRowIndex() == row.getIndex())
-			{
+		for (CellRangeRow row : rows) {
+			if (cell.getRowIndex() == row.getIndex()) {
 				isNewRow = false;
 			}
 		}
@@ -112,8 +99,7 @@ public class CellRange
 	 * 
 	 * @return True if this CellRange is contiguous, otherwise false.
 	 */
-	public boolean isContiguous()
-	{
+	public boolean isContiguous() {
 		boolean isContiguous = true;
 
 		int firstColumn = -99;
@@ -121,25 +107,17 @@ public class CellRange
 
 		boolean firstLoop = true;
 
-		for (CellRangeRow row : rows)
-		{
-			if (!row.isContiguous())
-			{
+		for (CellRangeRow row : rows) {
+			if (!row.isContiguous()) {
 				isContiguous = false;
 				break;
-			}
-			else
-			{
-				if (!firstLoop)
-				{
-					if (row.getFirstPopulatedColumn() != firstColumn || row.getLastPopulatedColumn() != lastColumn)
-					{
+			} else {
+				if (!firstLoop) {
+					if (row.getFirstPopulatedColumn() != firstColumn || row.getLastPopulatedColumn() != lastColumn) {
 						isContiguous = false;
 						break;
 					}
-				}
-				else
-				{
+				} else {
 					firstColumn = row.getFirstPopulatedColumn();
 					lastColumn = row.getLastPopulatedColumn();
 					firstLoop = false;
@@ -154,8 +132,7 @@ public class CellRange
 	 * 
 	 * @return
 	 */
-	public int getHeight()
-	{
+	public int getHeight() {
 		return rows.size();
 	}
 
@@ -163,14 +140,11 @@ public class CellRange
 	 * 
 	 * @return
 	 */
-	public boolean isEmpty()
-	{
+	public boolean isEmpty() {
 		boolean isEmpty = true;
 
-		for (CellRangeRow row : rows)
-		{
-			if (!row.isEmpty())
-			{
+		for (CellRangeRow row : rows) {
+			if (!row.isEmpty()) {
 				isEmpty = false;
 				break;
 			}
@@ -184,8 +158,7 @@ public class CellRange
 	 * @return The first cell in this range, that is the cell at the top left of
 	 *         the range.
 	 */
-	public TableCellReference getFirstCell()
-	{
+	public TableCellReference getFirstCell() {
 		return rows.get(0).getFirstCell();
 	}
 
@@ -194,8 +167,7 @@ public class CellRange
 	 * @return The last cell in this range, that is the cell at the bottom right
 	 *         of the range.
 	 */
-	public TableCellReference getLastCell()
-	{
+	public TableCellReference getLastCell() {
 		return rows.get(rows.size() - 1).getLastCell();
 	}
 
@@ -203,20 +175,17 @@ public class CellRange
 	 * 
 	 * @return The rows which this range references.
 	 */
-	public List<CellRangeRow> getRows()
-	{
+	public List<CellRangeRow> getRows() {
 		return rows;
 	}
 
 	/**
 	 * 
 	 */
-	public String toString()
-	{
+	public String toString() {
 		StringBuilder builder = new StringBuilder();
 
-		for (CellRangeRow row : rows)
-		{
+		for (CellRangeRow row : rows) {
 			builder.append("\nIndex").append(row.getIndex()).append(": ");
 			builder.append(row.toString()).append("\n");
 		}

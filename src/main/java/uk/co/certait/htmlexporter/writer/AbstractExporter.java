@@ -30,10 +30,10 @@ import uk.co.certait.htmlexporter.css.StyleMap;
 import uk.co.certait.htmlexporter.css.StyleParser;
 
 public abstract class AbstractExporter implements Exporter {
-	
+
 	private static final String DATA_NEW_SHEET_ATTRIBUTE = "data-new-sheet";
 	private static final String DATA_SHEET_NAME_ATTRIBUTE = "data-sheet-name";
-	
+
 	public byte[] exportHtml(String html) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		exportHtml(html, out);
@@ -66,9 +66,9 @@ public abstract class AbstractExporter implements Exporter {
 	protected boolean isNewSheet(Element element) {
 		return Boolean.valueOf(element.attr(DATA_NEW_SHEET_ATTRIBUTE));
 	}
-	
-	protected String getSheetName(Element element){
-		return element.attr(DATA_SHEET_NAME_ATTRIBUTE);	
+
+	protected String getSheetName(Element element) {
+		return element.attr(DATA_SHEET_NAME_ATTRIBUTE);
 	}
 
 	public abstract void exportHtml(String html, OutputStream out) throws IOException;

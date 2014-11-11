@@ -17,24 +17,20 @@ package uk.co.certait.htmlexporter.demo.domain;
 
 import java.math.BigDecimal;
 
-public class Sale
-{
+public class Sale {
 	private ProductGroup productGroup;
 	private BigDecimal value;
 
-	public Sale(ProductGroup productGroup, BigDecimal value)
-	{
+	public Sale(ProductGroup productGroup, BigDecimal value) {
 		this.productGroup = productGroup;
 		this.value = value;
 	}
 
-	public ProductGroup getProductGroup()
-	{
+	public ProductGroup getProductGroup() {
 		return productGroup;
 	}
 
-	public BigDecimal getValue()
-	{
+	public BigDecimal getValue() {
 		return value;
 	}
 }

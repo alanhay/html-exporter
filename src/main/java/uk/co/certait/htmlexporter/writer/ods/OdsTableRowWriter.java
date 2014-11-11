@@ -21,29 +21,25 @@ import org.odftoolkit.simple.table.Table;
 import uk.co.certait.htmlexporter.writer.AbstractTableRowWriter;
 import uk.co.certait.htmlexporter.writer.TableCellWriter;
 
-public class OdsTableRowWriter extends AbstractTableRowWriter
-{
+public class OdsTableRowWriter extends AbstractTableRowWriter {
 	private Table table;
-	
-	public OdsTableRowWriter(Table table, TableCellWriter cellWriter)
-	{
+
+	public OdsTableRowWriter(Table table, TableCellWriter cellWriter) {
 		super(cellWriter);
-		
+
 		this.table = table;
 	}
 
 	@Override
-	public void renderRow(Element row, int rowIndex)
-	{
-		//actually nothing required for ods
+	public void renderRow(Element row, int rowIndex) {
+		// actually nothing required for ods
 	}
 
 	@Override
-	public void doMerge(int rowIndex, int columnIndex, int rowSpan, int columnSpan)
-	{
-		org.odftoolkit.simple.table.CellRange cr = table.getCellRangeByPosition(columnIndex,
-				rowIndex, columnIndex + columnSpan - 1, rowIndex + rowSpan - 1);
-		
+	public void doMerge(int rowIndex, int columnIndex, int rowSpan, int columnSpan) {
+		org.odftoolkit.simple.table.CellRange cr = table.getCellRangeByPosition(columnIndex, rowIndex, columnIndex
+				+ columnSpan - 1, rowIndex + rowSpan - 1);
+
 		cr.merge();
 	}
 }

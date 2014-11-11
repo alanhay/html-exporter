@@ -17,11 +17,9 @@ package uk.co.certait.htmlexporter.writer.excel;
 
 import uk.co.certait.htmlexporter.ss.AbstractCellRangeResolver;
 
-public class ExcelCellRangeResolver extends AbstractCellRangeResolver
-{
+public class ExcelCellRangeResolver extends AbstractCellRangeResolver {
 	@Override
-	public String getCellSeparator()
-	{
+	public String getCellSeparator() {
 		return ",";
 	}
 }

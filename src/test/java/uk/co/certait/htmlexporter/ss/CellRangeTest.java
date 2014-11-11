@@ -21,19 +21,16 @@ import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
-public class CellRangeTest
-{
+public class CellRangeTest {
 	private CellRange range;
 
 	@Before
-	public void onSetup()
-	{
+	public void onSetup() {
 		range = new CellRange();
 	}
 
 	@Test
-	public void testAddCell()
-	{
+	public void testAddCell() {
 		TableCellReference cell1 = createCell(0, 5);
 		range.addCell(cell1);
 
@@ -62,8 +59,7 @@ public class CellRangeTest
 	}
 
 	@Test
-	public void testIsNewRowRequired()
-	{
+	public void testIsNewRowRequired() {
 		TableCellReference cell1 = createCell(0, 0);
 		Assert.assertTrue(range.isCellInNewRow(cell1));
 		range.addCell(cell1);
@@ -77,16 +73,14 @@ public class CellRangeTest
 	}
 
 	@Test
-	public void testIsEmpty()
-	{
+	public void testIsEmpty() {
 		Assert.assertTrue(range.isEmpty());
 
 		Assert.assertEquals(0, range.getHeight());
 	}
 
 	@Test
-	public void testIsContiguous()
-	{
+	public void testIsContiguous() {
 		range.addCell(createCell(1, 1));
 		range.addCell(createCell(1, 2));
 		Assert.assertTrue(range.isContiguous());
@@ -120,8 +114,7 @@ public class CellRangeTest
 	}
 
 	@Test
-	public void testAddCellRangeListener()
-	{
+	public void testAddCellRangeListener() {
 		// verify that registered observers called on cell added.
 		CellRangeObserver observer = createCellRangeObserver(range);
 		range.addCellRangeObserver(observer);
@@ -130,13 +123,11 @@ public class CellRangeTest
 		EasyMock.verify(observer);
 	}
 
-	private TableCellReference createCell(int rowIndex, int columnIndex)
-	{
+	private TableCellReference createCell(int rowIndex, int columnIndex) {
 		return TestUtils.createCell(rowIndex, columnIndex);
 	}
 
-	private CellRangeObserver createCellRangeObserver(CellRange range)
-	{
+	private CellRangeObserver createCellRangeObserver(CellRange range) {
 		CellRangeObserver observer = EasyMock.createMock(CellRangeObserver.class);
 		observer.cellRangeUpdated(range);
 		EasyMock.expectLastCall();
