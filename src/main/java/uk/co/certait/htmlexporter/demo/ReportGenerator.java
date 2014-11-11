@@ -39,27 +39,24 @@ import uk.co.certait.htmlexporter.pdf.PdfExporter;
 import uk.co.certait.htmlexporter.writer.excel.ExcelExporter;
 import uk.co.certait.htmlexporter.writer.ods.OdsExporter;
 
-public class ReportGenerator
-{
-	public ReportGenerator() throws Exception
-	{
-		String html = generateHTML("report.vm");
+public class ReportGenerator {
+	public ReportGenerator() throws Exception {
+		String html = generateHTML("reportMultiSheet.vm");
+		// String html = generateHTML("report.vm");
 		saveFile("report.html", html.getBytes());
 
 		new ExcelExporter().exportHtml(html, new File("./report.xlsx"));
 		new PdfExporter().exportHtml(html, new File("./report.pdf"));
-		new OdsExporter().exportHtml(html, new File("./report.ods")); 
+		new OdsExporter().exportHtml(html, new File("./report.ods"));
 	}
 
-	public static void main(String[] args) throws Exception
-	{
+	public static void main(String[] args) throws Exception {
 		new ReportGenerator();
 
 		System.exit(0);
 	}
 
-	public String generateHTML(String templateName)
-	{
+	public String generateHTML(String templateName) {
 		Properties props = new Properties();
 		props.put("resource.loader", "class");
 		props.put("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
@@ -76,36 +73,30 @@ public class ReportGenerator
 		return writer.toString();
 	}
 
-	public SalesReportData generateData()
-	{
+	public SalesReportData generateData() {
 		SalesReportData data = new SalesReportData();
 
 		String[] areaNames = { "North", "South", "East", "West" };
 		String[][] regionNames = { { "Grampian", "Highland" }, { "Borders", "Dumfries" },
 				{ "Fife", "Lothian", "Tayside" }, { "Argyll", "Ayrshire", "Glasgow" } };
 
-		for (int i = 0; i < areaNames.length; ++i)
-		{
+		for (int i = 0; i < areaNames.length; ++i) {
 			Area area = new Area(i, areaNames[i]);
 
 			int storeCount = RandomUtils.nextInt(2) + 2;
 
-			for (int j = 0; j < regionNames[i].length; ++j)
-			{
+			for (int j = 0; j < regionNames[i].length; ++j) {
 				Region region = new Region(i + "_" + j, regionNames[i][j]);
 				area.addRegion(region);
 
-				for (int k = 0; k < storeCount; ++k)
-				{
+				for (int k = 0; k < storeCount; ++k) {
 					Store store = new Store(region.getName() + "_" + (k + 1), region.getName() + " Store " + (k + 1));
 					region.addStore(store);
 
-					for (ProductGroup group : ProductGroup.values())
-					{
+					for (ProductGroup group : ProductGroup.values()) {
 						int saleCount = RandomUtils.nextInt(50);
 
-						for (int m = 0; m < saleCount; ++m)
-						{
+						for (int m = 0; m < saleCount; ++m) {
 							int value = RandomUtils.nextInt(100) + 10;
 							store.addSale(new Sale(group, new BigDecimal(Integer.toString(value))));
 						}
@@ -119,8 +110,7 @@ public class ReportGenerator
 		return data;
 	}
 
-	public void saveFile(String fileName, byte[] data) throws IOException
-	{
+	public void saveFile(String fileName, byte[] data) throws IOException {
 		File file = new File(fileName);
 		FileOutputStream out = new FileOutputStream(file);
 		IOUtils.write(data, out);

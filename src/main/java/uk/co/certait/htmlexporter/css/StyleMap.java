@@ -107,7 +107,8 @@ public class StyleMap
 			List<Rule> inlineRules;
 			try
 			{
-				inlineRules = CSSParser.parse("x{" + element.attr("style") + "}");
+				String inlineStyle = element.attr("style").endsWith(";") ? element.attr("style") : element.attr("style") + ";";
+				inlineRules = CSSParser.parse("x{" + inlineStyle + "}");
 			}
 			catch (Exception e)
 			{

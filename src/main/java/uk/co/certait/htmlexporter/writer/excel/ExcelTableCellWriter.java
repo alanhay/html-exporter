@@ -60,6 +60,7 @@ public class ExcelTableCellWriter extends AbstractTableCellWriter {
 		} else if ((numericValue = getNumericValue(element)) != null) {
 			cell.setCellValue(numericValue);
 		} else {
+			cell = sheet.getRow(rowIndex).createCell(columnIndex, Cell.CELL_TYPE_STRING);
 			cell.setCellValue(getElementText(element));
 		}
 

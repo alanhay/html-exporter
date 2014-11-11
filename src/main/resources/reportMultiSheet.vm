@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        #include("./report.css")
+    </head>
+    <body>
+        #set($areas = $data.areas)
+        <!-- LOOP AREAS -->
+        #set($firstAreaLoop = true)
+        #foreach($area in $areas)
+            #if($firstAreaLoop)
+                #set($firstAreaLoop = false)
+                #set($pageBreak = 'avoid')
+              #else
+                  #set($pageBreak = 'always')  
+            #end
+            <table style="width:100%; page-break-before: $pageBreak;" data-new-sheet="true">
+                <tr>
+                    ##<th style="width:120px;">Area</th>
+                    <th style="width:120px;">Region</th>
+                    <th style="width:120px;">Store</th>
+                    #foreach($group in $productGroups)
+                        <th colspan="2" style="text-align:center;">$group</th>
+                    #end
+                    <th colspan="2" style="text-align:center;">Total Sales</th>
+                </tr>
+                <tr>
+                    ##<th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                    #foreach($group in $productGroups) 
+                        <th style="text-align:center;">Count </th>
+                        <th style="text-align:center;">Value</th>
+                    #end
+                    <th style="text-align:center;">Count</th>
+                    <th style="text-align:center;">Value</th>
+                </tr>
+                ##set($firstAreaLoop = true)
+                <!-- FOR EACH REGION -->
+                #foreach($region in $area.regions)
+                    #set($firstRegionLoop = true)
+                    #set($dataRowCount = 0)
+                    <!-- FOR EACH STORE -->
+                    #foreach($store in $region.stores)
+                        #if($dataRowCount % 2 ==0)
+                            #set($backgroundClass="oddRow")
+                            #else
+                                #set($backgroundClass="")
+                        #end	
+                        <tr>
+                            ##if($firstAreaLoop)
+                                ##set($areaRowSpan = $area.numberOfRegions + $area.numberOfStores)
+                                ##<td class="areaClass" rowspan="$areaRowSpan">$area.name</td>
+                                ###set($firstAreaLoop = false)
+                                ##end
+                                #if($firstRegionLoop)
+                                    #set($regionRowSpan = $region.numberOfStores)
+                                    <td class="regionClass" rowspan="$regionRowSpan">$region.name</td>
+                                    #set($firstRegionLoop = false)
+                                #end
+                                <td class="$backgroundClass">$store.name</td>
+                                <!-- FOR EACH PRODUCT GROUP-->
+                                #foreach($group in $productGroups)	
+                                    <td data-group="store_${store.id}_count, region_${region.id}_pg_${group.id}_count" 
+                                        class="numeric $backgroundClass">
+                                        $store.getNumberOfSalesForProductGroup($group)
+                                    </td>
+                                    #if($store == $area.getBestPerformingStoreForProductGroup($group))
+                                        #set($bestPerformingClass = "bestPerforming")
+                                        #else
+                                            #set($bestPerformingClass = "")
+                                    #end
+                                    #if($store.getValueOfSalesForProductGroup($group) < 200)
+                                            #set($cellComment = "data-cell-comment='Random Comment: Sales &lt; 200'")
+                                            #set($cellCommentDimension = "data-cell-comment-dimension='4,1'")
+                                            #else
+                                                #set($cellComment = "")
+                                                #set($cellCommentDimension = "")
+                                    #end
+                                    <td data-group="store_${store.id}_value, region_${region.id}_pg_${group.id}_value" $cellComment $cellCommentDimension
+                                        class="numeric $backgroundClass $bestPerformingClass">
+                                        $store.getValueOfSalesForProductGroup($group)
+                                    </td>
+                                #end
+                                <!-- TOTAL FOR STORES -->
+                                <td data-group-output="store_${store.id}_count" data-group="region_${region.id}_count" 
+                                    class="numeric $backgroundClass">
+                                    $store.numberOfSales
+                                </td>
+                                <td data-group-output="store_${store.id}_value" data-group="region_${region.id}_value" 
+                                    class="numeric $backgroundClass" >
+                                    $store.valueOfSales
+                                </td>
+                                #set($dataRowCount = $dataRowCount + 1)
+</tr>
+                    #end <!--END STORES LOOP-->
+                    <!--OUTPUT TOTALS OR REGION-->
+                    <tr>
+                        <td class="subTotal">$region.name Sub-total</td>
+                        <td class="subTotal">&nbsp;</td>
+                        #foreach($group in $productGroups) 
+                            <td class="subTotal numeric" data-group-output="region_${region.id}_pg_${group.id}_count" 
+                                data-group="area_${area.id}_pg_${group.id}_count">
+                                $region.getNumberOfSalesForProductGroup($group)
+                            </td>
+                            <td class="subTotal numeric" data-group-output="region_${region.id}_pg_${group.id}_value" 
+                                data-group="area_${area.id}_pg_${group.id}_value">
+                                $region.getValueOfSalesForProductGroup($group)
+                            </td>
+                        #end
+                        <!-- TOTAL FOR REGION -->
+                        <td class="subTotal numeric" data-group-output="region_${region.id}_count" 
+                            data-group="area_${area.id}_count">
+                            $region.numberOfSales
+                        </td>
+                        <td class="subTotal numeric" data-group-output="region_${region.id}_value" 
+                            data-group="area_${area.id}_value">
+                            $region.valueOfSales
+                        </td>
+                    </tr>
+                #end <!--END REGIONS LOOPS-->
+                <!-- OUPUT TOTALS FOR AREA-->
+                <tr>
+                    <td class="areaSubTotal">$area.name Sub-total</td>
+                    <td class="areaSubTotal">&nbsp;</td>
+                    ##<td class="areaSubTotal">&nbsp;</td>
+                    #foreach($group in $productGroups) 
+                        <td class="areaSubTotal numeric" data-group-output="area_${area.id}_pg_${group.id}_count" 
+                            data-group="pg_${group.id}_count">
+                            $area.getNumberOfSalesForProductGroup($group)
+                        </td>
+                        <td class="areaSubTotal numeric" data-group-output="area_${area.id}_pg_${group.id}_value" 
+                            data-group="pg_${group.id}_value">
+                            $area.getValueOfSalesForProductGroup($group)
+                        </td>
+                    #end
+                    <!-- TOTAL FOR AREA -->
+                    <td class="areaSubTotal numeric" data-group-output="area_${area.id}_count" 
+                        data-group="total_count">
+                        $area.numberOfSales
+                    </td>
+                    <td class="areaSubTotal numeric" data-group-output="area_${area.id}_value" 
+                        data-group="total_value">
+                        $area.valueOfSales
+                    </td>
+                </tr>
+            </table>
+        #end	<!-- END AREA LOOP -->
+<br/>
+<table>
+    <tr>
+        <td class="bestPerforming">&nbsp;&nbsp;</td>
+        <td colspan="5" style="border-width:0px;">Best Performing Store in Area for Product Group</td>
+    </tr>
+</table>
+</body>
+</html>

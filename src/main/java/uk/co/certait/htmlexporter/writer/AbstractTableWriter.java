@@ -40,7 +40,7 @@ public abstract class AbstractTableWriter implements TableWriter
 			++ rowIndex;
 		}
 		
-		return rowIndex;
+		return rowIndex - startRow;
 	}
 	
 	public abstract void renderTable(Element table);
