@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>uk.co.certait</groupId>
 	<artifactId>html-exporter</artifactId>
-	<version>0.3.3</version>
+	<version>0.3.4</version>
 	<packaging>jar</packaging>
 
 	<!-- <parent> <groupId>org.sonatype.oss</groupId> <artifactId>oss-parent</artifactId> 
@@ -11,7 +11,7 @@
 
 	<properties>
 		<S3_BUCKET_NAME>alanhay-maven-repository</S3_BUCKET_NAME>
-		<java.version>7</java.version>
+		<java.version>8</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -141,6 +141,10 @@
 						<goals>
 							<goal>jar</goal>
 						</goals>
+						<!-- Prevents errors stopping build in java 8 -->
+			            <configuration>
+			                <additionalparam>-Xdoclint:none</additionalparam>
+			            </configuration>
 					</execution>
 				</executions>
 			</plugin>
