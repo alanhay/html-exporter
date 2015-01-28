@@ -14,7 +14,7 @@ Initial development has concentrated around  Excel (via POI) and Open Office Cal
 as I couldn't find an existing HTML to (proper) spreadsheet (as opposed to csv) exporter for java.
 
 For PDF generation this library simply provides some convenience methods around the existing 
-<a href="https://code.google.com/p/flying-saucer/">xhtmlRenderer</a> library. 
+<a href="https://code.google.com/p/flying-saucer/">xhtmlRenderer/flying saucer</a> library. 
 
 Word and OO Writer both open HTML documents regardless of the file extension so whether this is worth looking at remains to be seen.
 
@@ -57,6 +57,7 @@ Features
 * Supports a limited subset of CSS: enough for producing nicely formatted reports.
 * Spreadsheet cell comments.
 * Cells can span multiple rows and columns.
+* Multiple sheets.
 * Automatic formula insertion:
 
 The ODS and Excel exporters allow for producing spreadsheets with automatic formula insertion via the use of various HTML5 
