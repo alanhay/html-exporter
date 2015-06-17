@@ -59,6 +59,7 @@ Features
 * Cells can span multiple rows and columns.
 * Multiple sheets.
 * Automatic formula insertion:
+* Freeze panes
 
 The ODS and Excel exporters allow for producing spreadsheets with automatic formula insertion via the use of various HTML5 
 compliant data-* attributes being applied to table cells. The sample spreadsheets linked to above demonstrate this functionality.
