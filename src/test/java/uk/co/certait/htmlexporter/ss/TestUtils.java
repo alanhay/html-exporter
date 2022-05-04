@@ -17,8 +17,6 @@ package uk.co.certait.htmlexporter.ss;
 
 import org.easymock.EasyMock;
 
-import uk.co.certait.htmlexporter.ss.TableCellReference;
-
 public class TestUtils {
 	public static TableCellReference createCell(int rowIndex, int columnIndex) {
 		TableCellReference cell = EasyMock.createMock(TableCellReference.class);

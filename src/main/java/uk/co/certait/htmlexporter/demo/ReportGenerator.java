@@ -24,7 +24,7 @@ import java.math.BigDecimal;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.math.RandomUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -41,8 +41,8 @@ import uk.co.certait.htmlexporter.writer.ods.OdsExporter;
 
 public class ReportGenerator {
 	public ReportGenerator() throws Exception {
-		String html = generateHTML("reportMultiSheet.vm");
-		// String html = generateHTML("report.vm");
+		//String html = generateHTML("reportMultiSheet.vm");
+		String html = generateHTML("report.vm");
 		saveFile("report.html", html.getBytes());
 
 		new ExcelExporter().exportHtml(html, new File("./report.xlsx"));
@@ -83,7 +83,7 @@ public class ReportGenerator {
 		for (int i = 0; i < areaNames.length; ++i) {
 			Area area = new Area(i, areaNames[i]);
 
-			int storeCount = RandomUtils.nextInt(2) + 2;
+			int storeCount = RandomUtils.nextInt(1, 2) + 2;
 
 			for (int j = 0; j < regionNames[i].length; ++j) {
 				Region region = new Region(i + "_" + j, regionNames[i][j]);
@@ -94,10 +94,10 @@ public class ReportGenerator {
 					region.addStore(store);
 
 					for (ProductGroup group : ProductGroup.values()) {
-						int saleCount = RandomUtils.nextInt(50);
+						int saleCount = RandomUtils.nextInt(1, 50);
 
 						for (int m = 0; m < saleCount; ++m) {
-							int value = RandomUtils.nextInt(100) + 10;
+							int value = RandomUtils.nextInt(1, 100) + 10;
 							store.addSale(new Sale(group, new BigDecimal(Integer.toString(value))));
 						}
 					}

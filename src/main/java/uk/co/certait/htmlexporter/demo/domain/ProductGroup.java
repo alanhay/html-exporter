@@ -15,7 +15,7 @@
  */
 package uk.co.certait.htmlexporter.demo.domain;
 
-import org.apache.commons.lang.WordUtils;
+import org.apache.commons.text.WordUtils;
 
 public enum ProductGroup {
 	ELECTRICAL(1), SPORTS(2), HOME(3), GARDEN(4), TRAVEL(5), TOYS(6);

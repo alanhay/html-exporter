@@ -18,7 +18,7 @@ package uk.co.certait.htmlexporter.writer;
 import java.text.NumberFormat;
 import java.text.ParseException;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Attribute;
 import org.jsoup.nodes.Element;
 

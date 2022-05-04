@@ -48,14 +48,14 @@ public class ExcelTableRowWriter extends AbstractTableRowWriter {
 
 		sheet.addMergedRegion(range);
 
-		RegionUtil.setBorderBottom(cell.getCellStyle().getBorderBottom(), range, sheet, sheet.getWorkbook());
-		RegionUtil.setBorderTop(cell.getCellStyle().getBorderTop(), range, sheet, sheet.getWorkbook());
-		RegionUtil.setBorderLeft(cell.getCellStyle().getBorderLeft(), range, sheet, sheet.getWorkbook());
-		RegionUtil.setBorderRight(cell.getCellStyle().getBorderRight(), range, sheet, sheet.getWorkbook());
+		RegionUtil.setBorderBottom(cell.getCellStyle().getBorderBottom(), range, sheet);
+		RegionUtil.setBorderTop(cell.getCellStyle().getBorderTop(), range, sheet);
+		RegionUtil.setBorderLeft(cell.getCellStyle().getBorderLeft(), range, sheet);
+		RegionUtil.setBorderRight(cell.getCellStyle().getBorderRight(), range, sheet);
 
-		RegionUtil.setBottomBorderColor(cell.getCellStyle().getBottomBorderColor(), range, sheet, sheet.getWorkbook());
-		RegionUtil.setTopBorderColor(cell.getCellStyle().getTopBorderColor(), range, sheet, sheet.getWorkbook());
-		RegionUtil.setLeftBorderColor(cell.getCellStyle().getLeftBorderColor(), range, sheet, sheet.getWorkbook());
-		RegionUtil.setRightBorderColor(cell.getCellStyle().getRightBorderColor(), range, sheet, sheet.getWorkbook());
+		RegionUtil.setBottomBorderColor(cell.getCellStyle().getBottomBorderColor(), range, sheet);
+		RegionUtil.setTopBorderColor(cell.getCellStyle().getTopBorderColor(), range, sheet);
+		RegionUtil.setLeftBorderColor(cell.getCellStyle().getLeftBorderColor(), range, sheet);
+		RegionUtil.setRightBorderColor(cell.getCellStyle().getRightBorderColor(), range, sheet);
 	}
 }

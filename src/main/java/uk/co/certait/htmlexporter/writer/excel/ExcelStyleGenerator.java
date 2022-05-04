@@ -22,6 +22,7 @@ import java.util.Map;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
@@ -65,33 +66,28 @@ public class ExcelStyleGenerator {
 
 	protected void applyBackground(Style style, XSSFCellStyle cellStyle) {
 		if (style.isBackgroundSet()) {
-			cellStyle.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);
-			cellStyle.setFillForegroundColor(new XSSFColor(style.getProperty(CssColorProperty.BACKGROUND)));
+			cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+			cellStyle.setFillForegroundColor(new XSSFColor(style.getProperty(CssColorProperty.BACKGROUND), null));
 		}
 	}
 
 	protected void applyBorders(Style style, XSSFCellStyle cellStyle) {
 		if (style.isBorderWidthSet()) {
-			short width = (short) style.getProperty(CssIntegerProperty.BORDER_WIDTH);
 
 			Color color = style.getProperty(CssColorProperty.BORDER_COLOR) != null ? style
 					.getProperty(CssColorProperty.BORDER_COLOR) : Color.BLACK;
 
 			cellStyle.setBorderBottom(BorderStyle.THIN);
-			cellStyle.setBorderBottom(width);
-			cellStyle.setBottomBorderColor(new XSSFColor(color));
+			cellStyle.setBottomBorderColor(new XSSFColor(color, null));
 
 			cellStyle.setBorderTop(BorderStyle.THIN);
-			cellStyle.setBorderTop(width);
-			cellStyle.setTopBorderColor(new XSSFColor(color));
+			cellStyle.setTopBorderColor(new XSSFColor(color, null));
 
 			cellStyle.setBorderLeft(BorderStyle.THIN);
-			cellStyle.setBorderLeft(width);
-			cellStyle.setLeftBorderColor(new XSSFColor(color));
+			cellStyle.setLeftBorderColor(new XSSFColor(color, null));
 
 			cellStyle.setBorderRight(BorderStyle.THIN);
-			cellStyle.setBorderRight(width);
-			cellStyle.setRightBorderColor(new XSSFColor(color));
+			cellStyle.setRightBorderColor(new XSSFColor(color, null));
 		}
 	}
 
@@ -142,14 +138,11 @@ public class ExcelStyleGenerator {
 
 			// if(! color.equals(Color.WHITE)) // POI Bug
 			// {
-			((XSSFFont) font).setColor(new XSSFColor(color));
+			((XSSFFont) font).setColor(new XSSFColor(color, null));
 			// }
 		}
 
-		if (style.isFontBold()) {
-			font.setBoldweight(Font.BOLDWEIGHT_BOLD);
-		}
-
+		font.setBold(style.isFontBold());
 		font.setItalic(style.isFontItalic());
 
 		if (style.isTextUnderlined()) {
