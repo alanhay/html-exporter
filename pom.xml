@@ -90,6 +90,12 @@
 		    <version>2.3</version>
 		</dependency>
 		
+		<dependency>
+		  <groupId>com.helger</groupId>
+		  <artifactId>ph-css</artifactId>
+		  <version>6.5.0</version>
+		</dependency>
+
 		<!-- FIXME -->
 		<dependency>
 			<groupId>com.osbcp</groupId>
