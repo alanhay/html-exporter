@@ -38,6 +38,10 @@ public class Style {
 	protected static final String TOP_ALIGN = "top";
 	protected static final String BOTTOM_ALIGN = "bottom";
 	protected static final String MIDDLE_ALIGN = "middle";
+	protected static final String SOLID_BORDER = "solid";
+	protected static final String DASHED_BORDER = "dashed";
+	protected static final String DOTTED_BORDER = "dotted";
+	protected static final String DOUBLE_BORDER = "double";
 
 	private Map<CssIntegerProperty, Integer> integerProperties;
 	private Map<CssStringProperty, String> stringProperties;

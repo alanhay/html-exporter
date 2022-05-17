@@ -15,6 +15,31 @@
  */
 package uk.co.certait.htmlexporter.css;
 
-public class StyleMapperTest {
+import static org.assertj.core.api.Assertions.assertThat;
 
+import org.jsoup.nodes.Element;
+import org.jsoup.parser.Tag;
+import org.junit.Test;
+
+public class StyleMapTest {
+
+	@Test
+	public void testGetInlineStyle() {
+		Element e = new Element(Tag.valueOf("td"), "") {
+			
+			@Override
+			public boolean hasAttr(String attributeKey) {
+				return true;
+			}
+			@Override
+			public String attr(String attributeKey) {
+				return "font-color: red; background: white; border: 1px dashed #678876";
+			}
+		};
+
+		Style style = new StyleMap(null).getInlineStyle(e);
+
+		// FIXME Use Optional
+		assertThat(style).isNotNull();
+	}
 }

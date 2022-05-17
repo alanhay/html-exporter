@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>uk.co.certait</groupId>
@@ -70,9 +71,9 @@
 			<version>2.11.0</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.apache.commons</groupId>
-		    <artifactId>commons-text</artifactId>
-		    <version>1.9</version>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-text</artifactId>
+			<version>1.9</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -85,24 +86,16 @@
 			<version>9.1.22</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.apache.velocity</groupId>
-		    <artifactId>velocity-engine-core</artifactId>
-		    <version>2.3</version>
-		</dependency>
-		
-		<dependency>
-		  <groupId>com.helger</groupId>
-		  <artifactId>ph-css</artifactId>
-		  <version>6.5.0</version>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity-engine-core</artifactId>
+			<version>2.3</version>
 		</dependency>
 
-		<!-- FIXME REMOVE -->
 		<dependency>
-			<groupId>com.osbcp</groupId>
-			<artifactId>cssparser</artifactId>
-			<version>1.0.1</version>
+			<groupId>com.helger</groupId>
+			<artifactId>ph-css</artifactId>
+			<version>6.5.0</version>
 		</dependency>
-		
 
 		<!-- FIXME -->
 		<dependency>
@@ -111,6 +104,13 @@
 			<version>0.7-incubating</version>
 		</dependency>
 		
+		<!-- LOGGING -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.2.11</version>
+		</dependency>
+	
 		<!-- TEST ONLY -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -124,6 +124,13 @@
 			<version>3.1</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<version>3.22.0</version>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -150,22 +157,10 @@
 					</execution>
 				</executions>
 			</plugin>
-<!-- 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-						Prevents errors stopping build in java 8
-			            <configuration>
-			                <additionalparam>-Xdoclint:none</additionalparam>
-			            </configuration>
-					</execution>
-				</executions>
-			</plugin> -->
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-javadoc-plugin</artifactId> 
+				<executions> <execution> <id>attach-javadocs</id> <goals> <goal>jar</goal> 
+				</goals> Prevents errors stopping build in java 8 <configuration> <additionalparam>-Xdoclint:none</additionalparam> 
+				</configuration> </execution> </executions> </plugin> -->
 			<plugin>
 				<groupId>com.mycila.maven-license-plugin</groupId>
 				<artifactId>maven-license-plugin</artifactId>

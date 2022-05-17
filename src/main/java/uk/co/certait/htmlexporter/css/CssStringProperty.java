@@ -16,8 +16,10 @@
 package uk.co.certait.htmlexporter.css;
 
 public enum CssStringProperty {
-	FONT_FAMILY("font-family"), FONT_WEIGHT("font-weight"), FONT_STYLE("font-style"), TEXT_DECORATION("text-decoration"), TEXT_ALIGN(
-			"text-align"), VERTICAL_ALIGN("vertical-align");
+	FONT_FAMILY("font-family"), FONT_WEIGHT("font-weight"), FONT_STYLE("font-style"),
+	TEXT_DECORATION("text-decoration"), TEXT_ALIGN("text-align"), VERTICAL_ALIGN("vertical-align"),
+	BORDER_STYLE("border-style"), BORDER_TOP_STYLE("border-top-style"), BORDER_BOTTOM_STYLE("border-bottom-style"),
+	BORDER_LEFT_STYLE("border-left-style"), BORDER_RIGHT_STYLE("border-right-style");
 
 	private String property;
 
