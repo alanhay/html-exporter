@@ -20,6 +20,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.jsoup.nodes.Element;
@@ -60,7 +61,7 @@ public class ExcelTableCellWriter extends AbstractTableCellWriter {
 		} else if ((numericValue = getNumericValue(element)) != null) {
 			cell.setCellValue(numericValue);
 		} else {
-			cell = sheet.getRow(rowIndex).createCell(columnIndex, Cell.CELL_TYPE_STRING);
+			cell = sheet.getRow(rowIndex).createCell(columnIndex, CellType.STRING);
 			cell.setCellValue(getElementText(element));
 		}
 

@@ -15,16 +15,14 @@
  */
 package uk.co.certait.htmlexporter.writer.excel;
 
-import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 
+import junit.framework.Assert;
 import uk.co.certait.htmlexporter.ss.CellRange;
 import uk.co.certait.htmlexporter.ss.CellRangeResolver;
 import uk.co.certait.htmlexporter.ss.TableCellReference;
 import uk.co.certait.htmlexporter.ss.TestUtils;
-import uk.co.certait.htmlexporter.writer.excel.ExcelCellRangeResolver;
 
 public class ExcelCellRangeResolverTest {
 	private CellRange range;

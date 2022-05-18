@@ -15,7 +15,7 @@
  */
 package uk.co.certait.htmlexporter.ss;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.util.CellReference;
 
 public abstract class AbstractCellRangeResolver implements CellRangeResolver {

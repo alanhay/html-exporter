@@ -45,50 +45,67 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.1</version>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
-			<version>3.9</version>
+			<version>5.2.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
-			<version>1.6.3</version>
+			<version>1.14.3</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-beanutils</groupId>
 			<artifactId>commons-beanutils</artifactId>
-			<version>1.8.3</version>
+			<version>1.9.4</version>
 		</dependency>
 		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-			<version>2.6</version>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.12.0</version>
 		</dependency>
 		<dependency>
-			<groupId>commons-collections</groupId>
-			<artifactId>commons-collections</artifactId>
-			<version>3.2.2</version>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.11.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.velocity</groupId>
-			<artifactId>velocity</artifactId>
-			<version>1.7</version>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-text</artifactId>
+		    <version>1.9</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+			<version>4.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.xhtmlrenderer</groupId>
-			<artifactId>flying-saucer-pdf</artifactId>
-			<version>9.0.4</version>
+			<artifactId>flying-saucer-pdf-openpdf</artifactId>
+			<version>9.1.22</version>
 		</dependency>
+		<dependency>
+		    <groupId>org.apache.velocity</groupId>
+		    <artifactId>velocity-engine-core</artifactId>
+		    <version>2.3</version>
+		</dependency>
+		
+		<!-- FIXME -->
 		<dependency>
 			<groupId>com.osbcp</groupId>
 			<artifactId>cssparser</artifactId>
 			<version>1.0.1</version>
 		</dependency>
+		
+
+		<!-- FIXME -->
+		<dependency>
+			<groupId>org.apache.odftoolkit</groupId>
+			<artifactId>simple-odf</artifactId>
+			<version>0.7-incubating</version>
+		</dependency>
+		
+		<!-- TEST ONLY -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -100,11 +117,6 @@
 			<artifactId>easymock</artifactId>
 			<version>3.1</version>
 			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.odftoolkit</groupId>
-			<artifactId>simple-odf</artifactId>
-			<version>0.7-incubating</version>
 		</dependency>
 	</dependencies>
 
@@ -132,7 +144,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
+<!-- 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<executions>
@@ -141,17 +153,13 @@
 						<goals>
 							<goal>jar</goal>
 						</goals>
-						<!-- Prevents errors stopping build in java 8 -->
+						Prevents errors stopping build in java 8
 			            <configuration>
 			                <additionalparam>-Xdoclint:none</additionalparam>
 			            </configuration>
 					</execution>
 				</executions>
-			</plugin>
-			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-gpg-plugin</artifactId> 
-				<executions> <execution> <configuration> <executable>C:\Program Files\GNU\GnuPG\gpg2.exe</executable> 
-				</configuration> <id>sign-artifacts</id> <phase>verify</phase> <goals> <goal>sign</goal> 
-				</goals> </execution> </executions> </plugin> -->
+			</plugin> -->
 			<plugin>
 				<groupId>com.mycila.maven-license-plugin</groupId>
 				<artifactId>maven-license-plugin</artifactId>

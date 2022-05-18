@@ -18,7 +18,7 @@ package uk.co.certait.htmlexporter.writer.excel;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -72,6 +72,7 @@ public class ExcelExporter extends AbstractExporter {
 		workbook.write(out);
 		out.flush();
 		out.close();
+		workbook.close();
 	}
 
 	protected void formatSheet(Sheet sheet) {
