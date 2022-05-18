@@ -47,27 +47,40 @@ public class StyleMap {
 	}
 
 	public Style getStyleForElement(Element element) {
-		Style style = new Style();
+		return StyleMerger.mergeStyles(getAllStyles(element).toArray(new Style[0]));
+	}
+	
+	protected List<Style> getAllStyles(Element element) {
+		// FIXME We should be able to walk the tree here and get any inherited styles
+		// We have a list of styles and merge all at the end
+		List<Style> styles = new ArrayList<>();
 
 		if (getStyleForTag(element) != null) {
-			style = StyleMerger.mergeStyles(style, getStyleForTag(element));
+			styles.add(getStyleForTag(element));
+			// style = StyleMerger.mergeStyles(style, getStyleForTag(element));
 		}
 
 		if (!getStylesForClass(element).isEmpty()) {
 			List<Style> classStyles = getStylesForClass(element);
+			styles.addAll(classStyles);
 
-			for (Style classStyle : classStyles) {
-				style = StyleMerger.mergeStyles(style, classStyle);
-			}
+			// for (Style classStyle : classStyles) {
+			// style = StyleMerger.mergeStyles(style, classStyle);
+			// }
 		}
 
 		Optional<Style> inlineStyle = getInlineStyle(element);
 
 		if (inlineStyle.isPresent()) {
-			style = StyleMerger.mergeStyles(style, inlineStyle.get());
+			// style = StyleMerger.mergeStyles(style, inlineStyle.get());
+			styles.add(inlineStyle.get());
 		}
 
-		return style;
+		for (Element parent : element.parents()) {
+			styles.addAll(0, getAllStyles(parent));
+		}
+
+		return styles;		
 	}
 
 	private Style getStyleForTag(Element element) {

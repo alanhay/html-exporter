@@ -54,7 +54,7 @@
     					#else
     						#set($backgroundClass="")
     					#end	
-    					<tr>
+    					<tr class="$backgroundClass">
     						#if($firstAreaLoop)
     							#set($areaRowSpan = $area.numberOfRegions + $area.numberOfStores)
     							<td class="areaClass" rowspan="$areaRowSpan">$area.name</td>
@@ -65,12 +65,12 @@
     							<td class="regionClass" rowspan="$regionRowSpan">$region.name</td>
     							#set($firstRegionLoop = false)
     						#end
-    						<td class="$backgroundClass">$store.name</td>
+    						<td>$store.name</td>
     						
 							<!-- FOR EACH PRODUCT GROUP-->
             				#foreach($group in $productGroups)	
             						<td data-group="store_${store.id}_count, region_${region.id}_pg_${group.id}_count" 
-											class="numeric $backgroundClass">
+											class="numeric">
     									$store.getNumberOfSalesForProductGroup($group)
                                     </td>
     								#if($store == $area.getBestPerformingStoreForProductGroup($group))
@@ -87,18 +87,18 @@
 										#set($cellCommentDimension = "")
 									#end
             						<td data-group="store_${store.id}_value, region_${region.id}_pg_${group.id}_value" $cellComment $cellCommentDimension
-											class="numeric $backgroundClass $bestPerformingClass">
+											class="numeric $bestPerformingClass">
             							$store.getValueOfSalesForProductGroup($group)
                                     </td>                            
     						#end
     						
     						<!-- TOTAL FOR STORES -->
     						<td data-group-output="store_${store.id}_count" data-group="region_${region.id}_count" 
-									class="numeric $backgroundClass">
+									class="numeric">
     							$store.numberOfSales
                             </td>
     						<td data-group-output="store_${store.id}_value" data-group="region_${region.id}_value" 
-									class="numeric $backgroundClass" >
+									class="numeric" >
     							$store.valueOfSales
                             </td>   
     						
