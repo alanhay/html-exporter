@@ -33,7 +33,7 @@ import uk.co.certait.htmlexporter.css.Style;
 public class OdsStyleGenerator {
 	public void styleCell(Cell cell, Style style) {
 		if (style.isBackgroundSet()) {
-			cell.setCellBackgroundColor(new Color(style.getProperty(CssColorProperty.BACKGROUND)));
+			cell.setCellBackgroundColor(new Color(style.getProperty(CssColorProperty.BACKGROUND_COLOR)));
 		}
 
 		applyBorder(cell, style);

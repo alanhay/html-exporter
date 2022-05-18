@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Element;
@@ -60,8 +61,10 @@ public class StyleMap {
 			}
 		}
 
-		if (getInlineStyle(element) != null) {
-			style = StyleMerger.mergeStyles(style, getInlineStyle(element));
+		Optional<Style> inlineStyle = getInlineStyle(element);
+		
+		if (inlineStyle.isPresent()) {
+			style = StyleMerger.mergeStyles(style, inlineStyle.get());
 		}
 
 		return style;
@@ -89,7 +92,7 @@ public class StyleMap {
 		return classStyles;
 	}
 
-	protected Style getInlineStyle(Element element) {
+	protected Optional<Style> getInlineStyle(Element element) {
 		List<Style> styles = new ArrayList<>();
 
 		if (element.hasAttr("style")) {
@@ -114,6 +117,6 @@ public class StyleMap {
 			// inlineRules.get(0).getSelectors().get(0));
 		}
 
-		return StyleMerger.mergeStyles(styles.toArray(new Style[0]));
+		return Optional.of(StyleMerger.mergeStyles(styles.toArray(new Style[0])));
 	}
 }

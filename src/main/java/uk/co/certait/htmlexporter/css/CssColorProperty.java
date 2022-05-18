@@ -16,7 +16,7 @@
 package uk.co.certait.htmlexporter.css;
 
 public enum CssColorProperty {
-	COLOR("color"), BACKGROUND("background"), BACKGROUND_COLOR("background-color"), BORDER_COLOR("border-color"),
+	COLOR("color"), BACKGROUND_COLOR("background-color"), BORDER_COLOR("border-color"),
 	BORDER_TOP_COLOR("border-top-color"), BORDER_BOTTOM_COLOR("border-bottom-color"),
 	BORDER_LEFT_COLOR("border-left-color"), BORDER_RIGHT_COLOR("border-right-color");
 

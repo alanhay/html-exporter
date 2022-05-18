@@ -49,7 +49,8 @@ public class StyleParserTest {
 
 		assertThat(styleMap).containsKey("td");
 		style = styleMap.get("td");
-		assertThat(style.isBackgroundSet()).isFalse();
+		assertThat(style.isBackgroundSet()).isTrue();
+		assertThat(style.getProperty(CssColorProperty.BACKGROUND_COLOR)).isEqualTo(Color.decode("#999999"));
 		assertThat(style.getProperty(CssStringProperty.BORDER_STYLE)).isEqualTo(Style.SOLID_BORDER);
 		assertThat(style.getProperty(CssColorProperty.BORDER_TOP_COLOR)).isEqualTo(Color.decode("#656565"));
 		assertThat(style.getProperty(CssColorProperty.BORDER_BOTTOM_COLOR)).isEqualTo(Color.decode("#656565"));

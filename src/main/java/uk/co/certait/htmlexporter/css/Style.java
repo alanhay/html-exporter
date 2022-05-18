@@ -148,7 +148,7 @@ public class Style {
 	}
 
 	public boolean isBackgroundSet() {
-		return colorProperties.containsKey(CssColorProperty.BACKGROUND);
+		return colorProperties.containsKey(CssColorProperty.BACKGROUND_COLOR);
 	}
 
 	public boolean isBorderColorSet() {

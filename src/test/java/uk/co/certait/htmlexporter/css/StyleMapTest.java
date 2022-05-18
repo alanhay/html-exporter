@@ -17,6 +17,9 @@ package uk.co.certait.htmlexporter.css;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.awt.Color;
+import java.util.Optional;
+
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
 import org.junit.Test;
@@ -26,20 +29,26 @@ public class StyleMapTest {
 	@Test
 	public void testGetInlineStyle() {
 		Element e = new Element(Tag.valueOf("td"), "") {
-			
+
 			@Override
 			public boolean hasAttr(String attributeKey) {
 				return true;
 			}
+
 			@Override
 			public String attr(String attributeKey) {
-				return "font-color: red; background: white; border: 1px dashed #678876";
+				return "color: red; background: white; border: 2px dashed #678876";
 			}
 		};
 
-		Style style = new StyleMap(null).getInlineStyle(e);
+		Optional<Style> optional = new StyleMap(null).getInlineStyle(e);
+		assertThat(optional).isPresent();
+		Style style = optional.get();
 
-		// FIXME Use Optional
-		assertThat(style).isNotNull();
+		assertThat(style.getProperty(CssColorProperty.COLOR)).isEqualTo(Color.RED);
+		assertThat(style.getProperty(CssColorProperty.BACKGROUND_COLOR)).isEqualTo(Color.WHITE);
+		assertThat(style.getProperty(CssIntegerProperty.BORDER_WIDTH)).isEqualTo(2);
+		assertThat(style.getProperty(CssStringProperty.BORDER_STYLE)).isEqualTo(Style.DASHED_BORDER);
+		assertThat(style.getProperty(CssColorProperty.BORDER_COLOR)).isEqualTo(Color.decode("#678876"));
 	}
 }

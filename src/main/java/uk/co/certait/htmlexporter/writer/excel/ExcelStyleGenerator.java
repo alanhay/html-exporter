@@ -67,27 +67,68 @@ public class ExcelStyleGenerator {
 	protected void applyBackground(Style style, XSSFCellStyle cellStyle) {
 		if (style.isBackgroundSet()) {
 			cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-			cellStyle.setFillForegroundColor(new XSSFColor(style.getProperty(CssColorProperty.BACKGROUND), null));
+			cellStyle.setFillForegroundColor(new XSSFColor(style.getProperty(CssColorProperty.BACKGROUND_COLOR), null));
 		}
 	}
 
 	protected void applyBorders(Style style, XSSFCellStyle cellStyle) {
 		if (style.isBorderWidthSet()) {
 
-			Color color = style.getProperty(CssColorProperty.BORDER_COLOR) != null ? style
-					.getProperty(CssColorProperty.BORDER_COLOR) : Color.BLACK;
+			Color borderColor = style.getProperty(CssColorProperty.BORDER_COLOR) != null
+					? style.getProperty(CssColorProperty.BORDER_COLOR)
+					: Color.BLACK;
 
-			cellStyle.setBorderBottom(BorderStyle.THIN);
-			cellStyle.setBottomBorderColor(new XSSFColor(color, null));
+			Color topBorderColor = style.getProperty(CssColorProperty.BORDER_TOP_COLOR) != null
+					? style.getProperty(CssColorProperty.BORDER_TOP_COLOR)
+					: borderColor;
 
-			cellStyle.setBorderTop(BorderStyle.THIN);
-			cellStyle.setTopBorderColor(new XSSFColor(color, null));
+			Color bottomBorderColor = style.getProperty(CssColorProperty.BORDER_BOTTOM_COLOR) != null
+					? style.getProperty(CssColorProperty.BORDER_BOTTOM_COLOR)
+					: borderColor;
 
-			cellStyle.setBorderLeft(BorderStyle.THIN);
-			cellStyle.setLeftBorderColor(new XSSFColor(color, null));
+			Color leftBorderColor = style.getProperty(CssColorProperty.BORDER_LEFT_COLOR) != null
+					? style.getProperty(CssColorProperty.BORDER_LEFT_COLOR)
+					: borderColor;
 
-			cellStyle.setBorderRight(BorderStyle.THIN);
-			cellStyle.setRightBorderColor(new XSSFColor(color, null));
+			Color rightBorderColor = style.getProperty(CssColorProperty.BORDER_RIGHT_COLOR) != null
+					? style.getProperty(CssColorProperty.BORDER_RIGHT_COLOR)
+					: borderColor;
+
+			String borderStyle = style.getProperty(CssStringProperty.BORDER_STYLE);
+
+			String topBorderStyle = style.getProperty(CssStringProperty.BORDER_TOP_STYLE) != null
+					? style.getProperty(CssStringProperty.BORDER_TOP_STYLE)
+					: borderStyle;
+
+			String bottomBorderStyle = style.getProperty(CssStringProperty.BORDER_BOTTOM_STYLE) != null
+					? style.getProperty(CssStringProperty.BORDER_BOTTOM_STYLE)
+					: borderStyle;
+
+			String leftBorderStyle = style.getProperty(CssStringProperty.BORDER_LEFT_STYLE) != null
+					? style.getProperty(CssStringProperty.BORDER_LEFT_STYLE)
+					: borderStyle;
+
+			String rightBorderStyle = style.getProperty(CssStringProperty.BORDER_RIGHT_STYLE) != null
+					? style.getProperty(CssStringProperty.BORDER_RIGHT_STYLE)
+					: borderStyle;
+
+			String solidBorder = "solid";
+
+			cellStyle.setBorderTop(topBorderStyle.equals(solidBorder) ? BorderStyle.THIN
+					: BorderStyle.valueOf(topBorderStyle.toUpperCase()));
+			cellStyle.setTopBorderColor(new XSSFColor(topBorderColor, null));
+
+			cellStyle.setBorderBottom(bottomBorderStyle.equals(solidBorder) ? BorderStyle.THIN
+					: BorderStyle.valueOf(bottomBorderStyle.toUpperCase()));
+			cellStyle.setBottomBorderColor(new XSSFColor(bottomBorderColor, null));
+
+			cellStyle.setBorderLeft(leftBorderStyle.equals(solidBorder) ? BorderStyle.THIN
+					: BorderStyle.valueOf(leftBorderStyle.toUpperCase()));
+			cellStyle.setLeftBorderColor(new XSSFColor(leftBorderColor, null));
+
+			cellStyle.setBorderRight(rightBorderStyle.equals(solidBorder) ? BorderStyle.THIN
+					: BorderStyle.valueOf(rightBorderStyle.toUpperCase()));
+			cellStyle.setRightBorderColor(new XSSFColor(rightBorderColor, null));
 		}
 	}
 
