@@ -96,15 +96,6 @@ public class StyleMap {
 		List<Style> styles = new ArrayList<>();
 
 		if (element.hasAttr("style")) {
-			/*
-			 * List<Rule> inlineRules; try { String inlineStyle =
-			 * element.attr("style").endsWith(";") ? element.attr("style") : element
-			 * .attr("style") + ";"; inlineRules = CSSParser.parse("x{" + inlineStyle +
-			 * "}"); } catch (Exception e) { throw new
-			 * RuntimeException("Error parsing inline style for element " +
-			 * element.tagName()); }
-			 */
-
 			CSSDeclarationList cssStyles = CSSReaderDeclarationList.readFromString(element.attr("style"),
 					ECSSVersion.LATEST);
 			ICommonsList<CSSDeclaration> declarations = cssStyles.getAllDeclarations();
@@ -112,9 +103,6 @@ public class StyleMap {
 			for (CSSDeclaration declaration : declarations) {
 				styles.add(generator.createStyle(declaration));
 			}
-
-			// style = generator.createStyle(inlineRules.get(0),
-			// inlineRules.get(0).getSelectors().get(0));
 		}
 
 		return Optional.of(StyleMerger.mergeStyles(styles.toArray(new Style[0])));

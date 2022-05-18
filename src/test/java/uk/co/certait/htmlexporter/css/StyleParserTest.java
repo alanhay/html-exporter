@@ -10,6 +10,7 @@ import java.util.Map;
 import org.apache.commons.io.IOUtils;
 import org.jsoup.nodes.Element;
 import org.jsoup.parser.Tag;
+import org.jsoup.select.Elements;
 import org.junit.Test;
 
 public class StyleParserTest {
@@ -17,7 +18,7 @@ public class StyleParserTest {
 	private StyleParser parser = new StyleParser();
 
 	@Test
-	public void testParseStyles() throws IOException {
+	public void testParseStyleSheet() throws IOException {
 		String stylesheet = IOUtils.resourceToString("/stylesheet_1.css", Charset.defaultCharset());
 
 		Element e = new Element(Tag.valueOf("style"), "") {
@@ -80,5 +81,39 @@ public class StyleParserTest {
 		assertThat(style.getProperty(CssStringProperty.BORDER_RIGHT_STYLE)).isEqualTo(Style.SOLID_BORDER);
 		assertThat(style.getProperty(CssStringProperty.BORDER_BOTTOM_STYLE)).isEqualTo(Style.DOUBLE_BORDER);
 		assertThat(style.getProperty(CssStringProperty.BORDER_LEFT_STYLE)).isEqualTo(Style.DASHED_BORDER);
+	}
+
+	@Test
+	public void testParseStyleSheets() throws IOException {
+		String stylesheet = IOUtils.resourceToString("/stylesheet_1.css", Charset.defaultCharset());
+
+		Elements elements = new Elements();
+		Element element1 = new Element(Tag.valueOf("style"), "") {
+			public String data() {
+				return stylesheet;
+			}
+		};
+
+		Element element2 = new Element(Tag.valueOf("style"), "") {
+			public String data() {
+				return ".warning{font-size:20px; color: orange}";
+			}
+		};
+
+		elements.add(element1);
+		elements.add(element2);
+
+		Map<String, Style> styleMap = parser.parseStyleSheets(elements);
+		assertThat(styleMap).containsKey(".warning");
+		Style style = styleMap.get(".warning");
+
+		// Not specified in 2nd <style/> so inherited from 1st <style/>
+		assertThat(style.getProperty(CssColorProperty.BACKGROUND_COLOR)).isEqualTo(Color.decode("#ff0000"));
+
+		// Specified only in 2nd <style/>
+		assertThat(style.getProperty(CssIntegerProperty.FONT_SIZE)).isEqualTo(20);
+
+		// Property in 1st <Style/> overwritten in 2nd <style/>
+		assertThat(style.getProperty(CssColorProperty.COLOR)).isEqualTo(Color.ORANGE);
 	}
 }

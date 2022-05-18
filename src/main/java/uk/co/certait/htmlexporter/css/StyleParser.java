@@ -16,27 +16,20 @@
 package uk.co.certait.htmlexporter.css;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.css.ECSSVersion;
 import com.helger.css.decl.CSSDeclaration;
-import com.helger.css.decl.CSSDeclarationList;
-import com.helger.css.decl.CSSExpression;
-import com.helger.css.decl.CSSExpressionMemberTermSimple;
 import com.helger.css.decl.CSSSelector;
 import com.helger.css.decl.CSSStyleRule;
 import com.helger.css.decl.CascadingStyleSheet;
-import com.helger.css.decl.ICSSExpressionMember;
 import com.helger.css.decl.ICSSSelectorMember;
-import com.helger.css.decl.shorthand.CSSShortHandDescriptor;
-import com.helger.css.decl.shorthand.CSSShortHandRegistry;
-import com.helger.css.property.ECSSProperty;
 import com.helger.css.reader.CSSReader;
-import com.helger.css.reader.CSSReaderDeclarationList;
 
 public class StyleParser {
 	private StyleGenerator generator;
@@ -45,73 +38,40 @@ public class StyleParser {
 		generator = new StyleGenerator();
 	}
 
-	/*	*//**
-			 * 
-			 * @param elements
-			 * @return
-			 *//*
-				 * public Map<String, Style> parseStyles(Elements elements) { Map<String, Style>
-				 * styles = new HashMap<>();
-				 * 
-				 * for (Element element : elements) { try { List<Rule> rules =
-				 * CSSParser.parse(element.data()); mapStyles(rules, styles); } catch (Exception
-				 * e) { throw new RuntimeException(e); } }
-				 * 
-				 * return styles; }
-				 */
-
 	/**
 	 * 
-	 * @param elements A collection of <style/> elements
-	 * 
-	 * @return A Map of the Style elements
+	 * @param elements A collection of HTML <style/> elements. In cases of multiple
+	 *                 styles in the same sheet,
+	 * @return A Map of Styles extracted from the CSS. Normal order of
+	 *         precedence applies: where the same selector is specified in multiple
+	 *         <style/> elements, the properties will be merged. For any properties
+	 *         specified in both <style/> elements then the latest will overwrite
+	 *         the first.
 	 */
-	public Map<String, Style> parseInlineStyle(Element element) {
-		Map<String, Style> styleMap = new HashMap<>();
+	public Map<String, Style> parseStyleSheets(Elements elements) {
+		Map<String, Style> mergedStyleMap = new HashMap<>();
 
-		CSSDeclarationList styles = CSSReaderDeclarationList.readFromString(element.data(), ECSSVersion.LATEST);
-		ICommonsList<CSSDeclaration> decs = styles.getAllDeclarations();
+		for (Element element : elements) {
+			Map<String, Style> styleMap = parseStyleSheet(element);
 
-		for (CSSDeclaration dec : decs) {
-			if (ECSSProperty.getFromNameOrNull(dec.getProperty()) != null) {
-
-				CSSShortHandDescriptor shorthandDescriptor = CSSShortHandRegistry
-						.getShortHandDescriptor(ECSSProperty.getFromNameOrNull(dec.getProperty()));
-
-				if (shorthandDescriptor != null) {
-					List<CSSDeclaration> splitDeclarations = shorthandDescriptor.getSplitIntoPieces(dec);
-
-					for (CSSDeclaration d1 : splitDeclarations) {
-						System.out.println("\t" + d1.getProperty());
-						CSSExpression exp = d1.getExpression();
-						ICommonsList<ICSSExpressionMember> members = exp.getAllMembers();
-
-						for (ICSSExpressionMember m : members) {
-							CSSExpressionMemberTermSimple t = (CSSExpressionMemberTermSimple) m;
-							System.out.println("++" + t.getValue());
-						}
-					}
+			for (Entry<String, Style> entry : styleMap.entrySet()) {
+				if (mergedStyleMap.containsKey(entry.getKey())) {
+					mergedStyleMap.put(entry.getKey(),
+							StyleMerger.mergeStyles(mergedStyleMap.get(entry.getKey()), entry.getValue()));
 				} else {
-					System.out.println(dec.getProperty());
-					CSSExpression exp = dec.getExpression();
-					ICommonsList<ICSSExpressionMember> members = exp.getAllMembers();
-
-					for (ICSSExpressionMember m : members) {
-						CSSExpressionMemberTermSimple t = (CSSExpressionMemberTermSimple) m;
-						System.out.println("--" + t.getValue());
-					}
+					mergedStyleMap.put(entry.getKey(), entry.getValue());
 				}
 			}
 		}
 
-		return styleMap;
+		return mergedStyleMap;
 	}
 
 	/**
 	 * 
 	 * @param element An HTML <style/> element
 	 * 
-	 * @return
+	 * @return A Map of Styles extracted from the CSS
 	 */
 	public Map<String, Style> parseStyleSheet(Element element) {
 		Map<String, Style> styleMap = new HashMap<>();
@@ -143,19 +103,4 @@ public class StyleParser {
 
 		return styleMap;
 	}
-
-	/*
-	 * protected void mapStyles(List<Rule> rules, Map<String, Style> styles) {
-	 * 
-	 * for (Rule rule : rules) { for (Selector selector : rule.getSelectors()) {
-	 * Style style = generator.createStyle(rule, selector);
-	 * 
-	 * if (styles.containsKey(selector.toString())) { Style merged =
-	 * StyleMerger.mergeStyles(styles.get(selector.toString()), style);
-	 * styles.put(selector.toString(), merged); } else {
-	 * styles.put(selector.toString(), style); } } }
-	 */
-
-	// }
-
 }
