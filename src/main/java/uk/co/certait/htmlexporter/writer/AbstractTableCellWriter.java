@@ -78,8 +78,8 @@ public abstract class AbstractTableCellWriter implements TableCellWriter {
 	 * 
 	 * @param element
 	 * 
-	 * @return True if the this Element spans multiple columns (has the
-	 *         'colspan' attribute defined, otherwise false.
+	 * @return True if the this Element spans multiple columns (has the 'colspan'
+	 *         attribute defined, otherwise false.
 	 */
 	protected boolean spansMultipleColumns(Element element) {
 		boolean spansMultipleColumns = false;
@@ -208,8 +208,8 @@ public abstract class AbstractTableCellWriter implements TableCellWriter {
 	}
 
 	/**
-	 * Return the Dimension for the cell comment. Return a Dimension of 3,1 if
-	 * the dimension attribute is not present or has an invalid value.
+	 * Return the Dimension for the cell comment. Return a Dimension of 3,1 if the
+	 * dimension attribute is not present or has an invalid value.
 	 * 
 	 * @return
 	 */

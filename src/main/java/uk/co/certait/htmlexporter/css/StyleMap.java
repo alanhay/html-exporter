@@ -62,7 +62,7 @@ public class StyleMap {
 		}
 
 		Optional<Style> inlineStyle = getInlineStyle(element);
-		
+
 		if (inlineStyle.isPresent()) {
 			style = StyleMerger.mergeStyles(style, inlineStyle.get());
 		}

@@ -33,8 +33,8 @@ public class StyleMergerTest {
 		classStyle.addProperty(CssIntegerProperty.BORDER_WIDTH, 3);
 		classStyle.addProperty(CssStringProperty.FONT_STYLE, Style.TEXT_DECORATION_UNDERLINE);
 		classStyle.addProperty(CssColorProperty.BACKGROUND_COLOR, Color.BLUE);// override
-																		// tag
-																		// style
+		// tag
+		// style
 
 		inlineStyle.addProperty(CssColorProperty.COLOR, Color.WHITE);
 		inlineStyle.addProperty(CssIntegerProperty.BORDER_WIDTH, 4);// override

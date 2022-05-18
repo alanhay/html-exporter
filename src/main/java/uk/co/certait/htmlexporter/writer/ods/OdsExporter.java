@@ -67,8 +67,8 @@ public class OdsExporter extends AbstractExporter {
 					}
 				}
 
-				TableWriter writer = new OdsTableWriter(new OdsTableRowWriter(table, new OdsTableCellWriter(table,
-						styleMapper)));
+				TableWriter writer = new OdsTableWriter(
+						new OdsTableRowWriter(table, new OdsTableCellWriter(table, styleMapper)));
 
 				startRow += writer.writeTable(element, styleMapper, startRow) + 1;
 				firstLoop = false;
