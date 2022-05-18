@@ -18,6 +18,7 @@ package uk.co.certait.htmlexporter.css;
 import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -38,6 +39,10 @@ public class Style {
 	protected static final String TOP_ALIGN = "top";
 	protected static final String BOTTOM_ALIGN = "bottom";
 	protected static final String MIDDLE_ALIGN = "middle";
+	protected static final String SOLID_BORDER = "solid";
+	protected static final String DASHED_BORDER = "dashed";
+	protected static final String DOTTED_BORDER = "dotted";
+	protected static final String DOUBLE_BORDER = "double";
 
 	private Map<CssIntegerProperty, Integer> integerProperties;
 	private Map<CssStringProperty, String> stringProperties;
@@ -79,16 +84,16 @@ public class Style {
 		return colorProperties;
 	}
 
-	public int getProperty(CssIntegerProperty property) {
-		return integerProperties.get(property) != null ? integerProperties.get(property) : 0;
+	public Optional<Integer> getProperty(CssIntegerProperty property) {
+		return Optional.ofNullable(integerProperties.get(property));
 	}
 
-	public String getProperty(CssStringProperty property) {
-		return stringProperties.get(property);
+	public Optional<String> getProperty(CssStringProperty property) {
+		return Optional.ofNullable(stringProperties.get(property));
 	}
 
-	public Color getProperty(CssColorProperty property) {
-		return colorProperties.get(property);
+	public Optional<Color> getProperty(CssColorProperty property) {
+		return Optional.ofNullable(colorProperties.get(property));
 	}
 
 	public boolean isFontSizeSet() {
@@ -144,7 +149,7 @@ public class Style {
 	}
 
 	public boolean isBackgroundSet() {
-		return colorProperties.containsKey(CssColorProperty.BACKGROUND);
+		return colorProperties.containsKey(CssColorProperty.BACKGROUND_COLOR);
 	}
 
 	public boolean isBorderColorSet() {

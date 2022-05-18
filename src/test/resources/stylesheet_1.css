@@ -1,0 +1,43 @@
+
+
+td, th{
+	background: #999999;
+	border: 1px solid #556677;
+	vertical-align: middle;
+}
+
+th{
+	color: #ffffff;
+	font: italic small-caps bold 12px Georgia;
+	text-decoration: underline;
+	text-align:center;
+	border-style: dashed;
+}
+
+td{
+	color: #333333;
+	border-color: #656565;
+	font-size: 10px;
+	text-align: right;
+}
+
+.okay {
+	background: #0f0f0f
+}
+
+.warning {
+	background: #ff0000;
+	color: #000000
+}
+
+.total {
+	border-top-style: double;
+	border-bottom-style: dashed;
+	border-width: 2px;
+}
+
+.fancy-border {
+	border-color:red green orange cyan;
+	border-style: dotted solid double dashed;
+	border-width: 5px;
+}

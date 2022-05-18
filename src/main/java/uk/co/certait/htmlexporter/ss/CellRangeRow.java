@@ -38,11 +38,10 @@ public class CellRangeRow {
 	}
 
 	/**
-	 * Adds a reference to the specified cell to this row. The cell will be
-	 * inserted at the position corresponding to the cell's column index.
+	 * Adds a reference to the specified cell to this row. The cell will be inserted
+	 * at the position corresponding to the cell's column index.
 	 * 
-	 * @throws IllegalArgumentException
-	 *             if the cell reference is null.
+	 * @throws IllegalArgumentException if the cell reference is null.
 	 * 
 	 * @param cell
 	 */
@@ -61,9 +60,9 @@ public class CellRangeRow {
 
 	/**
 	 * A row is regarded as contiguous if there there are no gaps in the cell
-	 * references if refers to. Thus for a row with cell references in columns
-	 * 2,3 and 4, [-][-][O][O][O], this would be true. Add a cell reference at
-	 * column 6 and this would be false [-][-][O][O][O][-][O].
+	 * references if refers to. Thus for a row with cell references in columns 2,3
+	 * and 4, [-][-][O][O][O], this would be true. Add a cell reference at column 6
+	 * and this would be false [-][-][O][O][O][-][O].
 	 * 
 	 * @return True if this row is contiguous, otherwise false.
 	 */
@@ -89,8 +88,8 @@ public class CellRangeRow {
 
 	/**
 	 * 
-	 * @return The index of the first populated column in this row. Returns -1
-	 *         if the row holds no cell references.
+	 * @return The index of the first populated column in this row. Returns -1 if
+	 *         the row holds no cell references.
 	 */
 	protected int getFirstPopulatedColumn() {
 		int firstColumn = -1;
@@ -144,10 +143,10 @@ public class CellRangeRow {
 	}
 
 	/**
-	 * Returns the width of this row. The width represents the difference
-	 * between the first non-null column and the last non-null column. Thus, for
-	 * example, for a row holding references in columns 3, 4, and 6,
-	 * [-][-][-][O][O][-][O] the width would be 4.
+	 * Returns the width of this row. The width represents the difference between
+	 * the first non-null column and the last non-null column. Thus, for example,
+	 * for a row holding references in columns 3, 4, and 6, [-][-][-][O][O][-][O]
+	 * the width would be 4.
 	 * 
 	 * @return The width of this row.
 	 */

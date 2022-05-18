@@ -41,7 +41,7 @@ import uk.co.certait.htmlexporter.writer.ods.OdsExporter;
 
 public class ReportGenerator {
 	public ReportGenerator() throws Exception {
-		//String html = generateHTML("reportMultiSheet.vm");
+		// String html = generateHTML("report-multi-sheet.vm");
 		String html = generateHTML("report.vm");
 		saveFile("report.html", html.getBytes());
 

@@ -58,7 +58,7 @@ public abstract class AbstractExporter implements Exporter {
 																// twice
 
 		StyleParser parser = new StyleParser();
-		StyleMap mapper = new StyleMap(parser.parseStyles(styles));
+		StyleMap mapper = new StyleMap(parser.parseStyleSheets(styles));
 
 		return mapper;
 	}

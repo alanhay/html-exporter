@@ -16,66 +16,100 @@
 package uk.co.certait.htmlexporter.css;
 
 import java.awt.Color;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.osbcp.cssparser.PropertyValue;
-import com.osbcp.cssparser.Rule;
-import com.osbcp.cssparser.Selector;
+import com.helger.css.decl.CSSDeclaration;
+import com.helger.css.decl.CSSExpressionMemberTermSimple;
+import com.helger.css.decl.ICSSExpressionMember;
+import com.helger.css.decl.shorthand.CSSShortHandDescriptor;
+import com.helger.css.decl.shorthand.CSSShortHandRegistry;
+import com.helger.css.property.ECSSProperty;
 
 public class StyleGenerator {
 	private static final String PX = "px";
 	private static final String PERCENTAGE = "%";
 
-	protected Style createStyle(Rule rule, Selector selector) {
-		Style style = new Style();
+	// called by the parser and by the cell writer for an in-line style
+	// the common interface is CSSDeclaration - which may need split
+	protected Style createStyle(CSSDeclaration declaration) {
+		List<Style> styles = new ArrayList<>();
+		List<CSSDeclaration> declarations = new ArrayList<>();
 
-		populateIntegerProperties(rule, selector, style);
-		populateStringProperties(rule, selector, style);
-		populateColorProperties(rule, selector, style);
+		if (ECSSProperty.getFromNameOrNull(declaration.getProperty()) != null) {
 
-		return style;
+			CSSShortHandDescriptor shorthandDescriptor = CSSShortHandRegistry
+					.getShortHandDescriptor(ECSSProperty.getFromNameOrNull(declaration.getProperty()));
+
+			if (shorthandDescriptor != null) {
+				declarations.addAll(shorthandDescriptor.getSplitIntoPieces(declaration));
+			} else {
+				declarations.add(declaration);
+			}
+
+			for (CSSDeclaration decs : declarations) {
+				Style style = new Style();
+				populateIntegerProperties(decs, style);
+				populateStringProperties(decs, style);
+				populateColorProperties(decs, style);
+				styles.add(style);
+			}
+		}
+
+		return StyleMerger.mergeStyles(styles.toArray(new Style[0]));
 	}
 
-	protected void populateIntegerProperties(Rule rule, Selector selector, Style style) {
-		for (PropertyValue pv : rule.getPropertyValues()) {
-			for (CssIntegerProperty p : CssIntegerProperty.values()) {
-				if (p.getProperty().equals(pv.getProperty())) {
-					if (!pv.getValue().contains(PERCENTAGE)) {
-						double value = Double.parseDouble(pv.getValue().replaceAll(PX, "").trim());
+	protected void populateIntegerProperties(CSSDeclaration rule, Style style) {
+		for (CssIntegerProperty p : CssIntegerProperty.values()) {
+			if (p.getProperty().equals(rule.getProperty())) {
+				ICSSExpressionMember member = rule.getExpression().getMemberAtIndex(0);
+				CSSExpressionMemberTermSimple term = (CSSExpressionMemberTermSimple) member;
+				if (!term.getValue().contains(PERCENTAGE)) {
+					double value = Double.parseDouble(term.getValue().replaceAll(PX, "").trim());
 
-						if (value < 1) {
-							value = 1;
-						}
-
-						style.addProperty(p, (int) value);
+					if (value < 1) {
+						value = 1;
 					}
+
+					style.addProperty(p, (int) value);
 				}
 			}
 		}
 	}
 
-	protected void populateStringProperties(Rule rule, Selector selector, Style style) {
-		for (PropertyValue pv : rule.getPropertyValues()) {
-			for (CssStringProperty p : CssStringProperty.values()) {
-				if (p.getProperty().equals(pv.getProperty())) {
-					style.addProperty(p, pv.getValue().trim());
-				}
+	protected void populateStringProperties(CSSDeclaration rule, Style style) {
+		for (CssStringProperty p : CssStringProperty.values()) {
+			if (p.getProperty().equals(rule.getProperty())) {
+				ICSSExpressionMember member = rule.getExpression().getMemberAtIndex(0);
+				CSSExpressionMemberTermSimple term = (CSSExpressionMemberTermSimple) member;
+				style.addProperty(p, term.getValue().trim());
 			}
 		}
 	}
 
-	protected void populateColorProperties(Rule rule, Selector selector, Style style) {
-		for (PropertyValue pv : rule.getPropertyValues()) {
-			for (CssColorProperty p : CssColorProperty.values()) {
-				if (p.getProperty().equals(pv.getProperty())) {
-					style.addProperty(p, createColor(pv.getValue().trim()));
-				}
+	protected void populateColorProperties(CSSDeclaration rule, Style style) {
+		for (CssColorProperty p : CssColorProperty.values()) {
+			if (p.getProperty().equals(rule.getProperty())) {
+				ICSSExpressionMember member = rule.getExpression().getMemberAtIndex(0);
+				CSSExpressionMemberTermSimple term = (CSSExpressionMemberTermSimple) member;
+				style.addProperty(p, createColor(term.getValue().trim()));
 			}
 		}
 	}
 
-	private Color createColor(String hex) {
-		hex = hex.toUpperCase();
-
-		return Color.decode(hex);
+	private Color createColor(String cssValue) {
+		// FIXME handle short format hex i.e. #fff
+		// See also class CSSColorHelper
+		try {
+			return Color.decode(cssValue.toUpperCase());
+		} catch (Exception ex) {
+			try {
+				Field field = Class.forName("java.awt.Color").getField(cssValue.toUpperCase());
+				return (Color) field.get(null);
+			} catch (Exception e) {
+				return null;
+			}
+		}
 	}
 }

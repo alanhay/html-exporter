@@ -74,11 +74,10 @@ public class CellRange {
 
 	/**
 	 * 
-	 * @param cell
-	 *            The cell to be added.
+	 * @param cell The cell to be added.
 	 * 
-	 * @return True if this cell references a previously unreferenced row,
-	 *         otherwise false.
+	 * @return True if this cell references a previously unreferenced row, otherwise
+	 *         false.
 	 */
 	protected boolean isCellInNewRow(TableCellReference cell) {
 		boolean isNewRow = true;
@@ -155,8 +154,8 @@ public class CellRange {
 
 	/**
 	 * 
-	 * @return The first cell in this range, that is the cell at the top left of
-	 *         the range.
+	 * @return The first cell in this range, that is the cell at the top left of the
+	 *         range.
 	 */
 	public TableCellReference getFirstCell() {
 		return rows.get(0).getFirstCell();
@@ -164,8 +163,8 @@ public class CellRange {
 
 	/**
 	 * 
-	 * @return The last cell in this range, that is the cell at the bottom right
-	 *         of the range.
+	 * @return The last cell in this range, that is the cell at the bottom right of
+	 *         the range.
 	 */
 	public TableCellReference getLastCell() {
 		return rows.get(rows.size() - 1).getLastCell();

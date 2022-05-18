@@ -67,27 +67,42 @@ public class ExcelStyleGenerator {
 	protected void applyBackground(Style style, XSSFCellStyle cellStyle) {
 		if (style.isBackgroundSet()) {
 			cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-			cellStyle.setFillForegroundColor(new XSSFColor(style.getProperty(CssColorProperty.BACKGROUND), null));
+			cellStyle.setFillForegroundColor(
+					new XSSFColor(style.getProperty(CssColorProperty.BACKGROUND_COLOR).get(), null));
 		}
 	}
 
 	protected void applyBorders(Style style, XSSFCellStyle cellStyle) {
 		if (style.isBorderWidthSet()) {
+			String solidBorder = "solid";
 
-			Color color = style.getProperty(CssColorProperty.BORDER_COLOR) != null ? style
-					.getProperty(CssColorProperty.BORDER_COLOR) : Color.BLACK;
+			Color borderColor = style.getProperty(CssColorProperty.BORDER_COLOR).orElse(Color.BLACK);
+			Color topBorderColor = style.getProperty(CssColorProperty.BORDER_TOP_COLOR).orElse(borderColor);
+			Color bottomBorderColor = style.getProperty(CssColorProperty.BORDER_BOTTOM_COLOR).orElse(borderColor);
+			Color leftBorderColor = style.getProperty(CssColorProperty.BORDER_LEFT_COLOR).orElse(borderColor);
+			Color rightBorderColor = style.getProperty(CssColorProperty.BORDER_RIGHT_COLOR).orElse(borderColor);
 
-			cellStyle.setBorderBottom(BorderStyle.THIN);
-			cellStyle.setBottomBorderColor(new XSSFColor(color, null));
+			String borderStyle = style.getProperty(CssStringProperty.BORDER_STYLE).orElse(solidBorder);
+			String topBorderStyle = style.getProperty(CssStringProperty.BORDER_TOP_STYLE).orElse(borderStyle);
+			String bottomBorderStyle = style.getProperty(CssStringProperty.BORDER_BOTTOM_STYLE).orElse(borderStyle);
+			String leftBorderStyle = style.getProperty(CssStringProperty.BORDER_LEFT_STYLE).orElse(borderStyle);
+			String rightBorderStyle = style.getProperty(CssStringProperty.BORDER_RIGHT_STYLE).orElse(borderStyle);
 
-			cellStyle.setBorderTop(BorderStyle.THIN);
-			cellStyle.setTopBorderColor(new XSSFColor(color, null));
+			cellStyle.setBorderTop(topBorderStyle.equals(solidBorder) ? BorderStyle.THIN
+					: BorderStyle.valueOf(topBorderStyle.toUpperCase()));
+			cellStyle.setTopBorderColor(new XSSFColor(topBorderColor, null));
 
-			cellStyle.setBorderLeft(BorderStyle.THIN);
-			cellStyle.setLeftBorderColor(new XSSFColor(color, null));
+			cellStyle.setBorderBottom(bottomBorderStyle.equals(solidBorder) ? BorderStyle.THIN
+					: BorderStyle.valueOf(bottomBorderStyle.toUpperCase()));
+			cellStyle.setBottomBorderColor(new XSSFColor(bottomBorderColor, null));
 
-			cellStyle.setBorderRight(BorderStyle.THIN);
-			cellStyle.setRightBorderColor(new XSSFColor(color, null));
+			cellStyle.setBorderLeft(leftBorderStyle.equals(solidBorder) ? BorderStyle.THIN
+					: BorderStyle.valueOf(leftBorderStyle.toUpperCase()));
+			cellStyle.setLeftBorderColor(new XSSFColor(leftBorderColor, null));
+
+			cellStyle.setBorderRight(rightBorderStyle.equals(solidBorder) ? BorderStyle.THIN
+					: BorderStyle.valueOf(rightBorderStyle.toUpperCase()));
+			cellStyle.setRightBorderColor(new XSSFColor(rightBorderColor, null));
 		}
 	}
 
@@ -117,8 +132,9 @@ public class ExcelStyleGenerator {
 	}
 
 	protected void applyWidth(Cell cell, Style style) {
-		if (style.getProperty(CssIntegerProperty.WIDTH) > 0) {
-			cell.getSheet().setColumnWidth(cell.getColumnIndex(), style.getProperty(CssIntegerProperty.WIDTH) * 50);
+		if (style.getProperty(CssIntegerProperty.WIDTH).isPresent()) {
+			cell.getSheet().setColumnWidth(cell.getColumnIndex(),
+					style.getProperty(CssIntegerProperty.WIDTH).get() * 50);
 		}
 	}
 
@@ -126,15 +142,15 @@ public class ExcelStyleGenerator {
 		Font font = workbook.createFont();
 
 		if (style.isFontNameSet()) {
-			font.setFontName(style.getProperty(CssStringProperty.FONT_FAMILY));
+			font.setFontName(style.getProperty(CssStringProperty.FONT_FAMILY).get());
 		}
 
 		if (style.isFontSizeSet()) {
-			font.setFontHeightInPoints((short) style.getProperty(CssIntegerProperty.FONT_SIZE));
+			font.setFontHeightInPoints((short) style.getProperty(CssIntegerProperty.FONT_SIZE).get().intValue());
 		}
 
 		if (style.isColorSet()) {
-			Color color = style.getProperty(CssColorProperty.COLOR);
+			Color color = style.getProperty(CssColorProperty.COLOR).get();
 
 			// if(! color.equals(Color.WHITE)) // POI Bug
 			// {

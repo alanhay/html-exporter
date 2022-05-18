@@ -43,8 +43,8 @@ public class ExcelTableRowWriter extends AbstractTableRowWriter {
 
 	public void doMerge(int rowIndex, int columnIndex, int rowSpan, int columnSpan) {
 		Cell cell = sheet.getRow(rowIndex).getCell(columnIndex);
-		CellRangeAddress range = new CellRangeAddress(rowIndex, rowIndex + rowSpan - 1, columnIndex, columnIndex
-				+ columnSpan - 1);
+		CellRangeAddress range = new CellRangeAddress(rowIndex, rowIndex + rowSpan - 1, columnIndex,
+				columnIndex + columnSpan - 1);
 
 		sheet.addMergedRegion(range);
 

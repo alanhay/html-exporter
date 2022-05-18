@@ -58,8 +58,8 @@ public class ExcelExporter extends AbstractExporter {
 				startRow = 0;
 			}
 
-			TableWriter writer = new ExcelTableWriter(new ExcelTableRowWriter(sheet, new ExcelTableCellWriter(sheet,
-					styleMapper)));
+			TableWriter writer = new ExcelTableWriter(
+					new ExcelTableRowWriter(sheet, new ExcelTableCellWriter(sheet, styleMapper)));
 
 			startRow += writer.writeTable(element, styleMapper, startRow) + 1;
 			sheet.createRow(startRow);

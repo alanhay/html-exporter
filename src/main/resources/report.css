@@ -11,9 +11,7 @@
 	
 	th, td{
 		font-family: sans-serif;
-		border-color: #000000;
-		border-width: 1px;
-		border-style: solid;
+		border: 1px solid #000000;
 		padding-left: 2px;
 		padding-right: 2px;
 	}

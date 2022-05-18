@@ -19,12 +19,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Element;
 
-import com.osbcp.cssparser.CSSParser;
-import com.osbcp.cssparser.Rule;
+import com.helger.commons.collection.impl.ICommonsList;
+import com.helger.css.ECSSVersion;
+import com.helger.css.decl.CSSDeclaration;
+import com.helger.css.decl.CSSDeclarationList;
+import com.helger.css.reader.CSSReaderDeclarationList;
 
 /**
  * 
@@ -57,8 +61,10 @@ public class StyleMap {
 			}
 		}
 
-		if (getInlineStyle(element) != null) {
-			style = StyleMerger.mergeStyles(style, getInlineStyle(element));
+		Optional<Style> inlineStyle = getInlineStyle(element);
+
+		if (inlineStyle.isPresent()) {
+			style = StyleMerger.mergeStyles(style, inlineStyle.get());
 		}
 
 		return style;
@@ -86,22 +92,19 @@ public class StyleMap {
 		return classStyles;
 	}
 
-	private Style getInlineStyle(Element element) {
-		Style style = null;
+	protected Optional<Style> getInlineStyle(Element element) {
+		List<Style> styles = new ArrayList<>();
 
 		if (element.hasAttr("style")) {
-			List<Rule> inlineRules;
-			try {
-				String inlineStyle = element.attr("style").endsWith(";") ? element.attr("style") : element
-						.attr("style") + ";";
-				inlineRules = CSSParser.parse("x{" + inlineStyle + "}");
-			} catch (Exception e) {
-				throw new RuntimeException("Error parsing inline style for element " + element.tagName());
-			}
+			CSSDeclarationList cssStyles = CSSReaderDeclarationList.readFromString(element.attr("style"),
+					ECSSVersion.LATEST);
+			ICommonsList<CSSDeclaration> declarations = cssStyles.getAllDeclarations();
 
-			style = generator.createStyle(inlineRules.get(0), inlineRules.get(0).getSelectors().get(0));
+			for (CSSDeclaration declaration : declarations) {
+				styles.add(generator.createStyle(declaration));
+			}
 		}
 
-		return style;
+		return Optional.of(StyleMerger.mergeStyles(styles.toArray(new Style[0])));
 	}
 }

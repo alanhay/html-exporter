@@ -50,11 +50,11 @@ public class StyleTest {
 		Assert.assertEquals(style1, style2);
 		Assert.assertEquals(style1.hashCode(), style2.hashCode());
 
-		style1.addProperty(CssColorProperty.BACKGROUND, Color.GREEN);
+		style1.addProperty(CssColorProperty.BACKGROUND_COLOR, Color.GREEN);
 		Assert.assertFalse(style1.equals(style2));
-		style2.addProperty(CssColorProperty.BACKGROUND, Color.RED);
+		style2.addProperty(CssColorProperty.BACKGROUND_COLOR, Color.RED);
 		Assert.assertFalse(style1.equals(style2));
-		style2.addProperty(CssColorProperty.BACKGROUND, Color.GREEN);
+		style2.addProperty(CssColorProperty.BACKGROUND_COLOR, Color.GREEN);
 		Assert.assertEquals(style1, style2);
 		Assert.assertEquals(style1.hashCode(), style2.hashCode());
 	}
@@ -154,7 +154,7 @@ public class StyleTest {
 		Style style = new Style();
 		Assert.assertFalse(style.isBackgroundSet());
 
-		style.addProperty(CssColorProperty.BACKGROUND, Color.RED);
+		style.addProperty(CssColorProperty.BACKGROUND_COLOR, Color.RED);
 
 		Assert.assertTrue(style.isBackgroundSet());
 	}

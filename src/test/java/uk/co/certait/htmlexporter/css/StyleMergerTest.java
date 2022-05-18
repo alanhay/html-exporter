@@ -27,14 +27,14 @@ public class StyleMergerTest {
 		Style classStyle = new Style();
 		Style inlineStyle = new Style();
 
-		tagStyle.addProperty(CssColorProperty.BACKGROUND, Color.RED);
+		tagStyle.addProperty(CssColorProperty.BACKGROUND_COLOR, Color.RED);
 		tagStyle.addProperty(CssStringProperty.FONT_WEIGHT, Style.BOLD_FONT_STYLE);
 
 		classStyle.addProperty(CssIntegerProperty.BORDER_WIDTH, 3);
 		classStyle.addProperty(CssStringProperty.FONT_STYLE, Style.TEXT_DECORATION_UNDERLINE);
-		classStyle.addProperty(CssColorProperty.BACKGROUND, Color.BLUE);// override
-																		// tag
-																		// style
+		classStyle.addProperty(CssColorProperty.BACKGROUND_COLOR, Color.BLUE);// override
+		// tag
+		// style
 
 		inlineStyle.addProperty(CssColorProperty.COLOR, Color.WHITE);
 		inlineStyle.addProperty(CssIntegerProperty.BORDER_WIDTH, 4);// override
@@ -45,11 +45,11 @@ public class StyleMergerTest {
 																	// style
 
 		Style style = StyleMerger.mergeStyles(tagStyle, classStyle, inlineStyle);
-		Assert.assertEquals(style.getProperty(CssColorProperty.BACKGROUND), Color.BLUE);
-		Assert.assertEquals(style.getProperty(CssStringProperty.FONT_WEIGHT), Style.BOLD_FONT_STYLE);
-		Assert.assertEquals(style.getProperty(CssIntegerProperty.BORDER_WIDTH), 4);
-		Assert.assertEquals(style.getProperty(CssStringProperty.FONT_STYLE), Style.TEXT_DECORATION_UNDERLINE);
-		Assert.assertEquals(style.getProperty(CssColorProperty.COLOR), Color.WHITE);
-		Assert.assertEquals(style.getProperty(CssIntegerProperty.FONT_SIZE), 12);
+		Assert.assertEquals(style.getProperty(CssColorProperty.BACKGROUND_COLOR).get(), Color.BLUE);
+		Assert.assertEquals(style.getProperty(CssStringProperty.FONT_WEIGHT).get(), Style.BOLD_FONT_STYLE);
+		Assert.assertEquals(style.getProperty(CssIntegerProperty.BORDER_WIDTH).get().intValue(), 4);
+		Assert.assertEquals(style.getProperty(CssStringProperty.FONT_STYLE).get(), Style.TEXT_DECORATION_UNDERLINE);
+		Assert.assertEquals(style.getProperty(CssColorProperty.COLOR).get(), Color.WHITE);
+		Assert.assertEquals(style.getProperty(CssIntegerProperty.FONT_SIZE).get().intValue(), 12);
 	}
 }
