@@ -42,11 +42,10 @@ public class StyleParser {
 	 * 
 	 * @param elements A collection of HTML <style/> elements. In cases of multiple
 	 *                 styles in the same sheet,
-	 * @return A Map of Styles extracted from the CSS. Normal order of
-	 *         precedence applies: where the same selector is specified in multiple
-	 *         <style/> elements, the properties will be merged. For any properties
-	 *         specified in both <style/> elements then the latest will overwrite
-	 *         the first.
+	 * @return A Map of Styles extracted from the CSS. Normal order of precedence
+	 *         applies: where the same selector is specified in multiple <style/>
+	 *         elements, the properties will be merged. For any properties specified
+	 *         in both <style/> elements then the latest will overwrite the first.
 	 */
 	public Map<String, Style> parseStyleSheets(Elements elements) {
 		Map<String, Style> mergedStyleMap = new HashMap<>();

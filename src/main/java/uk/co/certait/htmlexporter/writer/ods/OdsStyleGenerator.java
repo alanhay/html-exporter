@@ -33,7 +33,7 @@ import uk.co.certait.htmlexporter.css.Style;
 public class OdsStyleGenerator {
 	public void styleCell(Cell cell, Style style) {
 		if (style.isBackgroundSet()) {
-			cell.setCellBackgroundColor(new Color(style.getProperty(CssColorProperty.BACKGROUND_COLOR)));
+			cell.setCellBackgroundColor(new Color(style.getProperty(CssColorProperty.BACKGROUND_COLOR).get()));
 		}
 
 		applyBorder(cell, style);
@@ -44,11 +44,11 @@ public class OdsStyleGenerator {
 
 	protected void applyBorder(Cell cell, Style style) {
 		if (style.isBorderWidthSet()) {
-			double borderWidth = style.getProperty(CssIntegerProperty.BORDER_WIDTH);
+			double borderWidth = style.getProperty(CssIntegerProperty.BORDER_WIDTH).get();
 			Color borderColor;
 
 			if (style.isBorderColorSet()) {
-				borderColor = new Color(style.getProperty(CssColorProperty.BORDER_COLOR));
+				borderColor = new Color(style.getProperty(CssColorProperty.BORDER_COLOR).get());
 			} else {
 				borderColor = Color.BLACK;
 			}
@@ -85,7 +85,7 @@ public class OdsStyleGenerator {
 		Font font = cell.getFont();
 
 		if (style.isFontNameSet()) {
-			font.setFamilyName(style.getProperty(CssStringProperty.FONT_FAMILY));
+			font.setFamilyName(style.getProperty(CssStringProperty.FONT_FAMILY).get());
 		}
 
 		if (style.isFontBold() && style.isFontItalic()) {
@@ -97,11 +97,11 @@ public class OdsStyleGenerator {
 		}
 
 		if (style.isFontSizeSet()) {
-			font.setSize(style.getProperty(CssIntegerProperty.FONT_SIZE));
+			font.setSize(style.getProperty(CssIntegerProperty.FONT_SIZE).get());
 		}
 
 		if (style.isColorSet()) {
-			font.setColor(new Color(style.getProperty(CssColorProperty.COLOR)));
+			font.setColor(new Color(style.getProperty(CssColorProperty.COLOR).get()));
 		}
 
 		cell.setFont(font);

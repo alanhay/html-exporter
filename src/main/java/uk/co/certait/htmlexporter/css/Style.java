@@ -18,6 +18,7 @@ package uk.co.certait.htmlexporter.css;
 import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -83,16 +84,16 @@ public class Style {
 		return colorProperties;
 	}
 
-	public int getProperty(CssIntegerProperty property) {
-		return integerProperties.get(property) != null ? integerProperties.get(property) : 0;
+	public Optional<Integer> getProperty(CssIntegerProperty property) {
+		return Optional.ofNullable(integerProperties.get(property));
 	}
 
-	public String getProperty(CssStringProperty property) {
-		return stringProperties.get(property);
+	public Optional<String> getProperty(CssStringProperty property) {
+		return Optional.ofNullable(stringProperties.get(property));
 	}
 
-	public Color getProperty(CssColorProperty property) {
-		return colorProperties.get(property);
+	public Optional<Color> getProperty(CssColorProperty property) {
+		return Optional.ofNullable(colorProperties.get(property));
 	}
 
 	public boolean isFontSizeSet() {

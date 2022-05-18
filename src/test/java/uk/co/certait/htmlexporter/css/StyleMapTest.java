@@ -45,10 +45,10 @@ public class StyleMapTest {
 		assertThat(optional).isPresent();
 		Style style = optional.get();
 
-		assertThat(style.getProperty(CssColorProperty.COLOR)).isEqualTo(Color.RED);
-		assertThat(style.getProperty(CssColorProperty.BACKGROUND_COLOR)).isEqualTo(Color.WHITE);
-		assertThat(style.getProperty(CssIntegerProperty.BORDER_WIDTH)).isEqualTo(2);
-		assertThat(style.getProperty(CssStringProperty.BORDER_STYLE)).isEqualTo(Style.DASHED_BORDER);
-		assertThat(style.getProperty(CssColorProperty.BORDER_COLOR)).isEqualTo(Color.decode("#678876"));
+		assertThat(style.getProperty(CssColorProperty.COLOR).get()).isEqualTo(Color.RED);
+		assertThat(style.getProperty(CssColorProperty.BACKGROUND_COLOR).get()).isEqualTo(Color.WHITE);
+		assertThat(style.getProperty(CssIntegerProperty.BORDER_WIDTH).get()).isEqualTo(2);
+		assertThat(style.getProperty(CssStringProperty.BORDER_STYLE).get()).isEqualTo(Style.DASHED_BORDER);
+		assertThat(style.getProperty(CssColorProperty.BORDER_COLOR).get()).isEqualTo(Color.decode("#678876"));
 	}
 }

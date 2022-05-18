@@ -26,15 +26,15 @@ public class StyleMerger {
 
 		for (Style style : styles) {
 			for (CssStringProperty p : style.getStringProperties().keySet()) {
-				merged.addProperty(p, style.getProperty(p));
+				merged.addProperty(p, style.getProperty(p).get());
 			}
 
 			for (CssIntegerProperty p : style.getIntegerProperties().keySet()) {
-				merged.addProperty(p, style.getProperty(p));
+				merged.addProperty(p, style.getProperty(p).get());
 			}
 
 			for (CssColorProperty p : style.getColorProperties().keySet()) {
-				merged.addProperty(p, style.getProperty(p));
+				merged.addProperty(p, style.getProperty(p).get());
 			}
 		}
 
