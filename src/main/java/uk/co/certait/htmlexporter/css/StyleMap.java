@@ -51,31 +51,26 @@ public class StyleMap {
 	}
 	
 	protected List<Style> getAllStyles(Element element) {
-		// FIXME We should be able to walk the tree here and get any inherited styles
-		// We have a list of styles and merge all at the end
 		List<Style> styles = new ArrayList<>();
 
 		if (getStyleForTag(element) != null) {
 			styles.add(getStyleForTag(element));
-			// style = StyleMerger.mergeStyles(style, getStyleForTag(element));
 		}
 
 		if (!getStylesForClass(element).isEmpty()) {
 			List<Style> classStyles = getStylesForClass(element);
 			styles.addAll(classStyles);
-
-			// for (Style classStyle : classStyles) {
-			// style = StyleMerger.mergeStyles(style, classStyle);
-			// }
 		}
 
 		Optional<Style> inlineStyle = getInlineStyle(element);
 
 		if (inlineStyle.isPresent()) {
-			// style = StyleMerger.mergeStyles(style, inlineStyle.get());
 			styles.add(inlineStyle.get());
 		}
-
+		
+		//recursive call for each parent element (closest first)
+		//get any applicable styles and insert at start of list to
+		//preserve priority
 		for (Element parent : element.parents()) {
 			styles.addAll(0, getAllStyles(parent));
 		}
