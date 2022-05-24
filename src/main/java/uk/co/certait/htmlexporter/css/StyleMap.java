@@ -47,27 +47,35 @@ public class StyleMap {
 	}
 
 	public Style getStyleForElement(Element element) {
-		Style style = new Style();
+		return StyleMerger.mergeStyles(getAllStyles(element).toArray(new Style[0]));
+	}
+	
+	protected List<Style> getAllStyles(Element element) {
+		List<Style> styles = new ArrayList<>();
 
 		if (getStyleForTag(element) != null) {
-			style = StyleMerger.mergeStyles(style, getStyleForTag(element));
+			styles.add(getStyleForTag(element));
 		}
 
 		if (!getStylesForClass(element).isEmpty()) {
 			List<Style> classStyles = getStylesForClass(element);
-
-			for (Style classStyle : classStyles) {
-				style = StyleMerger.mergeStyles(style, classStyle);
-			}
+			styles.addAll(classStyles);
 		}
 
 		Optional<Style> inlineStyle = getInlineStyle(element);
 
 		if (inlineStyle.isPresent()) {
-			style = StyleMerger.mergeStyles(style, inlineStyle.get());
+			styles.add(inlineStyle.get());
+		}
+		
+		//recursive call for each parent element (closest first)
+		//get any applicable styles and insert at start of list to
+		//preserve priority
+		for (Element parent : element.parents()) {
+			styles.addAll(0, getAllStyles(parent));
 		}
 
-		return style;
+		return styles;		
 	}
 
 	private Style getStyleForTag(Element element) {
