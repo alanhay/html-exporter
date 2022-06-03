@@ -54,19 +54,19 @@ public class Style {
 		colorProperties = new HashMap<CssColorProperty, Color>();
 	}
 
-	protected void addProperty(CssIntegerProperty property, Integer value) {
+	public void addProperty(CssIntegerProperty property, Integer value) {
 		if (value != null) {
 			integerProperties.put(property, value);
 		}
 	}
 
-	protected void addProperty(CssStringProperty property, String value) {
+	public void addProperty(CssStringProperty property, String value) {
 		if (!StringUtils.isEmpty(value)) {
 			stringProperties.put(property, value);
 		}
 	}
 
-	protected void addProperty(CssColorProperty property, Color color) {
+	public void addProperty(CssColorProperty property, Color color) {
 		if (color != null) {
 			colorProperties.put(property, color);
 		}
@@ -103,11 +103,7 @@ public class Style {
 	public boolean isWidthSet() {
 		return integerProperties.containsKey(CssIntegerProperty.WIDTH);
 	}
-
-	public boolean isBorderWidthSet() {
-		return integerProperties.containsKey(CssIntegerProperty.BORDER_WIDTH);
-	}
-
+	
 	public boolean isFontNameSet() {
 		return stringProperties.containsKey(CssStringProperty.FONT_FAMILY);
 	}

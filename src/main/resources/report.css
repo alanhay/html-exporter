@@ -10,8 +10,8 @@
 	}
 	
 	th, td{
-		font-family: sans-serif;
-		border: 1px solid #000000;
+		font-family: "Courier New";
+		border: thin solid #444444;
 		padding-left: 2px;
 		padding-right: 2px;
 	}
