@@ -19,6 +19,8 @@ import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -37,6 +39,16 @@ import uk.co.certait.htmlexporter.css.CssStringProperty;
 import uk.co.certait.htmlexporter.css.Style;
 
 public class ExcelStyleGenerator {
+
+	private static final Map<BorderMappingKey, BorderStyle> BORDER_STYLE_MAP = new HashMap<>();
+
+	static {
+		BORDER_STYLE_MAP.put(new BorderMappingKey("solid", null), BorderStyle.HAIR);
+		BORDER_STYLE_MAP.put(new BorderMappingKey("solid", "thin"), BorderStyle.HAIR);
+		BORDER_STYLE_MAP.put(new BorderMappingKey("solid", "medium"), BorderStyle.MEDIUM);
+		BORDER_STYLE_MAP.put(new BorderMappingKey("solid", "thick"), BorderStyle.THICK);
+	}
+
 	private Map<Style, XSSFCellStyle> styles;
 
 	public ExcelStyleGenerator() {
@@ -73,37 +85,67 @@ public class ExcelStyleGenerator {
 	}
 
 	protected void applyBorders(Style style, XSSFCellStyle cellStyle) {
-		if (style.isBorderWidthSet()) {
-			String solidBorder = "solid";
 
-			Color borderColor = style.getProperty(CssColorProperty.BORDER_COLOR).orElse(Color.BLACK);
+		Color borderColor = style.getProperty(CssColorProperty.BORDER_COLOR).orElse(Color.BLACK);
+
+		BorderStyle topBorderStyle = getBorderStyle(style, CssStringProperty.BORDER_TOP_STYLE,
+				CssStringProperty.BORDER_TOP_WIDTH);
+
+		if (topBorderStyle != null) {
+			cellStyle.setBorderTop(topBorderStyle);
 			Color topBorderColor = style.getProperty(CssColorProperty.BORDER_TOP_COLOR).orElse(borderColor);
-			Color bottomBorderColor = style.getProperty(CssColorProperty.BORDER_BOTTOM_COLOR).orElse(borderColor);
-			Color leftBorderColor = style.getProperty(CssColorProperty.BORDER_LEFT_COLOR).orElse(borderColor);
-			Color rightBorderColor = style.getProperty(CssColorProperty.BORDER_RIGHT_COLOR).orElse(borderColor);
-
-			String borderStyle = style.getProperty(CssStringProperty.BORDER_STYLE).orElse(solidBorder);
-			String topBorderStyle = style.getProperty(CssStringProperty.BORDER_TOP_STYLE).orElse(borderStyle);
-			String bottomBorderStyle = style.getProperty(CssStringProperty.BORDER_BOTTOM_STYLE).orElse(borderStyle);
-			String leftBorderStyle = style.getProperty(CssStringProperty.BORDER_LEFT_STYLE).orElse(borderStyle);
-			String rightBorderStyle = style.getProperty(CssStringProperty.BORDER_RIGHT_STYLE).orElse(borderStyle);
-
-			cellStyle.setBorderTop(topBorderStyle.equals(solidBorder) ? BorderStyle.THIN
-					: BorderStyle.valueOf(topBorderStyle.toUpperCase()));
 			cellStyle.setTopBorderColor(new XSSFColor(topBorderColor, null));
+		}
 
-			cellStyle.setBorderBottom(bottomBorderStyle.equals(solidBorder) ? BorderStyle.THIN
-					: BorderStyle.valueOf(bottomBorderStyle.toUpperCase()));
+		BorderStyle bottomBorderStyle = getBorderStyle(style, CssStringProperty.BORDER_BOTTOM_STYLE,
+				CssStringProperty.BORDER_BOTTOM_WIDTH);
+
+		if (bottomBorderStyle != null) {
+			cellStyle.setBorderBottom(bottomBorderStyle);
+			Color bottomBorderColor = style.getProperty(CssColorProperty.BORDER_BOTTOM_COLOR).orElse(borderColor);
 			cellStyle.setBottomBorderColor(new XSSFColor(bottomBorderColor, null));
+		}
 
-			cellStyle.setBorderLeft(leftBorderStyle.equals(solidBorder) ? BorderStyle.THIN
-					: BorderStyle.valueOf(leftBorderStyle.toUpperCase()));
+		BorderStyle leftBorderStyle = getBorderStyle(style, CssStringProperty.BORDER_LEFT_STYLE,
+				CssStringProperty.BORDER_LEFT_WIDTH);
+
+		if (leftBorderStyle != null) {
+			cellStyle.setBorderLeft(leftBorderStyle);
+			Color leftBorderColor = style.getProperty(CssColorProperty.BORDER_LEFT_COLOR).orElse(borderColor);
 			cellStyle.setLeftBorderColor(new XSSFColor(leftBorderColor, null));
+		}
 
-			cellStyle.setBorderRight(rightBorderStyle.equals(solidBorder) ? BorderStyle.THIN
-					: BorderStyle.valueOf(rightBorderStyle.toUpperCase()));
+		BorderStyle rightBorderStyle = getBorderStyle(style, CssStringProperty.BORDER_RIGHT_STYLE,
+				CssStringProperty.BORDER_RIGHT_WIDTH);
+
+		if (rightBorderStyle != null) {
+			cellStyle.setBorderRight(rightBorderStyle);
+			Color rightBorderColor = style.getProperty(CssColorProperty.BORDER_RIGHT_COLOR).orElse(borderColor);
 			cellStyle.setRightBorderColor(new XSSFColor(rightBorderColor, null));
 		}
+	}
+
+	protected BorderStyle getBorderStyle(Style style, CssStringProperty borderStyleProperty,
+			CssStringProperty borderWidthProperty) {
+		BorderStyle excelBorderStyle = null;
+
+		String cssBorderStyle = style.getProperty(borderStyleProperty)
+				.orElse(style.getProperty(CssStringProperty.BORDER_STYLE).orElse(null));
+
+		String cssBorderWidth = style.getProperty(borderWidthProperty)
+				.orElse(style.getProperty(CssStringProperty.BORDER_WIDTH).orElse(null));
+
+		excelBorderStyle = BORDER_STYLE_MAP.get(new BorderMappingKey(cssBorderStyle, cssBorderWidth));
+
+		if (excelBorderStyle == null) {
+			try {
+				excelBorderStyle = BorderStyle.valueOf(cssBorderStyle.toUpperCase());
+			} catch (IllegalArgumentException ex) {
+				// ignore unsupported border style
+			}
+		}
+
+		return excelBorderStyle;
 	}
 
 	protected void applyFont(Cell cell, Style style, XSSFCellStyle cellStyle) {
@@ -142,7 +184,9 @@ public class ExcelStyleGenerator {
 		Font font = workbook.createFont();
 
 		if (style.isFontNameSet()) {
-			font.setFontName(style.getProperty(CssStringProperty.FONT_FAMILY).get());
+			String fontName = style.getProperty(CssStringProperty.FONT_FAMILY).get().split(",")[0].trim()
+					.replaceAll("\"", "");
+			font.setFontName(fontName);
 		}
 
 		if (style.isFontSizeSet()) {
@@ -166,5 +210,34 @@ public class ExcelStyleGenerator {
 		}
 
 		return font;
+	}
+
+	static class BorderMappingKey {
+		private String borderStyle;
+		private String borderWidth;
+
+		public BorderMappingKey(String borderStyle, String borderWidth) {
+			this.borderStyle = borderStyle;
+			this.borderWidth = borderWidth;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			} else if (obj instanceof BorderMappingKey) {
+				BorderMappingKey other = (BorderMappingKey) obj;
+				return new EqualsBuilder().append(this.borderStyle, other.borderStyle)
+						.append(this.borderWidth, other.borderWidth).isEquals();
+			}
+
+			return false;
+
+		}
+
+		@Override
+		public int hashCode() {
+			return new HashCodeBuilder().append(this.borderStyle).append(this.borderWidth).toHashCode();
+		}
 	}
 }

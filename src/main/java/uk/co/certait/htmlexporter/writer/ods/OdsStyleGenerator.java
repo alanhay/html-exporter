@@ -43,20 +43,19 @@ public class OdsStyleGenerator {
 	}
 
 	protected void applyBorder(Cell cell, Style style) {
-		if (style.isBorderWidthSet()) {
-			double borderWidth = style.getProperty(CssIntegerProperty.BORDER_WIDTH).get();
-			Color borderColor;
-
-			if (style.isBorderColorSet()) {
-				borderColor = new Color(style.getProperty(CssColorProperty.BORDER_COLOR).get());
-			} else {
-				borderColor = Color.BLACK;
-			}
-
-			// ods border too thick. divide by 5 for now
-			cell.setBorders(CellBordersType.ALL_FOUR,
-					new Border(borderColor, borderWidth / 5, StyleTypeDefinitions.SupportedLinearMeasure.PT));
-		}
+		//TODO REIMPLEMENT AS FOR EXCEL IF THE ODS FUNCTIONLITY IN GENERAL IS WORTH MAINTAINING
+		/*
+		 * if (style.isBorderWidthSet()) { double borderWidth =
+		 * style.getProperty(CssIntegerProperty.BORDER_WIDTH).get(); Color borderColor;
+		 * 
+		 * if (style.isBorderColorSet()) { borderColor = new
+		 * Color(style.getProperty(CssColorProperty.BORDER_COLOR).get()); } else {
+		 * borderColor = Color.BLACK; }
+		 * 
+		 * // ods border too thick. divide by 5 for now
+		 * cell.setBorders(CellBordersType.ALL_FOUR, new Border(borderColor, borderWidth
+		 * / 5, StyleTypeDefinitions.SupportedLinearMeasure.PT)); }
+		 */
 	}
 
 	protected void applyHorizontalAlignment(Cell cell, Style style) {

@@ -37,7 +37,7 @@ public class StyleMapTest {
 
 			@Override
 			public String attr(String attributeKey) {
-				return "color: red; background: white; border: 2px dashed #678876";
+				return "color: red; background: white; border: thin solid #678876";
 			}
 		};
 
@@ -47,8 +47,8 @@ public class StyleMapTest {
 
 		assertThat(style.getProperty(CssColorProperty.COLOR).get()).isEqualTo(Color.RED);
 		assertThat(style.getProperty(CssColorProperty.BACKGROUND_COLOR).get()).isEqualTo(Color.WHITE);
-		assertThat(style.getProperty(CssIntegerProperty.BORDER_WIDTH).get()).isEqualTo(2);
-		assertThat(style.getProperty(CssStringProperty.BORDER_STYLE).get()).isEqualTo(Style.DASHED_BORDER);
+		assertThat(style.getProperty(CssStringProperty.BORDER_WIDTH).get()).isEqualTo("thin");
+		assertThat(style.getProperty(CssStringProperty.BORDER_STYLE).get()).isEqualTo(Style.SOLID_BORDER);
 		assertThat(style.getProperty(CssColorProperty.BORDER_COLOR).get()).isEqualTo(Color.decode("#678876"));
 	}
 }

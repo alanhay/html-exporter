@@ -79,15 +79,6 @@ public class StyleTest {
 		Assert.assertTrue(style.isWidthSet());
 	}
 
-	@Test
-	public void testIsBorderWidthSet() {
-		Style style = new Style();
-		Assert.assertFalse(style.isBorderWidthSet());
-
-		style.addProperty(CssIntegerProperty.BORDER_WIDTH, 2);
-
-		Assert.assertTrue(style.isBorderWidthSet());
-	}
 
 	@Test
 	public void testIsFontBold() {

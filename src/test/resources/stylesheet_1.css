@@ -2,7 +2,7 @@
 
 td, th{
 	background: #999999;
-	border: 1px solid #556677;
+	border: thin solid #556677;
 	vertical-align: middle;
 }
 
@@ -33,11 +33,11 @@ td{
 .total {
 	border-top-style: double;
 	border-bottom-style: dashed;
-	border-width: 2px;
+	border-width: thick;
 }
 
 .fancy-border {
 	border-color:red green orange cyan;
 	border-style: dotted solid double dashed;
-	border-width: 5px;
+	border-width: medium;
 }

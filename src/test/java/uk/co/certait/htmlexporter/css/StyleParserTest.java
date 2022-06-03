@@ -35,7 +35,7 @@ public class StyleParserTest {
 		Style style = styleMap.get("th");
 		assertThat(style.getProperty(CssColorProperty.BACKGROUND_COLOR).get()).isEqualTo(Color.decode("#999999"));
 		assertThat(style.getProperty(CssColorProperty.BORDER_COLOR).get()).isEqualTo(Color.decode("#556677"));
-		assertThat(style.getProperty(CssIntegerProperty.BORDER_WIDTH).get()).isEqualTo(1);
+		assertThat(style.getProperty(CssStringProperty.BORDER_WIDTH).get()).isEqualTo("thin");
 		assertThat(style.getProperty(CssColorProperty.COLOR).get()).isEqualTo(Color.decode("#ffffff"));
 		assertThat(style.getProperty(CssStringProperty.FONT_FAMILY).get()).isEqualTo("Georgia");
 		assertThat(style.getProperty(CssStringProperty.BORDER_TOP_STYLE).get()).isEqualTo(Style.DASHED_BORDER);
@@ -57,7 +57,7 @@ public class StyleParserTest {
 		assertThat(style.getProperty(CssColorProperty.BORDER_BOTTOM_COLOR).get()).isEqualTo(Color.decode("#656565"));
 		assertThat(style.getProperty(CssColorProperty.BORDER_LEFT_COLOR).get()).isEqualTo(Color.decode("#656565"));
 		assertThat(style.getProperty(CssColorProperty.BORDER_RIGHT_COLOR).get()).isEqualTo(Color.decode("#656565"));
-		assertThat(style.getProperty(CssIntegerProperty.BORDER_WIDTH).get()).isEqualTo(1);
+		assertThat(style.getProperty(CssStringProperty.BORDER_WIDTH).get()).isEqualTo("thin");
 		assertThat(style.getProperty(CssColorProperty.COLOR).get()).isEqualTo(Color.decode("#333333"));
 		assertThat(style.isVerticallyAlignedMiddle()).isTrue();
 		assertThat(style.isHorizontallyAlignedRight()).isTrue();

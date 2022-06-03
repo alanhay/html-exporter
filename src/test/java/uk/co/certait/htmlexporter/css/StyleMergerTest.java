@@ -15,6 +15,8 @@
  */
 package uk.co.certait.htmlexporter.css;
 
+import static org.junit.Assert.assertEquals;
+
 import java.awt.Color;
 
 import org.junit.Assert;
@@ -30,14 +32,14 @@ public class StyleMergerTest {
 		tagStyle.addProperty(CssColorProperty.BACKGROUND_COLOR, Color.RED);
 		tagStyle.addProperty(CssStringProperty.FONT_WEIGHT, Style.BOLD_FONT_STYLE);
 
-		classStyle.addProperty(CssIntegerProperty.BORDER_WIDTH, 3);
+		classStyle.addProperty(CssStringProperty.BORDER_WIDTH, "thin");
 		classStyle.addProperty(CssStringProperty.FONT_STYLE, Style.TEXT_DECORATION_UNDERLINE);
 		classStyle.addProperty(CssColorProperty.BACKGROUND_COLOR, Color.BLUE);// override
 		// tag
 		// style
 
 		inlineStyle.addProperty(CssColorProperty.COLOR, Color.WHITE);
-		inlineStyle.addProperty(CssIntegerProperty.BORDER_WIDTH, 4);// override
+		inlineStyle.addProperty(CssStringProperty.BORDER_WIDTH, "thick");// override
 																	// class
 																	// style
 		inlineStyle.addProperty(CssIntegerProperty.FONT_SIZE, 12);// override
@@ -45,11 +47,11 @@ public class StyleMergerTest {
 																	// style
 
 		Style style = StyleMerger.mergeStyles(tagStyle, classStyle, inlineStyle);
-		Assert.assertEquals(style.getProperty(CssColorProperty.BACKGROUND_COLOR).get(), Color.BLUE);
-		Assert.assertEquals(style.getProperty(CssStringProperty.FONT_WEIGHT).get(), Style.BOLD_FONT_STYLE);
-		Assert.assertEquals(style.getProperty(CssIntegerProperty.BORDER_WIDTH).get().intValue(), 4);
-		Assert.assertEquals(style.getProperty(CssStringProperty.FONT_STYLE).get(), Style.TEXT_DECORATION_UNDERLINE);
-		Assert.assertEquals(style.getProperty(CssColorProperty.COLOR).get(), Color.WHITE);
-		Assert.assertEquals(style.getProperty(CssIntegerProperty.FONT_SIZE).get().intValue(), 12);
+		assertEquals(style.getProperty(CssColorProperty.BACKGROUND_COLOR).get(), Color.BLUE);
+		assertEquals(style.getProperty(CssStringProperty.FONT_WEIGHT).get(), Style.BOLD_FONT_STYLE);
+		assertEquals(style.getProperty(CssStringProperty.BORDER_WIDTH).get(), "thick");
+		assertEquals(style.getProperty(CssStringProperty.FONT_STYLE).get(), Style.TEXT_DECORATION_UNDERLINE);
+		assertEquals(style.getProperty(CssColorProperty.COLOR).get(), Color.WHITE);
+		assertEquals(style.getProperty(CssIntegerProperty.FONT_SIZE).get().intValue(), 12);
 	}
 }
