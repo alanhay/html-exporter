@@ -84,29 +84,12 @@ Example:
 Maven
 =====
 
-To try out the library quickly add the following repository to your POM:
+<dependency>
+    <groupId>io.github.alanhay</groupId>
+    <artifactId>html-exporter</artifactId>
+    <version>0.5.2</version>
+</dependency>
 
-		<repositories>
-			<repository>
-				<id>maven-s3-release-repo</id>
-				<name>S3 Release Repository</name>
-				<url>s3://alanhay-maven-repository/release</url>
-				<releases>
-					<enabled>true</enabled>
-				</releases>
-				<snapshots>
-					<enabled>false</enabled>
-				</snapshots>
-			</repository>
-		</repositories>
-
-and then add the following dependency:
-
-		<dependency>
-			<groupId>uk.co.certait</groupId>
-			<artifactId>html-exporter</artifactId>
-			<version>0.3</version>
-		</dependency>
     
 Further documentation to follow.
 
