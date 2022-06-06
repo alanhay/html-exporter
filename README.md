@@ -84,11 +84,11 @@ Example:
 Maven
 =====
 
-<dependency>
-    <groupId>io.github.alanhay</groupId>
-    <artifactId>html-exporter</artifactId>
-    <version>0.5.2</version>
-</dependency>
+	<dependency>
+	    <groupId>io.github.alanhay</groupId>
+	    <artifactId>html-exporter</artifactId>
+	    <version>0.5.2</version>
+	</dependency>
 
     
 Further documentation to follow.
