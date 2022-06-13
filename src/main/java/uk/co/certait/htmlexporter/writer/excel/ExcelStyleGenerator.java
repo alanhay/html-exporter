@@ -43,8 +43,8 @@ public class ExcelStyleGenerator {
 	private static final Map<BorderMappingKey, BorderStyle> BORDER_STYLE_MAP = new HashMap<>();
 
 	static {
-		BORDER_STYLE_MAP.put(new BorderMappingKey("solid", null), BorderStyle.HAIR);
-		BORDER_STYLE_MAP.put(new BorderMappingKey("solid", "thin"), BorderStyle.HAIR);
+		BORDER_STYLE_MAP.put(new BorderMappingKey("solid", null), BorderStyle.THIN);
+		BORDER_STYLE_MAP.put(new BorderMappingKey("solid", "thin"), BorderStyle.THIN);
 		BORDER_STYLE_MAP.put(new BorderMappingKey("solid", "medium"), BorderStyle.MEDIUM);
 		BORDER_STYLE_MAP.put(new BorderMappingKey("solid", "thick"), BorderStyle.THICK);
 	}

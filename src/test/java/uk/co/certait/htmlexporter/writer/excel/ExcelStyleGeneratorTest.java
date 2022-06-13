@@ -19,7 +19,7 @@ public class ExcelStyleGeneratorTest {
 		Style style = new Style();
 		style.addProperty(BORDER_STYLE, "solid");
 
-		assertThat(generator.getBorderStyle(style, BORDER_STYLE, BORDER_WIDTH)).isEqualTo(BorderStyle.HAIR);
+		assertThat(generator.getBorderStyle(style, BORDER_STYLE, BORDER_WIDTH)).isEqualTo(BorderStyle.THIN);
 	}
 
 	@Test
@@ -65,7 +65,7 @@ public class ExcelStyleGeneratorTest {
 		style.addProperty(BORDER_STYLE, "solid");
 		style.addProperty(BORDER_WIDTH, "thin");
 
-		assertThat(generator.getBorderStyle(style, BORDER_STYLE, BORDER_WIDTH)).isEqualTo(BorderStyle.HAIR);
+		assertThat(generator.getBorderStyle(style, BORDER_STYLE, BORDER_WIDTH)).isEqualTo(BorderStyle.THIN);
 	}
 
 	@Test
