@@ -21,8 +21,9 @@ import java.text.SimpleDateFormat;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.util.CellUtil;
 import org.jsoup.nodes.Element;
 
 import uk.co.certait.htmlexporter.css.Style;
@@ -36,19 +37,21 @@ public class ExcelTableCellWriter extends AbstractTableCellWriter {
 	private Sheet sheet;
 	private StyleMap styleMapper;
 	private ExcelStyleGenerator styleGenerator;
+	private DataFormat dataFormat;
 
 	public ExcelTableCellWriter(Sheet sheet, StyleMap styleMapper) {
 		this.sheet = sheet;
 		this.styleMapper = styleMapper;
 
 		styleGenerator = new ExcelStyleGenerator();
+		dataFormat = sheet.getWorkbook().getCreationHelper().createDataFormat();
 	}
 
 	@Override
 	public void renderCell(Element element, int rowIndex, int columnIndex) {
 		Cell cell = sheet.getRow(rowIndex).createCell(columnIndex);
 
-		Double numericValue;
+		Double numericValue = null;
 
 		if (isDateCell(element)) {
 			DateFormat df = new SimpleDateFormat(getDateCellFormat(element));
@@ -69,8 +72,16 @@ public class ExcelTableCellWriter extends AbstractTableCellWriter {
 		cell.setCellStyle(styleGenerator.getStyle(cell, style));
 
 		if (isDateCell(element)) {
-			CreationHelper createHelper = sheet.getWorkbook().getCreationHelper();
-			cell.getCellStyle().setDataFormat(createHelper.createDataFormat().getFormat(getDateCellFormat(element)));
+			// do not use: getCellStyle().setDataFormat(...) as this changes the format for all fields having the same style
+			// use CellUtils.setCellStyleProperty instead
+			CellUtil.setCellStyleProperty(cell, CellUtil.DATA_FORMAT, dataFormat.getFormat(getDateCellFormat(element)));
+		}
+		
+		if (numericValue != null && getNumberCellFormat(element) != null) {
+			CellUtil.setCellStyleProperty(cell, CellUtil.DATA_FORMAT, dataFormat.getFormat(getNumberCellFormat(element)));
+			if (getNumberCellFormat(element).contains("%")) {
+				cell.setCellValue(numericValue / 100); // fix wrong excel interpretation of percent formatted values
+			}
 		}
 
 		String commentText;
