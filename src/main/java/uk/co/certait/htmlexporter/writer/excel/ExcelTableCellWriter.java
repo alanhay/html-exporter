@@ -77,9 +77,9 @@ public class ExcelTableCellWriter extends AbstractTableCellWriter {
 			CellUtil.setCellStyleProperty(cell, CellUtil.DATA_FORMAT, dataFormat.getFormat(getDateCellFormat(element)));
 		}
 		
-		if (numericValue != null && getNumberCellFormat(element) != null) {
-			CellUtil.setCellStyleProperty(cell, CellUtil.DATA_FORMAT, dataFormat.getFormat(getNumberCellFormat(element)));
-			if (getNumberCellFormat(element).contains("%")) {
+		if (numericValue != null && getNumericCellFormat(element) != null) {
+			CellUtil.setCellStyleProperty(cell, CellUtil.DATA_FORMAT, dataFormat.getFormat(getNumericCellFormat(element)));
+			if (getNumericCellFormat(element).contains("%")) {
 				cell.setCellValue(numericValue / 100); // fix wrong excel interpretation of percent formatted values
 			}
 		}
