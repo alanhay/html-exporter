@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
@@ -41,13 +43,23 @@ import uk.co.certait.htmlexporter.writer.ods.OdsExporter;
 
 public class ReportGenerator {
 	public ReportGenerator() throws Exception {
-		// String html = generateHTML("report-multi-sheet.vm");
 		String html = generateHTML("report.vm");
-		saveFile("report.html", html.getBytes());
+		// saveFile("report.html", html.getBytes());
 
-		new ExcelExporter().exportHtml(html, new File("./report.xlsx"));
-		new PdfExporter().exportHtml(html, new File("./report.pdf"));
-		new OdsExporter().exportHtml(html, new File("./report.ods"));
+		File directory = new File(System.getProperty("user.home") + "/html-exporter");
+
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yy-HH-mm-ss");
+		String timestamp = LocalDateTime.now().format(formatter);
+
+		if (!directory.exists()) {
+			directory.mkdirs();
+		}
+
+		LocalDateTime.now();
+
+		new ExcelExporter().exportHtml(html, new File(directory, "report-" + timestamp + ".xlsx"));
+		new PdfExporter().exportHtml(html, new File(directory, "report-" + timestamp + ".pdf"));
+		new OdsExporter().exportHtml(html, new File(directory, "report-" + timestamp + ".ods"));
 	}
 
 	public static void main(String[] args) throws Exception {

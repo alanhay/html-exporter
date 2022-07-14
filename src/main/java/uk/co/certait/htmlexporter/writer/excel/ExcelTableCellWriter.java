@@ -24,6 +24,8 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.jsoup.nodes.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import uk.co.certait.htmlexporter.css.Style;
 import uk.co.certait.htmlexporter.css.StyleMap;
@@ -32,6 +34,8 @@ import uk.co.certait.htmlexporter.ss.Function;
 import uk.co.certait.htmlexporter.writer.AbstractTableCellWriter;
 
 public class ExcelTableCellWriter extends AbstractTableCellWriter {
+
+	private static final Logger logger = LoggerFactory.getLogger(ExcelTableCellWriter.class);
 
 	private Sheet sheet;
 	private StyleMap styleMapper;
@@ -56,7 +60,8 @@ public class ExcelTableCellWriter extends AbstractTableCellWriter {
 			try {
 				cell.setCellValue(df.parse(getElementText(element)));
 			} catch (ParseException pex) {
-				System.out.println("Invalid Usage");
+				logger.error("Error processing date cell with format specified as {} and value {}",
+						getDateCellFormat(element), getElementText(element), pex);
 			}
 		} else if ((numericValue = getNumericValue(element)) != null) {
 			cell.setCellValue(numericValue);
