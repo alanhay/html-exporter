@@ -20,7 +20,7 @@ For PDF generation this library simply provides some convenience methods around 
 <dependency>
     <groupId>io.github.alanhay</groupId>
     <artifactId>html-exporter</artifactId>
-    <version>0.5.2</version>
+    <version>0.5.4</version>
 </dependency>
 ```
 
