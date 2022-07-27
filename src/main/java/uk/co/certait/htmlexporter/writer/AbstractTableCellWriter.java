@@ -140,6 +140,14 @@ public abstract class AbstractTableCellWriter implements TableCellWriter {
 	protected String getDateCellFormat(Element element) {
 		return element.attr(DATE_CELL_ATTRIBUTE);
 	}
+	
+	protected boolean isNumericCell(Element element) {
+		return getNumericValue(element) != null;
+	}
+	
+	protected String getNumericCellFormat(Element element) {
+		return element.attr(NUMBER_CELL_ATTRIBUTE);
+	}
 
 	/**
 	 * 
