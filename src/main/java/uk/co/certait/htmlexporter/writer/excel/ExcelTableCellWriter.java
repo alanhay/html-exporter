@@ -80,7 +80,6 @@ public class ExcelTableCellWriter extends AbstractTableCellWriter {
 		Style style = styleMapper.getStyleForElement(element);
 		cell.setCellStyle(styleGenerator.getStyle(cell, style,format));
 
-
 		String commentText;
 
 		if ((commentText = getCellCommentText(element)) != null) {
