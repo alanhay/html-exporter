@@ -19,11 +19,13 @@ import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
@@ -49,17 +51,20 @@ public class ExcelStyleGenerator {
 		BORDER_STYLE_MAP.put(new BorderMappingKey("solid", "thick"), BorderStyle.THICK);
 	}
 
-	private Map<Style, XSSFCellStyle> styles;
+	private Map<ExtendedStyle, XSSFCellStyle> styles;
+	
+	private DataFormat dataFormat = null;
 
 	public ExcelStyleGenerator() {
-		styles = new HashMap<Style, XSSFCellStyle>();
+		styles = new HashMap<ExtendedStyle, XSSFCellStyle>();
 	}
 
-	public CellStyle getStyle(Cell cell, Style style) {
+	public CellStyle getStyle(Cell cell, Style style, String format) {
 		XSSFCellStyle cellStyle;
-
-		if (styles.containsKey(style)) {
-			cellStyle = styles.get(style);
+		ExtendedStyle extendedStyle = new ExtendedStyle(style, format); 
+		
+		if (styles.containsKey(extendedStyle)) {
+			cellStyle = styles.get(extendedStyle);
 		} else {
 			cellStyle = (XSSFCellStyle) cell.getSheet().getWorkbook().createCellStyle();
 
@@ -69,8 +74,9 @@ public class ExcelStyleGenerator {
 			applyHorizontalAlignment(style, cellStyle);
 			applyverticalAlignment(style, cellStyle);
 			applyWidth(cell, style);
+			applyFormat(cell, cellStyle, format);
 
-			styles.put(style, cellStyle);
+			styles.put(extendedStyle, cellStyle);
 		}
 
 		return cellStyle;
@@ -179,6 +185,14 @@ public class ExcelStyleGenerator {
 					style.getProperty(CssIntegerProperty.WIDTH).get() * 50);
 		}
 	}
+	
+	protected void applyFormat(Cell cell,XSSFCellStyle cellStyle, String format) {
+		if (dataFormat == null) dataFormat = cell.getSheet().getWorkbook().getCreationHelper().createDataFormat();
+		if (!StringUtils.isEmpty(format)) {
+			cellStyle.setDataFormat(dataFormat.getFormat(format));
+		}
+	}
+	
 
 	public Font createFont(Workbook workbook, Style style) {
 		Font font = workbook.createFont();
@@ -238,6 +252,35 @@ public class ExcelStyleGenerator {
 		@Override
 		public int hashCode() {
 			return new HashCodeBuilder().append(this.borderStyle).append(this.borderWidth).toHashCode();
+		}
+	}
+	
+	class ExtendedStyle {
+		private Style style;
+		private String format;
+
+		public ExtendedStyle(Style style, String format) {
+			this.style = style;
+			this.format = format;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			} else if (obj instanceof ExtendedStyle) {
+				ExtendedStyle other = (ExtendedStyle) obj;
+				return new EqualsBuilder().append(this.style, other.style)
+						.append(this.format, other.format).isEquals();
+			}
+
+			return false;
+
+		}
+
+		@Override
+		public int hashCode() {
+			return new HashCodeBuilder().append(this.style).append(this.format).toHashCode();
 		}
 	}
 }

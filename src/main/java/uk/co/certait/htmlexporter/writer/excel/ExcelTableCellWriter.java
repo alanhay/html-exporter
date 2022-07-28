@@ -21,9 +21,7 @@ import java.text.SimpleDateFormat;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.util.CellUtil;
 import org.jsoup.nodes.Element;
 
 import uk.co.certait.htmlexporter.css.Style;
@@ -37,14 +35,12 @@ public class ExcelTableCellWriter extends AbstractTableCellWriter {
 	private Sheet sheet;
 	private StyleMap styleMapper;
 	private ExcelStyleGenerator styleGenerator;
-	private DataFormat dataFormat;
 
 	public ExcelTableCellWriter(Sheet sheet, StyleMap styleMapper) {
 		this.sheet = sheet;
 		this.styleMapper = styleMapper;
 
 		styleGenerator = new ExcelStyleGenerator();
-		dataFormat = sheet.getWorkbook().getCreationHelper().createDataFormat();
 	}
 
 	@Override
@@ -52,6 +48,7 @@ public class ExcelTableCellWriter extends AbstractTableCellWriter {
 		Cell cell = sheet.getRow(rowIndex).createCell(columnIndex);
 
 		Double numericValue = null;
+		String format = null;
 
 		if (isDateCell(element)) {
 			DateFormat df = new SimpleDateFormat(getDateCellFormat(element));
@@ -61,28 +58,22 @@ public class ExcelTableCellWriter extends AbstractTableCellWriter {
 			} catch (ParseException pex) {
 				System.out.println("Invalid Usage");
 			}
+			format = getDateCellFormat(element);
 		} else if ((numericValue = getNumericValue(element)) != null) {
 			cell.setCellValue(numericValue);
+			if (getNumericCellFormat(element) != null) {
+				format = getNumericCellFormat(element);
+				if (getNumericCellFormat(element).contains("%")) {
+					cell.setCellValue(numericValue / 100); // fix wrong excel interpretation of percent formatted values
+				}
+			}
 		} else {
 			cell = sheet.getRow(rowIndex).createCell(columnIndex, CellType.STRING);
 			cell.setCellValue(getElementText(element));
 		}
 
 		Style style = styleMapper.getStyleForElement(element);
-		cell.setCellStyle(styleGenerator.getStyle(cell, style));
-
-		if (isDateCell(element)) {
-			// do not use: getCellStyle().setDataFormat(...) as this changes the format for all fields having the same style
-			// use CellUtils.setCellStyleProperty instead
-			CellUtil.setCellStyleProperty(cell, CellUtil.DATA_FORMAT, dataFormat.getFormat(getDateCellFormat(element)));
-		}
-		
-		if (numericValue != null && getNumericCellFormat(element) != null) {
-			CellUtil.setCellStyleProperty(cell, CellUtil.DATA_FORMAT, dataFormat.getFormat(getNumericCellFormat(element)));
-			if (getNumericCellFormat(element).contains("%")) {
-				cell.setCellValue(numericValue / 100); // fix wrong excel interpretation of percent formatted values
-			}
-		}
+		cell.setCellStyle(styleGenerator.getStyle(cell, style,format));
 
 		String commentText;
 
@@ -100,4 +91,5 @@ public class ExcelTableCellWriter extends AbstractTableCellWriter {
 
 		new ExcelFunctionCell(cell, range, new ExcelCellRangeResolver(), function);
 	}
+	
 }
