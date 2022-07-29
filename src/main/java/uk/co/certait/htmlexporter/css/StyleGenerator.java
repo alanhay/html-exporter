@@ -29,6 +29,7 @@ import com.helger.css.property.ECSSProperty;
 
 public class StyleGenerator {
 	private static final String PX = "px";
+	private static final String PT = "pt";
 	private static final String PERCENTAGE = "%";
 
 	// called by the parser and by the cell writer for an in-line style
@@ -66,8 +67,9 @@ public class StyleGenerator {
 				ICSSExpressionMember member = rule.getExpression().getMemberAtIndex(0);
 				CSSExpressionMemberTermSimple term = (CSSExpressionMemberTermSimple) member;
 				if (!term.getValue().contains(PERCENTAGE)) {
-					double value = Double.parseDouble(term.getValue().replaceAll(PX, "").trim());
-
+					double value = Double.parseDouble(term.getValue().replaceAll(PX, "").replaceAll(PT, "").trim());
+					// TODO: correct PX values as Excel used PT metric and 1 PT equals 1.333(3) PX
+					// but this would be a breaking change, so not done yet
 					if (value < 1) {
 						value = 1;
 					}
