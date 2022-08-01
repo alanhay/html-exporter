@@ -79,7 +79,7 @@ public class StyleMap {
 	}
 
 	private Style getStyleForTag(Element element) {
-		return styles.get(element.tagName());
+		return styles.get(element.tagName().toLowerCase());
 	}
 
 	private List<Style> getStylesForClass(Element element) {
@@ -89,11 +89,16 @@ public class StyleMap {
 			String[] classNames = element.className().split(" ");
 
 			for (String className : classNames) {
-				String qualifiedClassName = CLASS_PREFIX + className.trim();
+				String qualifiedClassName = CLASS_PREFIX + className.trim().toLowerCase();
+				String fullyQualifiedClassName = element.tagName().toLowerCase() + CLASS_PREFIX + className.trim().toLowerCase();
 
 				if (styles.containsKey(qualifiedClassName)) {
 					classStyles.add(styles.get(qualifiedClassName));
 				}
+				if (styles.containsKey(fullyQualifiedClassName)) {
+					classStyles.add(styles.get(fullyQualifiedClassName));
+				}
+				
 			}
 		}
 

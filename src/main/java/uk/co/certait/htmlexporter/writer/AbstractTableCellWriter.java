@@ -56,18 +56,14 @@ public abstract class AbstractTableCellWriter implements TableCellWriter {
 	}
 
 	/**
-	 * Returns the actual text of the innermost child element for this cell.
+	 * Returns the actual text of the element for this cell.
 	 * 
 	 * @param element
 	 * 
 	 * @return The text to be output for this Cell.
 	 */
 	public String getElementText(Element element) {
-		String text = element.ownText();
-
-		for (Element child : element.children()) {
-			text = child.ownText();
-		}
+		String text = element.text();
 
 		return text;
 	}
@@ -85,7 +81,7 @@ public abstract class AbstractTableCellWriter implements TableCellWriter {
 		boolean spansMultipleColumns = false;
 
 		if (element.hasAttr(COLUMN_SPAN_ATTRIBUTE)) {
-			int columnCount = Integer.parseInt(element.attr(COLUMN_SPAN_ATTRIBUTE));
+			int columnCount = Integer.parseInt(element.attr(COLUMN_SPAN_ATTRIBUTE).replaceAll("\\s",""));
 
 			spansMultipleColumns = columnCount > 1;
 		}
@@ -117,7 +113,7 @@ public abstract class AbstractTableCellWriter implements TableCellWriter {
 		int columnCount = 1;
 
 		if (spansMultipleColumns(element)) {
-			columnCount = Integer.parseInt(element.attr(COLUMN_SPAN_ATTRIBUTE));
+			columnCount = Integer.parseInt(element.attr(COLUMN_SPAN_ATTRIBUTE).replaceAll("\\s",""));
 		}
 
 		return columnCount;

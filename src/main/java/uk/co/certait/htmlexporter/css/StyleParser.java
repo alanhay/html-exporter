@@ -28,7 +28,6 @@ import com.helger.css.decl.CSSDeclaration;
 import com.helger.css.decl.CSSSelector;
 import com.helger.css.decl.CSSStyleRule;
 import com.helger.css.decl.CascadingStyleSheet;
-import com.helger.css.decl.ICSSSelectorMember;
 import com.helger.css.reader.CSSReader;
 
 public class StyleParser {
@@ -85,17 +84,13 @@ public class StyleParser {
 				Style style = generator.createStyle(declaration);
 
 				for (CSSSelector selector : selectors) {
-					ICommonsList<ICSSSelectorMember> selectorMembers = selector.getAllMembers();
-
-					for (ICSSSelectorMember selectorMember : selectorMembers) {
-						String selectorName = selectorMember.getAsCSSString();
+						String selectorName = selector.getAsCSSString().toLowerCase();
 
 						if (styleMap.containsKey(selectorName)) {
 							styleMap.put(selectorName, StyleMerger.mergeStyles(styleMap.get(selectorName), style));
 						} else {
 							styleMap.put(selectorName, style);
 						}
-					}
 				}
 			}
 		}

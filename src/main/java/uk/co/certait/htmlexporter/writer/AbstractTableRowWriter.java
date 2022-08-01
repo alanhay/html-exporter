@@ -72,7 +72,7 @@ public abstract class AbstractTableRowWriter implements TableRowWriter {
 		int columnSpan = 1;
 
 		if (element.hasAttr("colspan")) {
-			columnSpan = Integer.parseInt(element.attr("colspan"));
+			columnSpan = Integer.parseInt(element.attr("colspan").replaceAll("\\s",""));
 		}
 
 		return columnSpan;
@@ -82,7 +82,7 @@ public abstract class AbstractTableRowWriter implements TableRowWriter {
 		int rowSpan = 1;
 
 		if (element.hasAttr("rowSpan")) {
-			rowSpan = Integer.parseInt(element.attr("rowSpan"));
+			rowSpan = Integer.parseInt(element.attr("rowSpan").replaceAll("\\s",""));
 		}
 
 		return rowSpan;

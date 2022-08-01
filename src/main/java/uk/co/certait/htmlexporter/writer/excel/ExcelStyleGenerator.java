@@ -45,10 +45,16 @@ public class ExcelStyleGenerator {
 	private static final Map<BorderMappingKey, BorderStyle> BORDER_STYLE_MAP = new HashMap<>();
 
 	static {
+		BORDER_STYLE_MAP.put(new BorderMappingKey("solid", "0px"), BorderStyle.NONE);
 		BORDER_STYLE_MAP.put(new BorderMappingKey("solid", null), BorderStyle.THIN);
 		BORDER_STYLE_MAP.put(new BorderMappingKey("solid", "thin"), BorderStyle.THIN);
+		BORDER_STYLE_MAP.put(new BorderMappingKey("solid", "1px"), BorderStyle.THIN);
 		BORDER_STYLE_MAP.put(new BorderMappingKey("solid", "medium"), BorderStyle.MEDIUM);
+		BORDER_STYLE_MAP.put(new BorderMappingKey("solid", "2px"), BorderStyle.MEDIUM);
 		BORDER_STYLE_MAP.put(new BorderMappingKey("solid", "thick"), BorderStyle.THICK);
+		BORDER_STYLE_MAP.put(new BorderMappingKey("solid", "3x"), BorderStyle.THICK);
+		BORDER_STYLE_MAP.put(new BorderMappingKey("solid", "4px"), BorderStyle.THICK);
+		BORDER_STYLE_MAP.put(new BorderMappingKey("solid", "5px"), BorderStyle.THICK);
 	}
 
 	private Map<ExtendedStyle, XSSFCellStyle> styles;
@@ -146,7 +152,7 @@ public class ExcelStyleGenerator {
 		if (excelBorderStyle == null) {
 			try {
 				excelBorderStyle = BorderStyle.valueOf(cssBorderStyle.toUpperCase());
-			} catch (IllegalArgumentException ex) {
+			} catch (Exception ex) {
 				// ignore unsupported border style
 			}
 		}

@@ -67,7 +67,7 @@ public class StyleGenerator {
 				ICSSExpressionMember member = rule.getExpression().getMemberAtIndex(0);
 				CSSExpressionMemberTermSimple term = (CSSExpressionMemberTermSimple) member;
 				if (!term.getValue().contains(PERCENTAGE)) {
-					double value = Double.parseDouble(term.getValue().replaceAll(PX, "").replaceAll(PT, "").trim());
+					double value = Double.parseDouble(term.getValue().replaceAll(PX, "").replaceAll(PT, "").replaceAll("\\s",""));
 					// TODO: correct PX values as Excel used PT metric and 1 PT equals 1.333(3) PX
 					// but this would be a breaking change, so not done yet
 					if (value < 1) {

@@ -29,6 +29,23 @@ import uk.co.certait.htmlexporter.writer.AbstractExporter;
 import uk.co.certait.htmlexporter.writer.TableWriter;
 
 public class ExcelExporter extends AbstractExporter {
+	
+	private boolean autoSizeMergedCells;
+	
+	private int tableDistanceInRows;
+	
+	public ExcelExporter(boolean autoSizeMergedCells, int tableDistanceInRows) {
+		super();
+		this.autoSizeMergedCells = autoSizeMergedCells;
+		this.tableDistanceInRows = tableDistanceInRows;
+	}
+	
+	public ExcelExporter() {
+		super();
+		this.autoSizeMergedCells = false;
+		this.tableDistanceInRows = 1;
+	}
+
 	public void exportHtml(String html, OutputStream out) throws IOException {
 		Workbook workbook = new XSSFWorkbook();
 
@@ -61,7 +78,7 @@ public class ExcelExporter extends AbstractExporter {
 			TableWriter writer = new ExcelTableWriter(
 					new ExcelTableRowWriter(sheet, new ExcelTableCellWriter(sheet, styleMapper)));
 
-			startRow += writer.writeTable(element, styleMapper, startRow) + 1;
+			startRow += writer.writeTable(element, styleMapper, startRow) + tableDistanceInRows;
 			sheet.createRow(startRow);
 		}
 
@@ -86,7 +103,7 @@ public class ExcelExporter extends AbstractExporter {
 		}
 
 		for (int i = 0; i < sheet.getRow(lastRowWithData).getPhysicalNumberOfCells(); ++i) {
-			sheet.autoSizeColumn(i);
+			sheet.autoSizeColumn(i,autoSizeMergedCells);
 		}
 
 		for (int i = 0; i < sheet.getRow(sheet.getLastRowNum()).getPhysicalNumberOfCells(); ++i) {
