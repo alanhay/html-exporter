@@ -21,7 +21,10 @@ import java.text.SimpleDateFormat;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.IgnoredErrorType;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.util.CellReference;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,11 +42,13 @@ public class ExcelTableCellWriter extends AbstractTableCellWriter {
 	private Sheet sheet;
 	private StyleMap styleMapper;
 	private ExcelStyleGenerator styleGenerator;
-
-	public ExcelTableCellWriter(Sheet sheet, StyleMap styleMapper) {
+	private boolean ignoreNumberAsTextWarning;
+	
+	public ExcelTableCellWriter(Sheet sheet, StyleMap styleMapper, boolean ignoreNumberAsTextWarning) {
 		this.sheet = sheet;
 		this.styleMapper = styleMapper;
-
+		this.ignoreNumberAsTextWarning = ignoreNumberAsTextWarning;
+		
 		styleGenerator = new ExcelStyleGenerator();
 	}
 
@@ -64,7 +69,8 @@ public class ExcelTableCellWriter extends AbstractTableCellWriter {
 						getDateCellFormat(element), getElementText(element), pex);
 			}
 			format = getDateCellFormat(element);
-		} else if ((numericValue = getNumericValue(element)) != null) {
+		} else if (isNumericCell(element)) {
+			numericValue = getNumericValue(element);
 			cell.setCellValue(numericValue);
 			if (getNumericCellFormat(element) != null) {
 				format = getNumericCellFormat(element);
@@ -75,6 +81,7 @@ public class ExcelTableCellWriter extends AbstractTableCellWriter {
 		} else {
 			cell = sheet.getRow(rowIndex).createCell(columnIndex, CellType.STRING);
 			cell.setCellValue(getElementText(element));
+			if (ignoreNumberAsTextWarning && getNumericValue(element)!=null && sheet instanceof XSSFSheet) ((XSSFSheet)sheet).addIgnoredErrors(new CellReference(cell), IgnoredErrorType.NUMBER_STORED_AS_TEXT);
 		}
 
 		Style style = styleMapper.getStyleForElement(element);

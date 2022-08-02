@@ -42,7 +42,8 @@ public class OdsTableCellWriter extends AbstractTableCellWriter {
 
 		Double numericValue = null;
 
-		if ((numericValue = getNumericValue(element)) != null) {
+		if (isNumericCell(element)) {
+			numericValue = getNumericValue(element);
 			cell.setDoubleValue(numericValue);
 		} else {
 			cell.setStringValue(getElementText(element));

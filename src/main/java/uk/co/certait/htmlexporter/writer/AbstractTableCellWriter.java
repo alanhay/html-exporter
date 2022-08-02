@@ -138,7 +138,7 @@ public abstract class AbstractTableCellWriter implements TableCellWriter {
 	}
 	
 	protected boolean isNumericCell(Element element) {
-		return getNumericValue(element) != null;
+		return (!element.hasAttr(DATA_TEXT_CELL) && getNumericValue(element) != null);
 	}
 	
 	protected String getNumericCellFormat(Element element) {
@@ -263,15 +263,15 @@ public abstract class AbstractTableCellWriter implements TableCellWriter {
 	public Double getNumericValue(Element element) {
 		Double numericValue = null;
 
-		if (!element.hasAttr(DATA_TEXT_CELL))
-			try {
-				numericValue = NumberFormat.getInstance().parse(element.ownText()).doubleValue();
-			} catch (ParseException e) {
+		try {
+			numericValue = NumberFormat.getInstance().parse(element.ownText()).doubleValue();
+		} catch (ParseException e) {
 
-			}
+		}
 
 		return numericValue;
 	}
+	
 
 	public abstract void renderCell(Element element, int rowIndex, int columnIndex);
 

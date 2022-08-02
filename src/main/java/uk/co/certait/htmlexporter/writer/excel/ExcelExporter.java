@@ -31,19 +31,22 @@ import uk.co.certait.htmlexporter.writer.TableWriter;
 public class ExcelExporter extends AbstractExporter {
 	
 	private boolean autoSizeMergedCells;
+	private boolean ignoreNumberAsTextWarning;
 	
 	private int tableDistanceInRows;
 	
-	public ExcelExporter(boolean autoSizeMergedCells, int tableDistanceInRows) {
+	public ExcelExporter(boolean autoSizeMergedCells, int tableDistanceInRows, boolean ignoreNumberAsTextWarning) {
 		super();
 		this.autoSizeMergedCells = autoSizeMergedCells;
 		this.tableDistanceInRows = tableDistanceInRows;
+		this.ignoreNumberAsTextWarning = ignoreNumberAsTextWarning;
 	}
 	
 	public ExcelExporter() {
 		super();
 		this.autoSizeMergedCells = false;
 		this.tableDistanceInRows = 1;
+		this.ignoreNumberAsTextWarning = false;
 	}
 
 	public void exportHtml(String html, OutputStream out) throws IOException {
@@ -76,7 +79,7 @@ public class ExcelExporter extends AbstractExporter {
 			}
 
 			TableWriter writer = new ExcelTableWriter(
-					new ExcelTableRowWriter(sheet, new ExcelTableCellWriter(sheet, styleMapper)));
+					new ExcelTableRowWriter(sheet, new ExcelTableCellWriter(sheet, styleMapper, ignoreNumberAsTextWarning)));
 
 			startRow += writer.writeTable(element, styleMapper, startRow) + tableDistanceInRows;
 			sheet.createRow(startRow);
@@ -110,4 +113,31 @@ public class ExcelExporter extends AbstractExporter {
 			sheet.setColumnWidth(i, (int) (sheet.getColumnWidth(i) * 1.2));
 		}
 	}
+	
+	
+	public boolean isAutoSizeMergedCells() {
+		return autoSizeMergedCells;
+	}
+
+	public void setAutoSizeMergedCells(boolean autoSizeMergedCells) {
+		this.autoSizeMergedCells = autoSizeMergedCells;
+	}
+
+	public boolean isIgnoreNumberAsTextWarning() {
+		return ignoreNumberAsTextWarning;
+	}
+
+	public void setIgnoreNumberAsTextWarning(boolean ignoreNumberAsTextWarning) {
+		this.ignoreNumberAsTextWarning = ignoreNumberAsTextWarning;
+	}
+
+	public int getTableDistanceInRows() {
+		return tableDistanceInRows;
+	}
+
+	public void setTableDistanceInRows(int tableDistanceInRows) {
+		this.tableDistanceInRows = tableDistanceInRows;
+	}
+
+
 }
