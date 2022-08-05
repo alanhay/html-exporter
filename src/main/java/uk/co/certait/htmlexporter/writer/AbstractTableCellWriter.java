@@ -144,9 +144,9 @@ public abstract class AbstractTableCellWriter implements TableCellWriter {
 	protected boolean isNumericCell(Element element) {
 		return getNumericValue(element) != null;
 	}
-	
-	protected String getNumericCellFormat(Element element) {
-		return element.attr(NUMBER_CELL_ATTRIBUTE);
+
+	protected boolean isPercentageCell(Element element) {
+		return getNumericValue(element) != null && element.ownText().trim().endsWith("%");
 	}
 
 	/**

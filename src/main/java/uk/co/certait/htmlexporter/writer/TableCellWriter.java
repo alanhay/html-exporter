@@ -21,8 +21,8 @@ public interface TableCellWriter {
 	public static final String COLUMN_SPAN_ATTRIBUTE = "colspan";
 	public static final String DATA_GROUP_ATTRIBUTE = "data-group";
 	public static final String DATA_GROUP_OUTPUT_ATTRIBUTE = "data-group-output";
-	public static final String DATE_CELL_ATTRIBUTE = "data-date-cell-format";
-	public static final String NUMBER_CELL_ATTRIBUTE = "data-number-cell-format";
+	public static final String DATE_CELL_ATTRIBUTE = "data-date-cell-format"; //FIXME Rename
+	public static final String DATA_NUMERIC_CELL_FORMAT_ATTRIBUTE = "data-numeric-cell-format";
 	public static final String DATA_CELL_COMMENT_ATTRIBUTE = "data-cell-comment";
 	public static final String DATA_CELL_COMMENT_DIMENSION_ATTRIBUTE = "data-cell-comment-dimension";
 	public static final String DATA_TEXT_CELL = "data-text-cell";
