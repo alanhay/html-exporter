@@ -14,6 +14,7 @@ import uk.co.certait.htmlexporter.ss.Dimension;
 
 public class ExcelCellCommentGenerator {
 
+	@SuppressWarnings("rawtypes")
 	public static void addCellComment(Cell cell, String commentText, Dimension d) {
 
 		Sheet sheet = cell.getSheet();
