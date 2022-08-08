@@ -21,8 +21,10 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
@@ -44,7 +46,7 @@ import uk.co.certait.htmlexporter.writer.ods.OdsExporter;
 public class ReportGenerator {
 	public ReportGenerator() throws Exception {
 		String html = generateHTML("report.vm");
-		// saveFile("report.html", html.getBytes());
+		//saveFile("report.html", html.getBytes());
 
 		File directory = new File(System.getProperty("user.home") + "/html-exporter");
 
@@ -77,6 +79,7 @@ public class ReportGenerator {
 		Template template = Velocity.getTemplate(templateName);
 
 		VelocityContext context = new VelocityContext();
+		context.put("numberFormatter", NumberFormat.getInstance(Locale.UK));
 		context.put("data", generateData());
 		context.put("productGroups", ProductGroup.values());
 		Writer writer = new StringWriter();

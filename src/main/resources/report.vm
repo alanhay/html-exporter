@@ -12,7 +12,7 @@
 		</table>
 		<br/>
 		#set($areas = $data.areas)
-
+		#set($numberFormat = "#[[#,##0]]#")
 		<table style="width:100%;">
 			<tr>
 				<th style="width:120px;">Area</th>
@@ -87,8 +87,8 @@
 										#set($cellCommentDimension = "")
 									#end
             						<td data-group="store_${store.id}_value, region_${region.id}_pg_${group.id}_value" $cellComment $cellCommentDimension
-											class="numeric $backgroundClass $bestPerformingClass">
-            							$store.getValueOfSalesForProductGroup($group)
+											class="numeric $backgroundClass $bestPerformingClass" data-numeric-cell-format="$numberFormat">
+            							$numberFormatter.format($store.getValueOfSalesForProductGroup($group))
                                     </td>                            
     						#end
     						
@@ -98,8 +98,8 @@
     							$store.numberOfSales
                             </td>
     						<td data-group-output="store_${store.id}_value" data-group="region_${region.id}_value" 
-									class="numeric $backgroundClass" >
-    							$store.valueOfSales
+									class="numeric $backgroundClass" data-numeric-cell-format="$numberFormat">
+    							$numberFormatter.format($store.valueOfSales)
                             </td>   
     						
     						#set($dataRowCount = $dataRowCount + 1)
@@ -117,8 +117,8 @@
         						$region.getNumberOfSalesForProductGroup($group)
                             </td>
         					<td class="numeric" data-group-output="region_${region.id}_pg_${group.id}_value" 
-									data-group="area_${area.id}_pg_${group.id}_value">
-        						$region.getValueOfSalesForProductGroup($group)
+									data-group="area_${area.id}_pg_${group.id}_value" data-numeric-cell-format="$numberFormat">
+        						$numberFormatter.format($region.getValueOfSalesForProductGroup($group))
         					</td>
     					#end
     					
@@ -128,8 +128,8 @@
     						$region.numberOfSales
                         </td>
     					<td class="numeric" data-group-output="region_${region.id}_value" 
-								data-group="area_${area.id}_value">
-    						$region.valueOfSales
+								data-group="area_${area.id}_value" data-numeric-cell-format="$numberFormat">
+    						$numberFormatter.format($region.valueOfSales)
                         </td>   
     				</tr>
 					
@@ -147,8 +147,8 @@
     						$area.getNumberOfSalesForProductGroup($group)
                         </td>
     					<td class="numeric" data-group-output="area_${area.id}_pg_${group.id}_value" 
-								data-group="pg_${group.id}_value">
-    						$area.getValueOfSalesForProductGroup($group)
+								data-group="pg_${group.id}_value" data-numeric-cell-format="$numberFormat">
+    						$numberFormatter.format($area.getValueOfSalesForProductGroup($group))
     					</td>
 					#end
 					
@@ -158,8 +158,8 @@
 						$area.numberOfSales
                     </td>
 					<td class="numeric" data-group-output="area_${area.id}_value" 
-							data-group="total_value">
-						$area.valueOfSales
+							data-group="total_value" data-numeric-cell-format="$numberFormat">
+						$numberFormatter.format($area.valueOfSales)
                     </td>   
 				</tr>
 			#end	<!-- END AREA LOOP -->
@@ -174,13 +174,13 @@
     				<td class="numeric" data-group-output="pg_${group.id}_count">
     					$data.getNumberOfSalesForProductGroup($group)
                     </td>
-    				<td class="numeric" data-group-output="pg_${group.id}_value">
-    					$data.getValueOfSalesForProductGroup($group)
+    				<td class="numeric" data-group-output="pg_${group.id}_value" data-numeric-cell-format="$numberFormat">
+    					$numberFormatter.format($data.getValueOfSalesForProductGroup($group))
     				</td>
 				#end
 				
                 <td class="numeric" data-group-output="total_count">$data.numberOfSales</td>
-                <td class="numeric" data-group-output="total_value">$data.valueOfSales</td>
+                <td class="numeric" data-group-output="total_value" data-numeric-cell-format="$numberFormat">$numberFormatter.format($data.valueOfSales)</td>
 			</tr>
 		</table>
 		<br/>

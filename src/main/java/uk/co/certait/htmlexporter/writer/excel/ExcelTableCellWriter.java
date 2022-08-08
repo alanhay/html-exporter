@@ -21,9 +21,7 @@ import java.text.SimpleDateFormat;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.util.CellUtil;
 import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,21 +39,19 @@ public class ExcelTableCellWriter extends AbstractTableCellWriter {
 	private Sheet sheet;
 	private StyleMap styleMapper;
 	private ExcelStyleGenerator styleGenerator;
-	private DataFormat dataFormat;
 
 	public ExcelTableCellWriter(Sheet sheet, StyleMap styleMapper) {
 		this.sheet = sheet;
 		this.styleMapper = styleMapper;
 
 		styleGenerator = new ExcelStyleGenerator();
-		dataFormat = sheet.getWorkbook().getCreationHelper().createDataFormat();
 	}
 
 	@Override
 	public void renderCell(Element element, int rowIndex, int columnIndex) {
 		Cell cell = sheet.getRow(rowIndex).createCell(columnIndex);
 
-		Double numericValue = null;
+		Double numericValue;
 
 		if (isDateCell(element)) {
 			DateFormat df = new SimpleDateFormat(getDateCellFormat(element));
@@ -67,27 +63,18 @@ public class ExcelTableCellWriter extends AbstractTableCellWriter {
 						getDateCellFormat(element), getElementText(element), pex);
 			}
 		} else if ((numericValue = getNumericValue(element)) != null) {
-			cell.setCellValue(numericValue);
+			if (isPercentageCell(element)) {
+				cell.setCellValue(numericValue / 100);
+			} else {
+				cell.setCellValue(numericValue);
+			}
 		} else {
 			cell = sheet.getRow(rowIndex).createCell(columnIndex, CellType.STRING);
 			cell.setCellValue(getElementText(element));
 		}
 
 		Style style = styleMapper.getStyleForElement(element);
-		cell.setCellStyle(styleGenerator.getStyle(cell, style));
-
-		if (isDateCell(element)) {
-			// do not use: getCellStyle().setDataFormat(...) as this changes the format for all fields having the same style
-			// use CellUtils.setCellStyleProperty instead
-			CellUtil.setCellStyleProperty(cell, CellUtil.DATA_FORMAT, dataFormat.getFormat(getDateCellFormat(element)));
-		}
-		
-		if (numericValue != null && getNumericCellFormat(element) != null) {
-			CellUtil.setCellStyleProperty(cell, CellUtil.DATA_FORMAT, dataFormat.getFormat(getNumericCellFormat(element)));
-			if (getNumericCellFormat(element).contains("%")) {
-				cell.setCellValue(numericValue / 100); // fix wrong excel interpretation of percent formatted values
-			}
-		}
+		cell.setCellStyle(styleGenerator.getStyle(element, cell, style));
 
 		String commentText;
 

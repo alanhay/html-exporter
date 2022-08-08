@@ -15,6 +15,9 @@
  */
 package uk.co.certait.htmlexporter.writer.excel;
 
+import static uk.co.certait.htmlexporter.writer.TableCellWriter.DATA_NUMERIC_CELL_FORMAT_ATTRIBUTE;
+import static uk.co.certait.htmlexporter.writer.TableCellWriter.DATE_CELL_ATTRIBUTE;
+
 import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,14 +27,17 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellUtil;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.jsoup.nodes.Element;
 
 import uk.co.certait.htmlexporter.css.CssColorProperty;
 import uk.co.certait.htmlexporter.css.CssIntegerProperty;
@@ -49,17 +55,54 @@ public class ExcelStyleGenerator {
 		BORDER_STYLE_MAP.put(new BorderMappingKey("solid", "thick"), BorderStyle.THICK);
 	}
 
-	private Map<Style, XSSFCellStyle> styles;
+	private Map<StyleCacheKey, XSSFCellStyle> styles;
 
 	public ExcelStyleGenerator() {
-		styles = new HashMap<Style, XSSFCellStyle>();
+		styles = new HashMap<StyleCacheKey, XSSFCellStyle>();
 	}
 
-	public CellStyle getStyle(Cell cell, Style style) {
+	/**
+	 * Creates and caches an Excel {@link CellStyle} object based on the specified
+	 * {@link Style}.
+	 * 
+	 * Note that when we cache the style we need to take into account any data
+	 * format specified for the cell due to a POI defect:
+	 * https://bz.apache.org/bugzilla/show_bug.cgi?id=59442
+	 * 
+	 * Which means that we cannot use the utility method
+	 * {@link CellUtil#setCellStyleProperty(Cell, String, Object)} that would allow
+	 * us to modify the format only for that cell.
+	 * 
+	 * We cannot do the following as that changes the data format for all cells with
+	 * that style i.e. Excel will attempt to display a numeric cell as a date for
+	 * any numeric cell sharing the same style as date cell and where we have set
+	 * the format as below.
+	 * 
+	 * <code>cell.getCellStyle().setDataFormat(createHelper.createDataFormat().getFormat(getDateCellFormat(element)));</code>
+	 * 
+	 * Essentially, then, if we want to cache styles (and we must) then our cache
+	 * must reflect both the style and the format.
+	 * 
+	 * @param element The HTML element being processed
+	 * @param cell    The Excel cell being generated
+	 * @param style   The Style object computed from the CSS
+	 * @return A {@link CellStyle} that can be applied to the Excel style
+	 */
+	public CellStyle getStyle(Element element, Cell cell, Style style) {
 		XSSFCellStyle cellStyle;
+		CreationHelper createHelper = cell.getSheet().getWorkbook().getCreationHelper();
+		short dataFormat = -1;
 
-		if (styles.containsKey(style)) {
-			cellStyle = styles.get(style);
+		if (element.hasAttr(DATE_CELL_ATTRIBUTE)) {
+			dataFormat = createHelper.createDataFormat().getFormat(element.attr(DATE_CELL_ATTRIBUTE));
+		} else if (element.hasAttr(DATA_NUMERIC_CELL_FORMAT_ATTRIBUTE)) {
+			dataFormat = createHelper.createDataFormat().getFormat(element.attr(DATA_NUMERIC_CELL_FORMAT_ATTRIBUTE));
+		}
+
+		StyleCacheKey styleCacheKey = new StyleCacheKey(style, dataFormat);
+
+		if (styles.containsKey(styleCacheKey)) {
+			cellStyle = styles.get(styleCacheKey);
 		} else {
 			cellStyle = (XSSFCellStyle) cell.getSheet().getWorkbook().createCellStyle();
 
@@ -70,7 +113,11 @@ public class ExcelStyleGenerator {
 			applyverticalAlignment(style, cellStyle);
 			applyWidth(cell, style);
 
-			styles.put(style, cellStyle);
+			if (dataFormat > -1) {
+				cellStyle.setDataFormat(dataFormat);
+			}
+
+			styles.put(styleCacheKey, cellStyle);
 		}
 
 		return cellStyle;
@@ -238,6 +285,34 @@ public class ExcelStyleGenerator {
 		@Override
 		public int hashCode() {
 			return new HashCodeBuilder().append(this.borderStyle).append(this.borderWidth).toHashCode();
+		}
+	}
+
+	static class StyleCacheKey {
+		private Style style;
+		private Short format;
+
+		private StyleCacheKey(Style style, Short format) {
+			this.style = style;
+			this.format = format;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			} else if (obj instanceof StyleCacheKey) {
+				StyleCacheKey other = (StyleCacheKey) obj;
+				return new EqualsBuilder().append(this.style, other.style).append(this.format, other.format).isEquals();
+			}
+
+			return false;
+
+		}
+
+		@Override
+		public int hashCode() {
+			return new HashCodeBuilder().append(this.style).append(this.format).toHashCode();
 		}
 	}
 }
