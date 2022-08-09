@@ -2,6 +2,7 @@ package uk.co.certait.htmlexporter.integration.excel;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -18,12 +19,15 @@ public class BaseIntegrationTest {
 		ExcelExporter exporter = new ExcelExporter();
 		File temp = null;
 
-		try {
-			String html = IOUtils.toString(this.getClass().getResourceAsStream(sourceHtmlPath), "UTF-8");
-			temp = File.createTempFile("html-exporter-intergation-test", ".xlsx");
+		try (InputStream in = this.getClass().getResourceAsStream(sourceHtmlPath)) {
+			String html = IOUtils.toString(in, "UTF-8");
+			temp = File.createTempFile("html-exporter-integration-test", ".xlsx");
 			exporter.exportHtml(html, temp);
-
-			return new XSSFWorkbook(temp);
+			XSSFWorkbook workbook = new XSSFWorkbook(temp);
+			workbook.close();
+			temp.delete();
+			in.close();
+			return workbook;
 		} catch (IOException ioex) {
 			logger.error("Error generating Excel workbook", ioex);
 		} catch (InvalidFormatException ife) {
