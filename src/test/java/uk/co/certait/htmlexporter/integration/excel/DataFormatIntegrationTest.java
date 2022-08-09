@@ -14,6 +14,10 @@ import org.junit.Test;
 
 public class DataFormatIntegrationTest extends BaseIntegrationTest {
 
+	/**
+	 * Tests that the correct data formatting is correctly applied to the table
+	 * cells
+	 */
 	@Test
 	public void testDataFormat() {
 		XSSFWorkbook workbook = createWorkbook("/integration/data-format.html");
@@ -21,7 +25,7 @@ public class DataFormatIntegrationTest extends BaseIntegrationTest {
 		XSSFRow row = sheet.getRow(0);
 
 		DataFormatter formatter = new DataFormatter();
-		
+
 		assertThat(row.getCell(0).getStringCellValue()).isEqualTo("some text");
 
 		assertThat(row.getCell(1).getLocalDateTimeCellValue())
@@ -35,7 +39,7 @@ public class DataFormatIntegrationTest extends BaseIntegrationTest {
 
 		assertThat(row.getCell(2).getCellStyle().getDataFormatString()).isEqualTo("dd-MM-yy HH:mm");
 		assertThat(formatter.formatCellValue(row.getCell(2))).isEqualTo("02-08-22 12:34");
-		
+
 		assertThat(row.getCell(3).getLocalDateTimeCellValue())
 				.isEqualTo(LocalDateTime.of(LocalDate.of(2022, 8, 3), LocalTime.of(0, 0)));
 
@@ -47,25 +51,25 @@ public class DataFormatIntegrationTest extends BaseIntegrationTest {
 
 		assertThat(row.getCell(5).getNumericCellValue()).isEqualTo(3.54);
 		assertThat(row.getCell(5).getCellStyle().getDataFormatString()).isEqualTo("General");
-		
+
 		assertThat(row.getCell(6).getNumericCellValue()).isEqualTo(1234567);
 		assertThat(row.getCell(6).getCellStyle().getDataFormatString()).isEqualTo("#,##0");
 		assertThat(formatter.formatCellValue(row.getCell(6))).isEqualTo("1,234,567");
-		
+
 		assertThat(row.getCell(7).getNumericCellValue()).isEqualTo(1.23456);
 		assertThat(row.getCell(7).getCellStyle().getDataFormatString()).isEqualTo("#,##0.000");
 		assertThat(formatter.formatCellValue(row.getCell(7))).isEqualTo("1.235");
-		
+
 		assertThat(row.getCell(8).getNumericCellValue()).isEqualTo(1234925.7746);
 		assertThat(row.getCell(8).getCellStyle().getDataFormatString()).isEqualTo("#,##0.0000");
-		
+
 		assertThat(row.getCell(9).getNumericCellValue()).isEqualTo(0.2354);
 		assertThat(row.getCell(9).getCellStyle().getDataFormatString()).isEqualTo("0.00%");
 		assertThat(formatter.formatCellValue(row.getCell(9))).isEqualTo("23.54%");
-		
+
 		assertThat(row.getCell(10).getNumericCellValue()).isEqualTo(0.2356561);
 		assertThat(row.getCell(10).getCellStyle().getDataFormatString()).isEqualTo("0.000%");
 		assertThat(formatter.formatCellValue(row.getCell(10))).isEqualTo("23.566%");
-		
+
 	}
 }
