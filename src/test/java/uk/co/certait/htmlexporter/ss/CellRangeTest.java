@@ -16,8 +16,10 @@
 package uk.co.certait.htmlexporter.ss;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
-import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -111,24 +113,15 @@ public class CellRangeTest {
 	@Test
 	public void testAddCellRangeListener() {
 		// verify that registered observers called on cell added.
-		CellRangeObserver observer = createCellRangeObserver(range);
+		CellRangeObserver observer = mock(CellRangeObserver.class);
 		range.addCellRangeObserver(observer);
 		range.addCell(createCell(1, 3));
+		range.addCell(createCell(1, 4));
 
-		EasyMock.verify(observer);
+		verify(observer, times(2)).cellRangeUpdated(range);
 	}
 
 	private TableCellReference createCell(int rowIndex, int columnIndex) {
 		return TestUtils.createCell(rowIndex, columnIndex);
-	}
-
-	private CellRangeObserver createCellRangeObserver(CellRange range) {
-		CellRangeObserver observer = EasyMock.createMock(CellRangeObserver.class);
-		observer.cellRangeUpdated(range);
-		EasyMock.expectLastCall();
-
-		EasyMock.replay(observer);
-
-		return observer;
 	}
 }
