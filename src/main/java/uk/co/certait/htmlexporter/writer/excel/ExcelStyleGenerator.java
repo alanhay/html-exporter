@@ -62,7 +62,7 @@ public class ExcelStyleGenerator {
 	private DataFormat dataFormat = null;
 
 	public ExcelStyleGenerator() {
-		styles = new HashMap<ExtendedStyle, XSSFCellStyle>();
+		styles = new HashMap<ExtendedStyle, XSSFCellStyle>(1000);
 	}
 
 	public CellStyle getStyle(Cell cell, Style style, String format) {

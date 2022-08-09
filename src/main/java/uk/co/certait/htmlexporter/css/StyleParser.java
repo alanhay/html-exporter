@@ -47,7 +47,7 @@ public class StyleParser {
 	 *         in both <style/> elements then the latest will overwrite the first.
 	 */
 	public Map<String, Style> parseStyleSheets(Elements elements) {
-		Map<String, Style> mergedStyleMap = new HashMap<>();
+		Map<String, Style> mergedStyleMap = new HashMap<>(1000);
 
 		for (Element element : elements) {
 			Map<String, Style> styleMap = parseStyleSheet(element);
