@@ -17,7 +17,7 @@ public class CssInheritanceIntegrationTest extends BaseIntegrationTest {
 	 * cells
 	 */
 	@Test
-	public void testDataFormat() {
+	public void testCssInheritance() {
 		XSSFWorkbook workbook = createWorkbook("/integration/css-inheritance.html");
 		XSSFSheet sheet = workbook.getSheetAt(0);
 		XSSFRow row = sheet.getRow(0);
