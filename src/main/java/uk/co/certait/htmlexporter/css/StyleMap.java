@@ -39,10 +39,12 @@ public class StyleMap {
 	private static final String CLASS_PREFIX = ".";
 
 	Map<String, Style> styles;
+	Map<Integer, List<Style>> cache;
 	private StyleGenerator generator;
 
 	public StyleMap(Map<String, Style> styles) {
 		this.styles = styles != null ? styles : new HashMap<String, Style>();
+		this.cache = new HashMap<Integer, List<Style>>();
 		generator = new StyleGenerator();
 	}
 
@@ -51,6 +53,10 @@ public class StyleMap {
 	}
 	
 	protected List<Style> getAllStyles(Element element) {
+		int elHash = getRelevantHashForElement(element);
+		List<Style> cached = cache.get(elHash);
+		if (cached != null) return cached;
+		
 		List<Style> styles = new ArrayList<>();
 
 		if (getStyleForTag(element) != null) {
@@ -71,10 +77,10 @@ public class StyleMap {
 		//recursive call for each parent element (closest first)
 		//get any applicable styles and insert at start of list to
 		//preserve priority
-		for (Element parent : element.parents()) {
-			styles.addAll(0, getAllStyles(parent));
-		}
-
+		if (element.parent()!=null) styles.addAll(0, getAllStyles(element.parent()));
+		
+		cache.put(elHash, styles);
+		
 		return styles;		
 	}
 
@@ -119,5 +125,22 @@ public class StyleMap {
 		}
 
 		return Optional.of(StyleMerger.mergeStyles(styles.toArray(new Style[0])));
+	}
+	
+	private int getRelevantHashForElement(Element element) {
+		int hash = 7;
+		
+		if (element == null) return hash;
+		
+		String tagname = element.tagName().toLowerCase();
+		String classname = element.className();
+		String inlinestyle = (element.hasAttr("style"))?element.attr("style"):"";
+		int parentHash = (element.parent()!=null)?element.parent().hashCode():0;
+		
+		 hash = 31 * hash + tagname.hashCode();
+		 hash = 31 * hash + (classname == null ? 0 : classname.hashCode());
+		 hash = 31 * hash + (inlinestyle == null ? 0 : inlinestyle.hashCode());
+		 hash = 31 * hash + parentHash;
+		 return hash;
 	}
 }
