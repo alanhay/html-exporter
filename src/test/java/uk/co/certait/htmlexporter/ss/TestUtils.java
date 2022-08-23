@@ -15,15 +15,14 @@
  */
 package uk.co.certait.htmlexporter.ss;
 
-import org.easymock.EasyMock;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class TestUtils {
 	public static TableCellReference createCell(int rowIndex, int columnIndex) {
-		TableCellReference cell = EasyMock.createMock(TableCellReference.class);
-		EasyMock.expect(cell.getRowIndex()).andReturn(rowIndex).anyTimes();
-		EasyMock.expect(cell.getColumnIndex()).andReturn(columnIndex).anyTimes();
-
-		EasyMock.replay(cell);
+		TableCellReference cell = mock(TableCellReference.class);
+		when(cell.getRowIndex()).thenReturn(rowIndex);
+		when(cell.getColumnIndex()).thenReturn(columnIndex);
 
 		return cell;
 	}

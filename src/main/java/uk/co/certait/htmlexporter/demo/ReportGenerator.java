@@ -45,9 +45,6 @@ import uk.co.certait.htmlexporter.writer.ods.OdsExporter;
 
 public class ReportGenerator {
 	public ReportGenerator() throws Exception {
-		String html = generateHTML("report.vm");
-		//saveFile("report.html", html.getBytes());
-
 		File directory = new File(System.getProperty("user.home") + "/html-exporter");
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yy-HH-mm-ss");
@@ -58,6 +55,9 @@ public class ReportGenerator {
 		}
 
 		LocalDateTime.now();
+
+		String html = generateHTML("report.vm");
+		saveFile(directory, "report-" + timestamp + ".html", html.getBytes());
 
 		new ExcelExporter().exportHtml(html, new File(directory, "report-" + timestamp + ".xlsx"));
 		new PdfExporter().exportHtml(html, new File(directory, "report-" + timestamp + ".pdf"));
@@ -125,9 +125,11 @@ public class ReportGenerator {
 		return data;
 	}
 
-	public void saveFile(String fileName, byte[] data) throws IOException {
-		File file = new File(fileName);
+	public void saveFile(File directory, String fileName, byte[] data) throws IOException {
+		File file = new File(directory, fileName);
 		FileOutputStream out = new FileOutputStream(file);
 		IOUtils.write(data, out);
+		out.flush();
+		out.close();
 	}
 }

@@ -15,10 +15,11 @@
  */
 package uk.co.certait.htmlexporter.writer.excel;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import junit.framework.Assert;
 import uk.co.certait.htmlexporter.ss.CellRange;
 import uk.co.certait.htmlexporter.ss.CellRangeResolver;
 import uk.co.certait.htmlexporter.ss.TableCellReference;
@@ -39,17 +40,16 @@ public class ExcelCellRangeResolverTest {
 		range.addCell(createCell(0, 0));
 		range.addCell(createCell(0, 1));
 
-		Assert.assertEquals("A1:B1", resolver.getRangeString(range));
+		assertThat(resolver.getRangeString(range)).isEqualTo("A1:B1");
 
 		range.addCell(createCell(0, 2));
-
-		Assert.assertEquals("A1:C1", resolver.getRangeString(range));
+		assertThat(resolver.getRangeString(range)).isEqualTo("A1:C1");
 
 		range.addCell(createCell(1, 0));
 		range.addCell(createCell(1, 1));
 		range.addCell(createCell(1, 2));
 
-		Assert.assertEquals("A1:C2", resolver.getRangeString(range));
+		assertThat(resolver.getRangeString(range)).isEqualTo("A1:C2");
 
 		range = new CellRange();
 		range.addCell(createCell(3, 4));
@@ -62,7 +62,7 @@ public class ExcelCellRangeResolverTest {
 		range.addCell(createCell(5, 5));
 		range.addCell(createCell(5, 6));
 
-		Assert.assertEquals("E4:G6", resolver.getRangeString(range));
+		assertThat(resolver.getRangeString(range)).isEqualTo("E4:G6");
 	}
 
 	public TableCellReference createCell(int rowIndex, int columnIndex) {

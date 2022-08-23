@@ -1,10 +1,9 @@
 package uk.co.certait.htmlexporter.writer;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-import org.easymock.EasyMock;
 import org.jsoup.nodes.Element;
 import org.junit.Test;
 
@@ -14,10 +13,9 @@ public class AbstractTableCellWriterTest {
 
 	@Test
 	public void testGetNumericValue_when_percentage() {
-		Element e = createMock(Element.class);
-		expect(e.hasAttr(TableCellWriter.DATA_TEXT_CELL)).andReturn(false);
-		expect(e.ownText()).andReturn("23.54%");
-		EasyMock.replay(e);
+		Element e = mock(Element.class);
+		when(e.hasAttr(TableCellWriter.DATA_TEXT_CELL)).thenReturn(false);
+		when(e.ownText()).thenReturn("23.54%");
 
 		ExcelTableCellWriter writer = new ExcelTableCellWriter(null, null);
 		assertThat(writer.getNumericValue(e)).isEqualTo(23.54);
@@ -25,10 +23,9 @@ public class AbstractTableCellWriterTest {
 
 	@Test
 	public void testIsPercentageCell_when_numeric_percentage_cell() {
-		Element e = createMock(Element.class);
-		expect(e.hasAttr(TableCellWriter.DATA_TEXT_CELL)).andReturn(false);
-		expect(e.ownText()).andReturn("23.54%").anyTimes();
-		EasyMock.replay(e);
+		Element e = mock(Element.class);
+		when(e.hasAttr(TableCellWriter.DATA_TEXT_CELL)).thenReturn(false);
+		when(e.ownText()).thenReturn("23.54%");
 
 		ExcelTableCellWriter writer = new ExcelTableCellWriter(null, null);
 		assertThat(writer.isPercentageCell(e)).isTrue();
@@ -36,21 +33,19 @@ public class AbstractTableCellWriterTest {
 
 	@Test
 	public void testIsPercentageCell_when_non_numeric_percentage_cell() {
-		Element e = createMock(Element.class);
-		expect(e.hasAttr(TableCellWriter.DATA_TEXT_CELL)).andReturn(false);
-		expect(e.ownText()).andReturn("some text%").anyTimes();
-		EasyMock.replay(e);
+		Element e = mock(Element.class);
+		when(e.hasAttr(TableCellWriter.DATA_TEXT_CELL)).thenReturn(false);
+		when(e.ownText()).thenReturn("some text%");
 
 		ExcelTableCellWriter writer = new ExcelTableCellWriter(null, null);
 		assertThat(writer.isPercentageCell(e)).isFalse();
 	}
-	
+
 	@Test
 	public void testIsPercentageCell_when_numeric_non_percentage_cell() {
-		Element e = createMock(Element.class);
-		expect(e.hasAttr(TableCellWriter.DATA_TEXT_CELL)).andReturn(false);
-		expect(e.ownText()).andReturn("23").anyTimes();
-		EasyMock.replay(e);
+		Element e = mock(Element.class);
+		when(e.hasAttr(TableCellWriter.DATA_TEXT_CELL)).thenReturn(false);
+		when(e.ownText()).thenReturn("23");
 
 		ExcelTableCellWriter writer = new ExcelTableCellWriter(null, null);
 		assertThat(writer.isPercentageCell(e)).isFalse();

@@ -15,9 +15,9 @@
  */
 package uk.co.certait.htmlexporter.css;
 
-import java.awt.Color;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import junit.framework.Assert;
+import java.awt.Color;
 
 import org.junit.Test;
 
@@ -27,146 +27,139 @@ public class StyleTest {
 		Style style1 = new Style();
 		Style style2 = null;
 
-		Assert.assertFalse(style1.equals(style2));
+		assertThat(style1).isNotEqualTo(style2);
 
 		style2 = style1;
-		Assert.assertEquals(style1, style2);
+		assertThat(style1).isEqualTo(style2);
 
 		style2 = new Style();
-		Assert.assertEquals(style1, style2);
 
 		style1.addProperty(CssIntegerProperty.FONT_SIZE, 12);
-		Assert.assertFalse(style1.equals(style2));
+		assertThat(style1).isNotEqualTo(style2);
+
 		style2.addProperty(CssIntegerProperty.FONT_SIZE, 11);
-		Assert.assertFalse(style1.equals(style2));
+		assertThat(style1).isNotEqualTo(style2);
+
 		style2.addProperty(CssIntegerProperty.FONT_SIZE, 12);
-		Assert.assertEquals(style1, style2);
-		Assert.assertEquals(style1.hashCode(), style2.hashCode());
+		assertThat(style1).isEqualTo(style2);
+		assertThat(style1.hashCode()).isEqualTo(style2.hashCode());
 
 		style1.addProperty(CssStringProperty.FONT_WEIGHT, Style.BOLD_FONT_STYLE);
-		Assert.assertFalse(style1.equals(style2));
+		assertThat(style1).isNotEqualTo(style2);
 
 		style2.addProperty(CssStringProperty.FONT_WEIGHT, Style.BOLD_FONT_STYLE);
-		Assert.assertEquals(style1, style2);
-		Assert.assertEquals(style1.hashCode(), style2.hashCode());
+		assertThat(style1).isEqualTo(style2);
+		assertThat(style1.hashCode()).isEqualTo(style2.hashCode());
+		;
 
 		style1.addProperty(CssColorProperty.BACKGROUND_COLOR, Color.GREEN);
-		Assert.assertFalse(style1.equals(style2));
+		assertThat(style1).isNotEqualTo(style2);
+
 		style2.addProperty(CssColorProperty.BACKGROUND_COLOR, Color.RED);
-		Assert.assertFalse(style1.equals(style2));
+		assertThat(style1).isNotEqualTo(style2);
+
 		style2.addProperty(CssColorProperty.BACKGROUND_COLOR, Color.GREEN);
-		Assert.assertEquals(style1, style2);
-		Assert.assertEquals(style1.hashCode(), style2.hashCode());
+		assertThat(style1).isEqualTo(style2);
+		assertThat(style1.hashCode()).isEqualTo(style2.hashCode());
+		;
 	}
 
 	@Test
 	public void testIsFontSizeSet() {
 		Style style = new Style();
-		Assert.assertFalse(style.isFontSizeSet());
+		assertThat(style.isFontSizeSet()).isFalse();
 
 		style.addProperty(CssIntegerProperty.FONT_SIZE, 12);
-
-		Assert.assertTrue(style.isFontSizeSet());
+		assertThat(style.isFontSizeSet()).isTrue();
 	}
 
 	@Test
 	public void testIsWidthSet() {
 		Style style = new Style();
-		Assert.assertFalse(style.isWidthSet());
+		assertThat(style.isWidthSet()).isFalse();
 
 		style.addProperty(CssIntegerProperty.WIDTH, 100);
-
-		Assert.assertTrue(style.isWidthSet());
+		assertThat(style.isWidthSet()).isTrue();
 	}
-
 
 	@Test
 	public void testIsFontBold() {
 		Style style = new Style();
-		Assert.assertFalse(style.isFontBold());
+		assertThat(style.isFontBold()).isFalse();
 
 		style.addProperty(CssStringProperty.FONT_WEIGHT, Style.BOLD_FONT_STYLE);
-
-		Assert.assertTrue(style.isFontBold());
+		assertThat(style.isFontBold()).isTrue();
 	}
 
 	@Test
 	public void testIsFontItalic() {
 		Style style = new Style();
-		Assert.assertFalse(style.isFontItalic());
+		assertThat(style.isFontItalic()).isFalse();
 
 		style.addProperty(CssStringProperty.FONT_STYLE, Style.ITALIC_FONT_STYLE);
-
-		Assert.assertTrue(style.isFontItalic());
+		assertThat(style.isFontItalic()).isTrue();
 	}
 
 	@Test
 	public void testIsTextUnderlined() {
 		Style style = new Style();
-		Assert.assertFalse(style.isTextUnderlined());
+		assertThat(style.isTextUnderlined()).isFalse();
 
 		style.addProperty(CssStringProperty.TEXT_DECORATION, Style.TEXT_DECORATION_UNDERLINE);
-
-		Assert.assertTrue(style.isTextUnderlined());
+		assertThat(style.isTextUnderlined()).isTrue();
 	}
 
 	@Test
 	public void testIsLeftAligned() {
 		Style style = new Style();
-		Assert.assertFalse(style.isHorizontallyAlignedLeft());
+		assertThat(style.isHorizontallyAlignedLeft()).isFalse();
 
 		style.addProperty(CssStringProperty.TEXT_ALIGN, Style.LEFT_ALIGN);
-
-		Assert.assertTrue(style.isHorizontallyAlignedLeft());
+		assertThat(style.isHorizontallyAlignedLeft()).isTrue();
 	}
 
 	@Test
 	public void testIsRightAligned() {
 		Style style = new Style();
-		Assert.assertFalse(style.isHorizontallyAlignedRight());
+		assertThat(style.isHorizontallyAlignedRight()).isFalse();
 
 		style.addProperty(CssStringProperty.TEXT_ALIGN, Style.RIGHT_ALIGN);
-
-		Assert.assertTrue(style.isHorizontallyAlignedRight());
+		assertThat(style.isHorizontallyAlignedRight()).isTrue();
 	}
 
 	@Test
 	public void testIsCenterAligned() {
 		Style style = new Style();
-		Assert.assertFalse(style.isHorizontallyAlignedCenter());
+		assertThat(style.isHorizontallyAlignedCenter()).isFalse();
 
 		style.addProperty(CssStringProperty.TEXT_ALIGN, Style.CENTER_ALIGN);
-
-		Assert.assertTrue(style.isHorizontallyAlignedCenter());
+		assertThat(style.isHorizontallyAlignedCenter()).isTrue();
 	}
 
 	@Test
 	public void testIsBackgroundSet() {
 		Style style = new Style();
-		Assert.assertFalse(style.isBackgroundSet());
+		assertThat(style.isBackgroundSet()).isFalse();
 
 		style.addProperty(CssColorProperty.BACKGROUND_COLOR, Color.RED);
-
-		Assert.assertTrue(style.isBackgroundSet());
+		assertThat(style.isBackgroundSet()).isTrue();
 	}
 
 	@Test
 	public void testisColorSet() {
 		Style style = new Style();
-		Assert.assertFalse(style.isColorSet());
+		assertThat(style.isColorSet()).isFalse();
 
 		style.addProperty(CssColorProperty.COLOR, Color.RED);
-
-		Assert.assertTrue(style.isColorSet());
+		assertThat(style.isColorSet()).isTrue();
 	}
 
 	@Test
 	public void testIsBorderColorSet() {
 		Style style = new Style();
-		Assert.assertFalse(style.isBorderColorSet());
+		assertThat(style.isBorderColorSet()).isFalse();
 
 		style.addProperty(CssColorProperty.BORDER_COLOR, Color.RED);
-
-		Assert.assertTrue(style.isBorderColorSet());
+		assertThat(style.isBorderColorSet()).isTrue();
 	}
 }
