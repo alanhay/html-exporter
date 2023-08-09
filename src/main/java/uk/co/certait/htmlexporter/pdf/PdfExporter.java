@@ -20,6 +20,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -28,6 +30,18 @@ import org.w3c.dom.Document;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 public class PdfExporter {
+
+	protected List<String> fontPaths;
+
+	public void registerFontPath(String path) {
+		getFontPaths().add(path);
+	}
+
+	public List<String> getFontPaths() {
+		if(fontPaths == null) fontPaths = new ArrayList<>();
+		return fontPaths;
+	}
+
 	public byte[] exportHtml(String html) throws Exception {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		exportHtml(html, out);
@@ -46,9 +60,9 @@ public class PdfExporter {
 		ITextRenderer renderer = new ITextRenderer();
 		renderer.setDocument(doc, null);
 
-		// FIXME
-		// renderer.getFontResolver().addFont("C:/Windows/Fonts/CALIBRI.TTF",
-		// true);
+		for(String path : getFontPaths()) {
+			renderer.getFontResolver().addFont(path, true);
+		}
 
 		renderer.layout();
 		renderer.createPDF(out);

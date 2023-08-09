@@ -30,9 +30,21 @@ import uk.co.certait.htmlexporter.css.StyleMap;
 import uk.co.certait.htmlexporter.css.StyleParser;
 
 public abstract class AbstractExporter implements Exporter {
+	protected String datePattern = "yyyy-MM-dd";
 
 	private static final String DATA_NEW_SHEET_ATTRIBUTE = "data-new-sheet";
 	private static final String DATA_SHEET_NAME_ATTRIBUTE = "data-sheet-name";
+
+	protected Document document;
+
+	protected Document parse(String html) {
+		document = Jsoup.parse(html);
+		return document;
+	}
+
+	protected Document getDocument() {
+		return document;
+	}
 
 	public byte[] exportHtml(String html) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -46,16 +58,22 @@ public abstract class AbstractExporter implements Exporter {
 		exportHtml(html, out);
 	}
 
-	protected Elements getTables(String html) {
-		Document document = Jsoup.parse(html);// FIXME parsing twice
+	public void setDatePattern(String datePattern) {
+		this.datePattern = datePattern;
+	}
 
+	public String getDatePattern() {
+		return this.datePattern;
+	}
+
+	protected Elements getTables() {
+		Document document = getDocument();
 		return document.getElementsByTag("table");
 	}
 
-	protected StyleMap getStyleMapper(String html) {
-		Document document = Jsoup.parse(html);
-		Elements styles = document.getElementsByTag("style");// FIXME parsing
-																// twice
+	protected StyleMap getStyleMapper() {
+		Document document = getDocument();
+		Elements styles = document.getElementsByTag("style");
 
 		StyleParser parser = new StyleParser();
 		StyleMap mapper = new StyleMap(parser.parseStyleSheets(styles));

@@ -15,12 +15,12 @@
  */
 package uk.co.certait.htmlexporter.writer;
 
-import java.text.NumberFormat;
-import java.text.ParseException;
+import java.text.*;
+import java.util.*;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jsoup.nodes.Attribute;
-import org.jsoup.nodes.Element;
+import org.jsoup.nodes.*;
 
 import uk.co.certait.htmlexporter.ss.CellRange;
 import uk.co.certait.htmlexporter.ss.DefaultTableCellReference;
@@ -35,6 +35,12 @@ import uk.co.certait.htmlexporter.ss.RangeReferenceTracker;
  */
 public abstract class AbstractTableCellWriter implements TableCellWriter {
 	private RangeReferenceTracker tracker;
+
+	private String datePattern = "yyyy-MM-dd";
+	private static Pattern pNumeric = Pattern.compile("^(-?[\\d]+\\.\\d+)$|^(-?[\\d]+)$");
+	private static Pattern pDate = Pattern.compile("^(\\d{1,2}/\\d{1,2}/\\d{4})$|^(\\d{4}-\\d{1,2}-\\d{1,2})$");
+
+	private Map<String, DateFormat> dateFormatterCache = new HashMap<>();
 
 	public AbstractTableCellWriter() {
 		tracker = new RangeReferenceTracker();
@@ -63,6 +69,25 @@ public abstract class AbstractTableCellWriter implements TableCellWriter {
 	 * @return The text to be output for this Cell.
 	 */
 	public String getElementText(Element element) {
+		String text = "";
+		for (Node child : element.childNodes()) {
+			if(child instanceof TextNode) {
+				text += ((TextNode) child).text();
+			} else if(child instanceof Element) {
+				Element childElement = (Element) child;
+				// do more of these for p or other tags you want a new line for
+				if (childElement.tag().getName().equalsIgnoreCase("br")) {
+					text += "\n";
+				}
+				text += getElementText(childElement);
+			}
+		}
+
+		return text;
+	}
+
+	@Deprecated
+	public String oldGetElementText(Element element) {
 		String text = element.ownText();
 
 		for (Element child : element.children()) {
@@ -71,6 +96,7 @@ public abstract class AbstractTableCellWriter implements TableCellWriter {
 
 		return text;
 	}
+
 
 	/**
 	 * Checks the for the presence of the 'colspan' attribute on the cell and
@@ -123,6 +149,14 @@ public abstract class AbstractTableCellWriter implements TableCellWriter {
 		return columnCount;
 	}
 
+	public void setDatePattern(String datePattern) {
+		this.datePattern = datePattern;
+	}
+
+	public String getDatePattern() {
+		return this.datePattern;
+	}
+
 	/**
 	 * 
 	 * @param element
@@ -139,6 +173,32 @@ public abstract class AbstractTableCellWriter implements TableCellWriter {
 
 	protected String getDateCellFormat(Element element) {
 		return element.attr(DATE_CELL_ATTRIBUTE);
+	}
+
+	protected boolean isPossibleDateCell(Element element) {
+		if (!element.hasAttr(DATA_TEXT_CELL)) {
+			String value = element.ownText();
+			if(value != null && pDate.matcher(value).matches()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	protected Date getDateValue(Element element, String datePattern) {
+		String value = element.ownText();
+		DateFormat dateFormatter = (DateFormat)dateFormatterCache.get(datePattern);
+		if(dateFormatter == null) {
+			dateFormatter = new SimpleDateFormat(datePattern);
+			dateFormatterCache.put(datePattern, dateFormatter);
+		}
+
+		try {
+			return dateFormatter.parse(value);
+		} catch(ParseException e) {
+		}
+
+		return null;
 	}
 	
 	protected boolean isNumericCell(Element element) {

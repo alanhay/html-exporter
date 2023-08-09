@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Element;
@@ -42,30 +43,40 @@ public class StyleMap {
 	private StyleGenerator generator;
 
 	public StyleMap(Map<String, Style> styles) {
-		this.styles = styles != null ? styles : new HashMap<String, Style>();
+		this.styles = styles != null ? styles : new HashMap<>();
 		generator = new StyleGenerator();
 	}
 
 	public Style getStyleForElement(Element element) {
 		return StyleMerger.mergeStyles(getAllStyles(element).toArray(new Style[0]));
 	}
+
+	public Style getDateStyleForElement(Element element, String datePattern) {
+		Style style = getStyleForElement(element);
+		style.setDatePattern(datePattern);
+
+		return style;
+	}
 	
 	protected List<Style> getAllStyles(Element element) {
 		List<Style> styles = new ArrayList<>();
 
-		if (getStyleForTag(element) != null) {
-			styles.add(getStyleForTag(element));
+		Style tagStyle = getStyleForTag(element);
+		if (tagStyle != null && !tagStyle.isEmpty()) {
+			styles.add(tagStyle);
 		}
 
-		if (!getStylesForClass(element).isEmpty()) {
-			List<Style> classStyles = getStylesForClass(element);
-			styles.addAll(classStyles);
+		List<Style> classStyles = getStylesForClass(element);
+		if (!classStyles.isEmpty()) {
+			styles.addAll(classStyles.stream().filter(s -> !s.isEmpty()).collect(Collectors.toList()));
 		}
 
 		Optional<Style> inlineStyle = getInlineStyle(element);
-
 		if (inlineStyle.isPresent()) {
-			styles.add(inlineStyle.get());
+			Style materializedStyle = inlineStyle.get();
+			if(!materializedStyle.isEmpty()) {
+				styles.add(materializedStyle);
+			}
 		}
 		
 		//recursive call for each parent element (closest first)

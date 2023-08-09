@@ -18,6 +18,7 @@ package uk.co.certait.htmlexporter.writer.excel;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -26,8 +27,7 @@ import org.jsoup.nodes.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.co.certait.htmlexporter.css.Style;
-import uk.co.certait.htmlexporter.css.StyleMap;
+import uk.co.certait.htmlexporter.css.*;
 import uk.co.certait.htmlexporter.ss.CellRange;
 import uk.co.certait.htmlexporter.ss.Function;
 import uk.co.certait.htmlexporter.writer.AbstractTableCellWriter;
@@ -39,6 +39,7 @@ public class ExcelTableCellWriter extends AbstractTableCellWriter {
 	private Sheet sheet;
 	private StyleMap styleMapper;
 	private ExcelStyleGenerator styleGenerator;
+	private ExcelStyleGenerator rowStyleGenerator;
 
 	public ExcelTableCellWriter(Sheet sheet, StyleMap styleMapper) {
 		this.sheet = sheet;
@@ -47,21 +48,37 @@ public class ExcelTableCellWriter extends AbstractTableCellWriter {
 		styleGenerator = new ExcelStyleGenerator();
 	}
 
+	public void setRowStyleGenerator(ExcelStyleGenerator rowStyleGenerator) {
+		this.rowStyleGenerator = rowStyleGenerator;
+	}
+
+	public ExcelStyleGenerator getRowStyleGenerator() {
+		return rowStyleGenerator;
+	}
+
 	@Override
 	public void renderCell(Element element, int rowIndex, int columnIndex) {
 		Cell cell = sheet.getRow(rowIndex).createCell(columnIndex);
 
 		Double numericValue;
+		Date dateValue = null;
 
+		String datePattern = null;
+		boolean wrapText = false;
 		if (isDateCell(element)) {
+			String dateCellFormat = getDateCellFormat(element);
 			DateFormat df = new SimpleDateFormat(getDateCellFormat(element));
 
 			try {
-				cell.setCellValue(df.parse(getElementText(element)));
-			} catch (ParseException pex) {
-				logger.error("Error processing date cell with format specified as {} and value {}",
-						getDateCellFormat(element), getElementText(element), pex);
+				dateValue = df.parse(getElementText(element));
+				cell.setCellValue(dateValue);
+				datePattern = dateCellFormat;
+			} catch(ParseException pex) {
+				logger.error("Error processing date cell with format specified as {} and value {}", getDateCellFormat(element), getElementText(element), pex);
 			}
+		} else if(isPossibleDateCell(element) && (dateValue = getDateValue(element, getDatePattern())) != null) {
+			cell.setCellValue(dateValue);
+			datePattern = getDatePattern();
 		} else if ((numericValue = getNumericValue(element)) != null) {
 			if (isPercentageCell(element)) {
 				cell.setCellValue(numericValue / 100);
@@ -70,11 +87,21 @@ public class ExcelTableCellWriter extends AbstractTableCellWriter {
 			}
 		} else {
 			cell = sheet.getRow(rowIndex).createCell(columnIndex, CellType.STRING);
-			cell.setCellValue(getElementText(element));
+
+			String text = getElementText(element);
+			cell.setCellValue(text);
+
+			wrapText = (text.contains("\n") || text.length() > ExcelExporter.MAX_COLUMN_WIDTH);
 		}
 
-		Style style = styleMapper.getStyleForElement(element);
-		cell.setCellStyle(styleGenerator.getStyle(element, cell, style));
+		Style cellStyle = dateValue != null ? styleMapper.getDateStyleForElement(element, datePattern) :
+						  styleMapper.getStyleForElement(element);
+
+		if(wrapText) {
+			cellStyle.addProperty(CssStringProperty.WRAP_TEXT, "true");
+		}
+
+		cell.setCellStyle(styleGenerator.getStyle(element, cell, cellStyle));
 
 		String commentText;
 
