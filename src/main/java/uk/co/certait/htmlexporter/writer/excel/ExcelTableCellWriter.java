@@ -79,6 +79,9 @@ public class ExcelTableCellWriter extends AbstractTableCellWriter {
 		} else if(isPossibleDateCell(element) && (dateValue = getDateValue(element, getDatePattern())) != null) {
 			cell.setCellValue(dateValue);
 			datePattern = getDatePattern();
+		} else if(isPossibleDateTimeCell(element) && (dateValue = getDateTimeValue(element, getDateTimePattern())) != null) {
+			cell.setCellValue(dateValue);
+			datePattern = toExcelDateTimePattern(getDateTimePattern());
 		} else if ((numericValue = getNumericValue(element)) != null) {
 			if (isPercentageCell(element)) {
 				cell.setCellValue(numericValue / 100);
@@ -119,4 +122,18 @@ public class ExcelTableCellWriter extends AbstractTableCellWriter {
 
 		new ExcelFunctionCell(cell, range, new ExcelCellRangeResolver(), function);
 	}
+
+	/**
+	 * Converts a date pattern (e.g. from Java) to one that can be used by Excel.
+	 *
+	 * @param dateTimePattern
+	 * @return
+	 */
+	private String toExcelDateTimePattern(String dateTimePattern) {
+		if(dateTimePattern.matches("^.*a$")) { // 1. Replace 'a' at the end of the pattern with AM/PM
+			return dateTimePattern.substring(0, dateTimePattern.lastIndexOf("a")) + "AM/PM";
+		}
+		return dateTimePattern;
+	}
+
 }

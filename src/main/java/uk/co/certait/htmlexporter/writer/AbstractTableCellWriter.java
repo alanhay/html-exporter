@@ -15,8 +15,10 @@
  */
 package uk.co.certait.htmlexporter.writer;
 
+import javax.swing.text.DateFormatter;
 import java.text.*;
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
@@ -36,11 +38,19 @@ import uk.co.certait.htmlexporter.ss.RangeReferenceTracker;
 public abstract class AbstractTableCellWriter implements TableCellWriter {
 	private RangeReferenceTracker tracker;
 
-	private String datePattern = "yyyy-MM-dd";
-	private static Pattern pNumeric = Pattern.compile("^(-?[\\d]+\\.\\d+)$|^(-?[\\d]+)$");
-	private static Pattern pDate = Pattern.compile("^(\\d{1,2}/\\d{1,2}/\\d{4})$|^(\\d{4}-\\d{1,2}-\\d{1,2})$");
+	private static final String DEFAULT_DATE_PATTERN = "yyyy-MM-dd";
+	private static final String DEFAULT_DATE_TIME_PATTERN = DEFAULT_DATE_PATTERN + " hh:mm a";
 
-	private Map<String, DateFormat> dateFormatterCache = new HashMap<>();
+	private String datePattern;
+	private String dateTimePattern;
+
+	private static final Pattern pBracketed = Pattern.compile("^\\((.*)\\)$");
+	private static final Pattern pNumeric = Pattern.compile("^(-?\\d+\\.?\\d+\\s*%?)$");
+	private static final Pattern pDate = Pattern.compile("^(\\d{1,2}/\\d{1,2}/\\d{4})$|^(\\d{4}-\\d{1,2}-\\d{1,2})$");
+	private static final Pattern pDateTime = Pattern.compile("^(\\d{1,2}/\\d{1,2}/\\d{4})[\\s-]+(\\d{1,2}:\\d{2})\\s*([APap][Mm])$|" +
+			"^(\\d{1,2}/\\d{1,2}/\\d{4})[\\s-]+(\\d{1,2}:\\d{2})$");
+
+	private final Map<String, DateFormat> dateFormatterCache = new HashMap<>();
 
 	public AbstractTableCellWriter() {
 		tracker = new RangeReferenceTracker();
@@ -150,11 +160,32 @@ public abstract class AbstractTableCellWriter implements TableCellWriter {
 	}
 
 	public void setDatePattern(String datePattern) {
+		if(this.datePattern != null && this.dateTimePattern != null) {
+			// update dateTimePattern with the new datePattern if it matches the default dateTimePattern
+			if((this.datePattern + " hh:mm a").equals(this.dateTimePattern)) {
+				setDateTimePattern(datePattern + " hh:mm a");
+			}
+		}
 		this.datePattern = datePattern;
 	}
 
 	public String getDatePattern() {
+		if(this.datePattern == null || this.datePattern.isEmpty()) {
+			setDatePattern(DEFAULT_DATE_PATTERN);
+		}
 		return this.datePattern;
+	}
+
+	public void setDateTimePattern(String dateTimePattern) {
+		this.dateTimePattern = dateTimePattern;
+	}
+
+	public String getDateTimePattern() {
+		if(dateTimePattern == null || dateTimePattern.isEmpty()) {
+			String datePattern = getDatePattern();
+			setDateTimePattern(datePattern + " hh:mm a");
+		}
+		return this.dateTimePattern;
 	}
 
 	/**
@@ -178,7 +209,17 @@ public abstract class AbstractTableCellWriter implements TableCellWriter {
 	protected boolean isPossibleDateCell(Element element) {
 		if (!element.hasAttr(DATA_TEXT_CELL)) {
 			String value = element.ownText();
-			if(value != null && pDate.matcher(value).matches()) {
+			if(pDate.matcher(value).matches()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	protected boolean isPossibleDateTimeCell(Element element) {
+		if (!element.hasAttr(DATA_TEXT_CELL)) {
+			String value = element.ownText();
+			if(pDateTime.matcher(value).matches()) {
 				return true;
 			}
 		}
@@ -186,19 +227,33 @@ public abstract class AbstractTableCellWriter implements TableCellWriter {
 	}
 
 	protected Date getDateValue(Element element, String datePattern) {
-		String value = element.ownText();
-		DateFormat dateFormatter = (DateFormat)dateFormatterCache.get(datePattern);
-		if(dateFormatter == null) {
-			dateFormatter = new SimpleDateFormat(datePattern);
-			dateFormatterCache.put(datePattern, dateFormatter);
-		}
-
+		DateFormat dateFormatter = getDateFormatter(datePattern);
 		try {
+			String value = element.ownText();
 			return dateFormatter.parse(value);
 		} catch(ParseException e) {
+			return null;
 		}
+	}
 
-		return null;
+	protected Date getDateTimeValue(Element element, String dateTimePattern) {
+		String value = element.ownText();
+		DateFormat dateFormatter = getDateFormatter(dateTimePattern);
+		try {
+			value = value.replaceAll("\\s+-+\\s+", " "); // replace the dash between date and time with a space (this is unique to our reporting module only)
+			return dateFormatter.parse(value);
+		} catch(ParseException e) {
+			return null;
+		}
+	}
+
+	protected DateFormat getDateFormatter(String pattern) {
+		DateFormat dateFormatter = (DateFormat)dateFormatterCache.get(pattern);
+		if(dateFormatter == null) {
+			dateFormatter = new SimpleDateFormat(pattern);
+			dateFormatterCache.put(pattern, dateFormatter);
+		}
+		return dateFormatter;
 	}
 	
 	protected boolean isNumericCell(Element element) {
@@ -319,20 +374,37 @@ public abstract class AbstractTableCellWriter implements TableCellWriter {
 	}
 
 	/**
+	 * Returns the numeric value of the cell if it is numeric, otherwise null.
+	 *
+	 * @param element The Element representing the cell.
 	 * 
-	 * @param element
-	 * 
-	 * @return
+	 * @return The numeric value of the cell if it is numeric, otherwise null.
 	 */
 	public Double getNumericValue(Element element) {
 		Double numericValue = null;
 
-		if (!element.hasAttr(DATA_TEXT_CELL))
+		if (!element.hasAttr(DATA_TEXT_CELL)) {
 			try {
-				numericValue = NumberFormat.getInstance().parse(element.ownText()).doubleValue();
-			} catch (ParseException e) {
+				String value = element.ownText();
+				value = value.replaceAll(",", "");
 
+				Matcher mBracketed = pBracketed.matcher(value);
+				boolean isBracketed = false;
+				if(mBracketed.matches()) {
+					value = mBracketed.group(1);
+					isBracketed = true;
+				}
+
+				if(pNumeric.matcher(value).matches()) {
+					numericValue = NumberFormat.getInstance().parse(value).doubleValue();
+					if(isBracketed) {
+						numericValue = -numericValue;
+					}
+				}
+			} catch (ParseException e) {
+				return null;
 			}
+		}
 
 		return numericValue;
 	}
