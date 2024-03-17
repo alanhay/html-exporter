@@ -21,7 +21,8 @@ public enum CssStringProperty {
 	BORDER_STYLE("border-style"), BORDER_TOP_STYLE("border-top-style"), BORDER_BOTTOM_STYLE("border-bottom-style"),
 	BORDER_LEFT_STYLE("border-left-style"), BORDER_RIGHT_STYLE("border-right-style"), BORDER_WIDTH("border-width"),
 	BORDER_TOP_WIDTH("border-top-width"), BORDER_BOTTOM_WIDTH("border-bottom-width"),
-	BORDER_LEFT_WIDTH("border-left-width"), BORDER_RIGHT_WIDTH("border-right-width");
+	BORDER_LEFT_WIDTH("border-left-width"), BORDER_RIGHT_WIDTH("border-right-width"),
+	WRAP_TEXT("wrap-text");
 
 	private String property;
 

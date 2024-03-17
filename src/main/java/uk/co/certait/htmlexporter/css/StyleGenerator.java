@@ -19,6 +19,8 @@ import java.awt.Color;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.helger.css.decl.CSSDeclaration;
 import com.helger.css.decl.CSSExpressionMemberTermSimple;
@@ -30,6 +32,8 @@ import com.helger.css.property.ECSSProperty;
 public class StyleGenerator {
 	private static final String PX = "px";
 	private static final String PERCENTAGE = "%";
+	private static final Pattern pFontSize = Pattern.compile("^[\\s\\t]*([0-9]+?)[\\s\\t]*(px|pt|em|ex|pc|in|cm|mm|%)$");
+	private static final Pattern pNumber = Pattern.compile("^[\\s\\t]*(\\d)+[\\s\\t]*$");
 
 	// called by the parser and by the cell writer for an in-line style
 	// the common interface is CSSDeclaration - which may need split
@@ -60,19 +64,75 @@ public class StyleGenerator {
 		return StyleMerger.mergeStyles(styles.toArray(new Style[0]));
 	}
 
+	protected double toPoint(double sourceValue, String unit) {
+		double valueInPt = sourceValue;
+		if(unit != null) {
+			unit = unit.trim();
+			if(!unit.isEmpty()) {
+				switch(unit) {
+				case "px":
+					valueInPt = sourceValue * 0.75;
+					break;
+				case "pt":
+					valueInPt = sourceValue;
+					break;
+				case "em":
+					valueInPt = sourceValue * 12;
+					break;
+				case "ex":
+					valueInPt = sourceValue * 6;
+					break;
+				case "pc":
+					valueInPt = sourceValue * 12;
+					break;
+				case "in":
+					valueInPt = sourceValue * 72;
+					break;
+				case "cm":
+					valueInPt = sourceValue * 28.3464567;
+					break;
+				case "mm":
+					valueInPt = sourceValue * 2.83464567;
+					break;
+				case "%":
+					valueInPt = (sourceValue / 100) * 12;
+					break;
+				}
+			}
+		}
+		return Math.max(1, round(valueInPt, 1));
+	}
+
+	protected static double round(double value, int precision) {
+		int scale = (int) Math.pow(10, precision);
+		return (double) Math.round(value * scale) / scale;
+	}
+
 	protected void populateIntegerProperties(CSSDeclaration rule, Style style) {
 		for (CssIntegerProperty p : CssIntegerProperty.values()) {
 			if (p.getProperty().equals(rule.getProperty())) {
 				ICSSExpressionMember member = rule.getExpression().getMemberAtIndex(0);
 				CSSExpressionMemberTermSimple term = (CSSExpressionMemberTermSimple) member;
-				if (!term.getValue().contains(PERCENTAGE)) {
-					double value = Double.parseDouble(term.getValue().replaceAll(PX, "").trim());
-
-					if (value < 1) {
-						value = 1;
+				if(term != null) {
+					String termValue = term.getValue().trim().toLowerCase();
+					Matcher mFontSize = pFontSize.matcher(termValue);
+					if (mFontSize.matches()) {
+						double rawValue = Double.parseDouble(mFontSize.group(1));
+						String unit = mFontSize.group(2);
+						if(unit != null) {
+							unit = unit.trim();
+							if(!unit.isEmpty()) {
+								double valueInPt = toPoint(rawValue, unit);
+								style.addProperty(p, (int) valueInPt);
+							}
+						}
+					} else {
+						Matcher mNumber = pNumber.matcher(termValue);
+						if(mNumber.matches()) {
+							double rawValue = Math.max(1, Double.parseDouble(mNumber.group(1)));
+							style.addProperty(p, (int) rawValue); // assume already in pt
+						}
 					}
-
-					style.addProperty(p, (int) value);
 				}
 			}
 		}

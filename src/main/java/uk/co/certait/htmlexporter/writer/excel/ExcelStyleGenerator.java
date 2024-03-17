@@ -50,6 +50,11 @@ public class ExcelStyleGenerator {
 
 	static {
 		BORDER_STYLE_MAP.put(new BorderMappingKey("solid", null), BorderStyle.THIN);
+		BORDER_STYLE_MAP.put(new BorderMappingKey("solid", "1px"), BorderStyle.THIN);
+		BORDER_STYLE_MAP.put(new BorderMappingKey("solid", "2px"), BorderStyle.MEDIUM);
+		BORDER_STYLE_MAP.put(new BorderMappingKey("solid", "3px"), BorderStyle.MEDIUM);
+		BORDER_STYLE_MAP.put(new BorderMappingKey("solid", "4px"), BorderStyle.THICK);
+		BORDER_STYLE_MAP.put(new BorderMappingKey("solid", "5px"), BorderStyle.THICK);
 		BORDER_STYLE_MAP.put(new BorderMappingKey("solid", "thin"), BorderStyle.THIN);
 		BORDER_STYLE_MAP.put(new BorderMappingKey("solid", "medium"), BorderStyle.MEDIUM);
 		BORDER_STYLE_MAP.put(new BorderMappingKey("solid", "thick"), BorderStyle.THICK);
@@ -97,6 +102,8 @@ public class ExcelStyleGenerator {
 			dataFormat = createHelper.createDataFormat().getFormat(element.attr(DATE_CELL_ATTRIBUTE));
 		} else if (element.hasAttr(DATA_NUMERIC_CELL_FORMAT_ATTRIBUTE)) {
 			dataFormat = createHelper.createDataFormat().getFormat(element.attr(DATA_NUMERIC_CELL_FORMAT_ATTRIBUTE));
+		} else if(style.getDatePattern() != null && !style.getDatePattern().trim().isEmpty()) {
+			dataFormat = createHelper.createDataFormat().getFormat(style.getDatePattern());
 		}
 
 		StyleCacheKey styleCacheKey = new StyleCacheKey(style, dataFormat);
@@ -110,7 +117,8 @@ public class ExcelStyleGenerator {
 			applyBorders(style, cellStyle);
 			applyFont(cell, style, cellStyle);
 			applyHorizontalAlignment(style, cellStyle);
-			applyverticalAlignment(style, cellStyle);
+			applyVerticalAlignment(style, cellStyle);
+			applyParagraph(style, cellStyle);
 			applyWidth(cell, style);
 
 			if (dataFormat > -1) {
@@ -210,13 +218,19 @@ public class ExcelStyleGenerator {
 		}
 	}
 
-	protected void applyverticalAlignment(Style style, XSSFCellStyle cellStyle) {
+	protected void applyVerticalAlignment(Style style, XSSFCellStyle cellStyle) {
 		if (style.isVerticallyAlignedTop()) {
 			cellStyle.setVerticalAlignment(VerticalAlignment.TOP);
 		} else if (style.isVerticallyAlignedBottom()) {
 			cellStyle.setVerticalAlignment(VerticalAlignment.BOTTOM);
 		} else if (style.isVerticallyAlignedMiddle()) {
 			cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+		}
+	}
+
+	protected void applyParagraph(Style style, XSSFCellStyle cellStyle) {
+		if (style.isWrapText()) {
+			cellStyle.setWrapText(true);
 		}
 	}
 

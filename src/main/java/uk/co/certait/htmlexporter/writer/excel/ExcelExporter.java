@@ -19,25 +19,31 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.helpers.ColumnHelper;
 import org.jsoup.nodes.Element;
 
+import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTCol;
 import uk.co.certait.htmlexporter.css.StyleMap;
 import uk.co.certait.htmlexporter.writer.AbstractExporter;
 import uk.co.certait.htmlexporter.writer.TableWriter;
 
 public class ExcelExporter extends AbstractExporter {
+	//Make 150 max column width. For reference, POI max column width is 255 characters.
+	public final static int MAX_COLUMN_WIDTH = 150;
+
 	public void exportHtml(String html, OutputStream out) throws IOException {
 		Workbook workbook = new XSSFWorkbook();
 
-		StyleMap styleMapper = getStyleMapper(html);
+		parse(html);
+
+		StyleMap styleMapper = getStyleMapper();
 		Sheet sheet = null;
 		int startRow = 0;
 
-		for (Element element : getTables(html)) {
-
+		for (Element element : getTables()) {
 			if (workbook.getNumberOfSheets() == 0) {
 				String sheetName = getSheetName(element);
 
@@ -58,11 +64,15 @@ public class ExcelExporter extends AbstractExporter {
 				startRow = 0;
 			}
 
-			TableWriter writer = new ExcelTableWriter(
-					new ExcelTableRowWriter(sheet, new ExcelTableCellWriter(sheet, styleMapper)));
+			ExcelTableCellWriter cellWriter = new ExcelTableCellWriter(sheet, styleMapper);
+			cellWriter.setDatePattern(getDatePattern());
+
+			ExcelTableRowWriter rowWriter = new ExcelTableRowWriter(sheet, cellWriter);
+			TableWriter writer = new ExcelTableWriter(rowWriter);
 
 			startRow += writer.writeTable(element, styleMapper, startRow) + 1;
-			sheet.createRow(startRow);
+			Row row = sheet.createRow(startRow);
+			row.setHeight((short) -1);
 		}
 
 		for (int i = 0; i < workbook.getNumberOfSheets(); ++i) {
@@ -77,20 +87,31 @@ public class ExcelExporter extends AbstractExporter {
 
 	protected void formatSheet(Sheet sheet) {
 		int lastRowWithData = 0;
-
 		for (int i = sheet.getLastRowNum(); i >= 0; --i) {
-			if (sheet.getRow(i) != null && sheet.getRow(i).getPhysicalNumberOfCells() > 0) {
+			if (sheet.getRow(i) != null &&  sheet.getRow(i).getPhysicalNumberOfCells() > 0) {
 				lastRowWithData = i;
 				break;
 			}
 		}
 
+		int defaultColumnWidth = sheet.getDefaultColumnWidth() * 256;
+
+		ColumnHelper columnHelper = ((XSSFSheet) sheet).getColumnHelper();
 		for (int i = 0; i < sheet.getRow(lastRowWithData).getPhysicalNumberOfCells(); ++i) {
-			sheet.autoSizeColumn(i);
+			CTCol ctCol = columnHelper.getColumn(i, true);
+
+			int columnWidth = sheet.getColumnWidth(i);
+			boolean hasCustomWidth = ctCol != null && ctCol.isSetCustomWidth();
+			boolean doAutoSizeColumn = !hasCustomWidth || columnWidth == 600;
+
+			if(doAutoSizeColumn) {
+				sheet.autoSizeColumn(i);
+			}
 		}
 
 		for (int i = 0; i < sheet.getRow(sheet.getLastRowNum()).getPhysicalNumberOfCells(); ++i) {
-			sheet.setColumnWidth(i, (int) (sheet.getColumnWidth(i) * 1.2));
+			int columnWidth = (int) (sheet.getColumnWidth(i) * 1.2);
+			sheet.setColumnWidth(i, (int)(columnWidth));
 		}
 	}
 }

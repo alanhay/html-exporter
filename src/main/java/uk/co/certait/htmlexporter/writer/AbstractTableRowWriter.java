@@ -26,6 +26,10 @@ public abstract class AbstractTableRowWriter implements TableRowWriter {
 		rowTracker = new RowTracker();
 	}
 
+	protected TableCellWriter getCellWriter() {
+		return cellWriter;
+	}
+
 	public void writeRow(Element row, int rowIndex) {
 		renderRow(row, rowIndex);
 
