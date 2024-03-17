@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		#include("./report.css")
+	    <!-- Declare style element outside of report.css so that its content can be valid CSS -->
+	    <style>
+		    #include("./report.css")
+		</style>
 	</head>
 	<body>
 		<table style="width:100%;">

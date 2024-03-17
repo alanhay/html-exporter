@@ -1,67 +1,68 @@
-<style>
-	@page {
-	    size: landscape;
-	    margin: 2%;
-	}
-	
-	table {
-		border-collapse: collapse;
-		border-spacing: 0;
-	}
-	
-	th, td{
-		font-family: "Courier New";
-		border: thin solid #444444;
-		padding-left: 2px;
-		padding-right: 2px;
-	}
-	
-	th{
-		background: #336699;
-		color: #eeeeee;
-		font-weight: bold;
-		font-size: 10px;
-		text-align:left;
-	}
-	
-	td{
-		font-size:10px;
-	}
-	
-	.reportHeader{
-		font-size:16px;
-		background: #336699;
-		color: #eeeeee;
-		text-align:left;
-	}
-	
-	.areaClass, .regionClass{
-		vertical-align:middle;
-	}
-	
-	.subTotal{
-		background: #FFCC33;
-	}
-	
-	.areaSubTotal{
-		background: #FF9900;
-	}
-	
-	.total{
-		background: #336699;
-		color: #eeeeee;
-	}
-	
-	.numeric{
-		text-align:right;
-	}
-	
-	.oddRow{
-		background: #FFFFCC;
-	}
-	
-	.bestPerforming{
-		background: #aa0000;
-		color: #dddddd;
-	}
-</style>
+/*
+We do not include any wrapping <style> tag here so that this file can remain valid CSS
+*/
+@page {
+    size: landscape;
+    margin: 2%;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+th, td{
+    font-family: "Courier New";
+    border: thin solid #444444;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+th{
+    background: #336699;
+    color: #eeeeee;
+    font-weight: bold;
+    font-size: 10px;
+    text-align:left;
+}
+
+td{
+    font-size:10px;
+}
+
+.reportHeader{
+    font-size:16px;
+    background: #336699;
+    color: #eeeeee;
+    text-align:left;
+}
+
+.areaClass, .regionClass{
+    vertical-align:middle;
+}
+
+.subTotal{
+    background: #FFCC33;
+}
+
+.areaSubTotal{
+    background: #FF9900;
+}
+
+.total{
+    background: #336699;
+    color: #eeeeee;
+}
+
+.numeric{
+    text-align:right;
+}
+
+.oddRow{
+    background: #FFFFCC;
+}
+
+.bestPerforming{
+    background: #aa0000;
+    color: #dddddd;
+}
