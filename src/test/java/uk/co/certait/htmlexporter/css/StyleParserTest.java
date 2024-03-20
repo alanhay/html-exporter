@@ -46,7 +46,7 @@ public class StyleParserTest {
 		assertThat(style.isFontBold()).isTrue();
 		assertThat(style.isFontItalic()).isTrue();
 		assertThat(style.isTextUnderlined()).isTrue();
-		assertThat(style.getProperty(CssIntegerProperty.FONT_SIZE).get()).isEqualTo(12);
+		assertThat(style.getProperty(CssIntegerProperty.FONT_SIZE).get()).isEqualTo(9);
 
 		assertThat(styleMap).containsKey("td");
 		style = styleMap.get("td");
@@ -65,7 +65,7 @@ public class StyleParserTest {
 		assertThat(style.isFontBold()).isFalse();
 		assertThat(style.isFontItalic()).isFalse();
 		assertThat(style.isTextUnderlined()).isFalse();
-		assertThat(style.getProperty(CssIntegerProperty.FONT_SIZE).get()).isEqualTo(10);
+		assertThat(style.getProperty(CssIntegerProperty.FONT_SIZE).get()).isEqualTo(7);
 
 		assertThat(styleMap).containsKey(".okay");
 		assertThat(styleMap).containsKey(".warning");
@@ -111,7 +111,7 @@ public class StyleParserTest {
 		assertThat(style.getProperty(CssColorProperty.BACKGROUND_COLOR).get()).isEqualTo(Color.decode("#ff0000"));
 
 		// Specified only in 2nd <style/>
-		assertThat(style.getProperty(CssIntegerProperty.FONT_SIZE).get()).isEqualTo(20);
+		assertThat(style.getProperty(CssIntegerProperty.FONT_SIZE).get()).isEqualTo(15);
 
 		// Property in 1st <Style/> overwritten in 2nd <style/>
 		assertThat(style.getProperty(CssColorProperty.COLOR).get()).isEqualTo(Color.ORANGE);

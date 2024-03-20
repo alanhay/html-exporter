@@ -48,10 +48,22 @@ public class Style {
 	private Map<CssStringProperty, String> stringProperties;
 	private Map<CssColorProperty, Color> colorProperties;
 
+	private String datePattern;
+
 	public Style() {
 		integerProperties = new HashMap<CssIntegerProperty, Integer>();
 		stringProperties = new HashMap<CssStringProperty, String>();
 		colorProperties = new HashMap<CssColorProperty, Color>();
+	}
+
+	public boolean isEmpty() {
+		return integerProperties.isEmpty() && stringProperties.isEmpty() && colorProperties.isEmpty();
+	}
+
+	public void merge(Style style) {
+		getIntegerProperties().putAll(style.getIntegerProperties());
+		getStringProperties().putAll(style.getStringProperties());
+		getColorProperties().putAll(style.getColorProperties());
 	}
 
 	public void addProperty(CssIntegerProperty property, Integer value) {
@@ -84,6 +96,18 @@ public class Style {
 		return colorProperties;
 	}
 
+	public boolean hasProperty(CssIntegerProperty property) {
+		return integerProperties.get(property) != null;
+	}
+
+	public boolean hasProperty(CssStringProperty property) {
+		return stringProperties.get(property) != null;
+	}
+
+	public boolean hasProperty(CssColorProperty property) {
+		return colorProperties.get(property) != null;
+	}
+
 	public Optional<Integer> getProperty(CssIntegerProperty property) {
 		return Optional.ofNullable(integerProperties.get(property));
 	}
@@ -103,7 +127,7 @@ public class Style {
 	public boolean isWidthSet() {
 		return integerProperties.containsKey(CssIntegerProperty.WIDTH);
 	}
-	
+
 	public boolean isFontNameSet() {
 		return stringProperties.containsKey(CssStringProperty.FONT_FAMILY);
 	}
@@ -156,6 +180,18 @@ public class Style {
 		return colorProperties.containsKey(CssColorProperty.COLOR);
 	}
 
+	public boolean isWrapText() {
+		return "true".equals(stringProperties.get(CssStringProperty.WRAP_TEXT));
+	}
+
+	public void setDatePattern(String datePattern) {
+		this.datePattern = datePattern;
+	}
+
+	public String getDatePattern() {
+		return datePattern;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		boolean equals = false;
@@ -166,7 +202,8 @@ public class Style {
 			Style other = (Style) obj;
 			equals = new EqualsBuilder().append(this.integerProperties, other.integerProperties)
 					.append(this.stringProperties, other.stringProperties)
-					.append(this.colorProperties, other.colorProperties).isEquals();
+					.append(this.colorProperties, other.colorProperties)
+					.append(this.datePattern, other.datePattern).isEquals();
 		}
 
 		return equals;
@@ -174,7 +211,7 @@ public class Style {
 
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder(17, 37).append(integerProperties).append(stringProperties).append(colorProperties)
+		return new HashCodeBuilder(17, 37).append(integerProperties).append(stringProperties).append(colorProperties).append(datePattern)
 				.toHashCode();
 	}
 }

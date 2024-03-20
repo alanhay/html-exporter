@@ -15,11 +15,14 @@
  */
 package uk.co.certait.htmlexporter.writer.excel;
 
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.jsoup.nodes.Element;
 
+import uk.co.certait.htmlexporter.css.Style;
+import uk.co.certait.htmlexporter.css.StyleMap;
 import uk.co.certait.htmlexporter.writer.AbstractTableRowWriter;
 import uk.co.certait.htmlexporter.writer.TableCellWriter;
 

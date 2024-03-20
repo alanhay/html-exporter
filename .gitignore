@@ -28,6 +28,13 @@ local.properties
 
 
 #################
+## IntelliJ
+#################
+
+/.idea
+
+
+#################
 ## Visual Studio
 #################
 
@@ -169,3 +176,5 @@ pip-log.txt
 /league.ods
 /league.xlsx
 /test.xlsx
+
+

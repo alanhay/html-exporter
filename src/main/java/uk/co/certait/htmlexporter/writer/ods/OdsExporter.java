@@ -36,12 +36,14 @@ public class OdsExporter extends AbstractExporter {
 		try {
 			spreadsheet = SpreadsheetDocument.newSpreadsheetDocument();
 			Table table = spreadsheet.getSheetByIndex(0);
-			;
-			StyleMap styleMapper = getStyleMapper(html);
+
+			parse(html);
+
+			StyleMap styleMapper = getStyleMapper();
 			int startRow = 0;
 			boolean firstLoop = true;
 
-			for (Element element : getTables(html)) {
+			for (Element element : getTables()) {
 
 				if (firstLoop) {
 					String sheetName = getSheetName(element);

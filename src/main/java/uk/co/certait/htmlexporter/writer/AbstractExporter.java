@@ -22,6 +22,7 @@ import java.io.OutputStream;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.DataNode;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -30,9 +31,24 @@ import uk.co.certait.htmlexporter.css.StyleMap;
 import uk.co.certait.htmlexporter.css.StyleParser;
 
 public abstract class AbstractExporter implements Exporter {
+	protected String datePattern = "yyyy-MM-dd";
 
 	private static final String DATA_NEW_SHEET_ATTRIBUTE = "data-new-sheet";
 	private static final String DATA_SHEET_NAME_ATTRIBUTE = "data-sheet-name";
+
+	// Optional resource loader to load external CSS files
+	protected IResourceLoader resourceLoader;
+
+	protected Document document;
+
+	protected Document parse(String html) {
+		document = Jsoup.parse(html);
+		return document;
+	}
+
+	protected Document getDocument() {
+		return document;
+	}
 
 	public byte[] exportHtml(String html) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -46,16 +62,53 @@ public abstract class AbstractExporter implements Exporter {
 		exportHtml(html, out);
 	}
 
-	protected Elements getTables(String html) {
-		Document document = Jsoup.parse(html);// FIXME parsing twice
+	public void setDatePattern(String datePattern) {
+		this.datePattern = datePattern;
+	}
 
+	public String getDatePattern() {
+		return this.datePattern;
+	}
+
+	protected Elements getTables() {
+		Document document = getDocument();
 		return document.getElementsByTag("table");
 	}
 
-	protected StyleMap getStyleMapper(String html) {
-		Document document = Jsoup.parse(html);
-		Elements styles = document.getElementsByTag("style");// FIXME parsing
-																// twice
+	protected StyleMap getStyleMapper() {
+		Document document = getDocument();
+		Elements styles = document.getElementsByTag("style");
+
+		// Load any external .css files specified in the <head> section as <link .. > tags
+		// and add the classes to the styles collection
+		// NOTE: we ignore any external CSS links not defined in the <head> section.
+		// This will add the styles from any external .css files as children of the styles collection.
+		Elements headElements = document.getElementsByTag("head");
+
+		// The linked stylesheets are in the head and are assumed to fall prior to any inline style elements
+		// so they are inserted at the start in the order they appear in
+		int index = 0;
+
+		for(Element head: headElements)
+		{
+			for (Element link : head.getElementsByTag("link"))
+			{
+				String rel = link.attr("rel");
+				if (rel != null && rel.equals("stylesheet"))
+				{
+					if (resourceLoader == null)
+						throw new RuntimeException("Attempt to load contents of external .css file but no resource loader configured");
+
+					Element styleElement = new Element("style");
+
+					String uri = link.attr("href");
+					String cssContent = resourceLoader.loadResourceContent(uri);
+					DataNode styleContent = new DataNode(cssContent);
+					styleElement.appendChild(styleContent);
+					styles.add(index++, styleElement);
+				}
+			}
+		}
 
 		StyleParser parser = new StyleParser();
 		StyleMap mapper = new StyleMap(parser.parseStyleSheets(styles));
@@ -72,4 +125,8 @@ public abstract class AbstractExporter implements Exporter {
 	}
 
 	public abstract void exportHtml(String html, OutputStream out) throws IOException;
+
+	public void setResourceLoader(IResourceLoader iResourceLoader) {
+		resourceLoader = iResourceLoader;
+	}
 }
